@@ -1,0 +1,31 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+timeslice1:
+  description: Blah
+  task: task1
+  user: user1
+  started: 2010-04-03 04:14:46
+  finished: 2010-04-03 05:14:46
+  chargeable: true
+  ar: nil
+  ap: nil
+
+timeslice2:
+  description: MyText
+  task: task1
+  user: user1
+  started: 2010-04-03 05:14:46
+  finished: 2010-04-03 06:14:46
+  chargeable: true
+  ar: nil
+  ap: nil
+
+timeslice3:
+  description: MyText
+  task: task1
+  user: user2
+  started: 2010-04-03 05:14:46
+  finished: 2010-04-03 06:14:46
+  chargeable: true
+  ar: nil
+  ap: nil

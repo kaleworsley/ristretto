@@ -1,0 +1,10 @@
+log
+tmp
+doc/api
+doc/app
+coverage
+db/*.sqlite3
+ristretto.kpf
+public/system/*
+config/settings.yml
+config/database.yml

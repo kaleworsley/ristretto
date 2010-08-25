@@ -1,0 +1,12 @@
+<% content_tag 'div', {:id => "#{attachment.attachable_type.downcase}_#{attachment.attachable_id}_attachments"} do %>
+  <ul class="attachments">
+    <% unless attachment.attachable.nil? %>
+      <%= render attachment.attachable.attachments %>
+    <% end %>
+  </ul>
+  <div class="form-item form-item-block">
+  <% form_for attachment, :html => { :multipart => true } do |form| %>
+    <%= render :partial => 'attachments/form', :object => form %>
+  <% end %>
+  </div>
+<% end %>

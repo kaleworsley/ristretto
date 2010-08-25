@@ -1,0 +1,19 @@
+<%- content_for :tabs do -%>
+  <%= tab 'Edit', edit_task_path(@task)                   if can? :edit,@task %>
+  <%= tab 'New timeslice', new_task_timeslice_path(@task) if can? :create, Timeslice %>
+  <%= tab 'New comment', new_task_comment_path(@task)     if can? :create, Comment %>
+  <%= tab 'New task', new_project_task_path(@project)     if can? :create, Task %>
+<% end %>
+
+<%- content_for :breadcrumbs do -%>
+  <%= crumb @customer.name, @customer %>
+  <%= crumb @project.name, @project %>
+  <%= crumb @task.name, @task %>
+<%- end -%>
+
+<%= title "Are you sure you want to continue?" -%>
+This will delete <%= link_to @task.name, @task %>, and all of the associated comments, etc.
+<% form_for @task, :html => {:method => 'delete'} do |f| %>
+  <%= submit_tag 'Delete' %> or <%= link_to 'Cancel', request.referer || @task %>
+<% end %>
+

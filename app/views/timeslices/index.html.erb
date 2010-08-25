@@ -1,0 +1,43 @@
+<%- content_for :tabs do -%>
+  <%= tab 'New timeslice', new_task_timeslice_path(@task) if can? :create, Timeslice %>
+<%- end -%>
+
+<%= title "Timeslices" -%>
+
+<table class="timeslices">
+  <thead>
+  <tr>
+    <th>Description</th>
+    <th>Task</th>
+    <th>Project</th>
+    <th>Customer</th>
+    <th>Date</th>
+    <th>Start</th>
+    <th>End</th>
+    <th>Duration</th>
+    <th>Chargeable</th>
+    <th><%= image_tag 'show.png' %></th>
+    <th><%= image_tag 'edit.png' %></th>
+    <th><%= image_tag 'delete.png' %></th>
+  </tr>
+  </thead>
+  <tbody>
+<% for timeslice in @timeslices %>
+  <tr>
+    <td><%=h timeslice.description %></td>
+    <td><%= link_to timeslice.task.name, timeslice.task %></td>
+    <td><%= link_to timeslice.task.project.name, timeslice.task.project %></td>
+    <td><%= link_to timeslice.task.project.customer.name, timeslice.task.project.customer %></td>
+    <td><%=h timeslice.date %></td>
+    <td><%=h timeslice.started_time %></td>
+    <td><%=h timeslice.finished_time %></td>
+    <td><%=h timeslice.duration_in_hours %> hours</td>
+    <td><%=h timeslice.chargeable %></td>
+    <td><%= show_link timeslice %></td>
+    <td><%= edit_link timeslice %></td>
+    <td><%= delete_link timeslice %></td>
+  </tr>
+<% end %>
+  </tbody>
+</table>
+<%= will_paginate @timeslices %>

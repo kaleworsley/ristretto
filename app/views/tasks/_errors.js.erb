@@ -1,0 +1,4 @@
+<% @task.errors.each do |attr,msg| %>
+$('#task_<%= escape_javascript(attr) %>').parent().addClass('fieldWithErrors');
+<% end %>
+$('#page').prepend('<%= escape_javascript(display_flashes) %>');

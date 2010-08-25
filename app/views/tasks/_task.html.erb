@@ -1,0 +1,12 @@
+<% content_tag 'li', { :class =>  ["task-#{task.id}", 'task'].join(' ') } do %>
+  <span class="name"><%= link_to task.name, task %></span>
+  <span class="estimate"><%= pluralize(task.estimate, task.estimate_unit.humanize.singularize) %></span>
+  <span class="state <%= task.state %>"><%= task.state.humanize %></span>
+
+  <span class="comment-count"><%= task.comments.count %></span>
+
+  <ul class="edit-links">
+    <li class="edit"><%= edit_link task %></li>
+    <li class="delete"><%= delete_link task %></li>
+  </ul>
+<% end %>

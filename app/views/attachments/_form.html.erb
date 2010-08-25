@@ -1,0 +1,10 @@
+<%= form.hidden_field :attachable_id %>
+<%= form.hidden_field :attachable_type %>
+<div class="form-item form-item-inline">
+<%= form.label :file %>
+<%= form.file_field :file %>
+</div>
+
+<div class="form-item form-item-inline">
+<%= form.submit "Attach" %>
+</div>

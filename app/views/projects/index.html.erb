@@ -1,0 +1,17 @@
+<%- content_for :breadcrumbs do -%>
+  <% unless @customer.nil? %>
+    <%= crumb @customer.name, @customer %>
+    <%= crumb 'Projects', customer_projects_path(@customer) %>
+    <% else %>
+      <%= crumb 'Projects', projects_path %>
+  <% end %>
+<%- end -%>
+
+<div class="projects">
+  <%= title "Projects" -%>
+  <ul>
+  <%= render :partial => 'project', :collection => @projects %>
+  </ul>
+</div>
+
+<%= will_paginate @projects %>

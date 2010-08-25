@@ -1,0 +1,9 @@
+# Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
+
+one:
+  attachable_id: 1
+  attachable_type: MyString
+
+two:
+  attachable_id: 1
+  attachable_type: MyString

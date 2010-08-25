@@ -1,0 +1,8 @@
+<div class="activity-item">
+  <div class="project-info"><%= link_to timeslice.task.project, timeslice.task.project %></div>
+  <div class="activity-info">
+    <em><%=h timeslice.user %></em> spent
+    <%= distance_of_time_in_words(timeslice.started, timeslice.finished) %> on
+    <strong><%=h timeslice.task %></strong>
+  </div>
+</div>

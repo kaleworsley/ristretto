@@ -1,0 +1,52 @@
+<%- content_for :breadcrumbs do -%>
+  <%= crumb @timeslice.task.project.customer.name, @timeslice.task.project.customer %>
+  <%= crumb @timeslice.task.project.name, @timeslice.task.project %>
+  <%= crumb @timeslice.task.name, @timeslice.task %>
+  <% unless @timeslice.description.blank? %>
+    <%= crumb @timeslice.description, @timeslice %>
+  <% else %>
+    <%= crumb '(blank)', @timeslice %>
+  <% end %>
+<%- end -%>
+
+<%- content_for :tabs do -%>
+  <%= tab 'Edit', edit_timeslice_path(@timeslice) if can? :edit, @timeslice %>
+  <%= tab 'New timeslice', new_task_timeslice_path(@timeslice.task) if can? :create, Timeslice %>
+<%- end -%>
+
+<%= post_info(@timeslice) %>
+<p>
+  <strong>Description:</strong>
+  <%=h @timeslice.description %>
+</p>
+
+<p>
+  <strong>Task:</strong>
+  <%= link_to @timeslice.task.name, @timeslice.task %>
+</p>
+
+<p>
+  <strong>Date:</strong>
+  <%=h @timeslice.date %>
+</p>
+
+<p>
+  <strong>Started:</strong>
+  <%=h @timeslice.started_time %>
+</p>
+
+<p>
+  <strong>Finished:</strong>
+  <%=h @timeslice.finished_time %>
+</p>
+
+<p>
+  <strong>Duration:</strong>
+  <%= distance_of_time_in_words(@timeslice.started, @timeslice.finished, true); %>
+</p>
+
+
+<p>
+  <strong>Chargeable:</strong>
+  <%=h @timeslice.chargeable %>
+</p>

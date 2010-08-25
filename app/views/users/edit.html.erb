@@ -1,0 +1,7 @@
+<%- content_for :breadcrumbs do -%>
+  <%= crumb 'Users', users_path if can? :index, User%>
+  <%= crumb @user.full_name, @user %>
+<% end %>
+
+<%= title "Edit profile" -%>
+<%= render :partial => 'form' %>

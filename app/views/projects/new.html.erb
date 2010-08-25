@@ -1,0 +1,13 @@
+<%- content_for :tabs do -%>
+  <%= tab 'Projects', projects_path if can? :index, Project %>
+<%- end -%>
+
+<%- content_for :breadcrumbs do -%>
+  <%= crumb @customer.name, @customer %>
+  <%= crumb 'New project', new_customer_project_path(@customer) %>
+<%- end -%>
+
+<%= title "New project" -%>
+<% form_for [@customer, @project], :html => { :multipart => true } do |form| %>
+<%= render :partial => form, :locals => {:form => form, :project => @project, :attachment => @attachment} %>
+<% end %>

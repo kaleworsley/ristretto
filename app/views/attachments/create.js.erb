@@ -1,0 +1,3 @@
+$('#page').prepend('<%= escape_javascript(display_flashes) %>');
+// TODO : ajax file upload.
+$('#<%= @attachment.attachable_type.downcase %>_<%= @attachment.attachable_id %>_attachments ul.attachments').html(<%= escape_javascript(render @attachment.attachable.attachments) %>);

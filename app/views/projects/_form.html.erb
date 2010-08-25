@@ -1,0 +1,69 @@
+<% javascript 'project.new' %>
+<% javascript 'attachment.new' %>
+  <% flash[:error] = form.error_messages %>
+  <% unless project.new_record? || !project.try(:has_stakeholder?, current_user) %>
+  <div class="form-item form-item-block">
+    <%= form.label :customer_id %>
+    <%= form.collection_select :customer_id, current_user.current_customers.sort_by(&:name), :id, :name %>
+  </div>
+  <% end %>
+  <div class="form-item form-item-block">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="form-item form-item-block">
+    <%= form.label :state %>
+    <%= form.select :state, Project.states_for_select %>
+  </div>
+
+  <% if project.new_record? %>
+    <div class="form-item form-item-block">
+      <%= label_tag 'is_member', "I'm involved in this project" %>
+      <%= check_box_tag :is_member %>
+      <span id="stakeholder_role_div">
+        as a
+        <%= select_tag :stakeholder_role, options_for_select(Stakeholder.roles_for_select) %>
+      </span>
+    </div>
+  <% end %>
+
+  <div class="form-item form-item-block">
+    <%= form.label :fixed_price %>
+    <%= form.check_box :fixed_price %>
+  </div>
+
+  <div class="form-item form-item-block">
+    <%= form.label :deadline %>
+    <%= form.text_field :deadline, :size => 8 %>
+  </div>
+
+  <div class="form-item form-item-block">
+    <%= form.label :rate %>
+    <%= form.text_field :rate, :size => 4 %> $/hour
+  </div>
+
+  <div class="form-item form-item-block">
+    <%= form.label :estimate %>
+    <%= form.text_field :estimate, :size => 4 %> <%= form.select :estimate_unit, Project.estimate_units_for_select %> (leave blank for no estimate)
+  </div>
+
+  <% unless project.attachments.blank? %>
+    <ul class="attachments">
+      <%= render project.attachments %>
+    </ul>
+  <% end %>
+
+  <div id="attachments">
+    <div class="form-item form-item-block">
+      <% fields_for "new_attachments[]", attachment do |f| %>
+        <%= f.label :file %>
+        <%= f.file_field :file %>
+      <% end %>
+    </div>
+  </div>
+
+
+  <div class="form-item form-item-block">
+    <%= form.submit "Save" %>
+  </div>

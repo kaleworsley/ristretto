@@ -1,0 +1,13 @@
+<h1>Change My Password</h1>
+
+<% form_for @user, :url => password_reset_path, :method => :put do |form| %>
+  <% flash[:error] = form.error_messages %>
+  <%= form.label :password %><br />
+  <%= form.password_field :password %><br />
+  <br />
+  <%= form.label :password_confirmation %><br />
+  <%= form.password_field :password_confirmation %><br />
+  <br />
+  <%= form.submit "Update my password and log me in" %>
+<% end %>
+

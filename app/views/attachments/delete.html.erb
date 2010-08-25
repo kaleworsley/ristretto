@@ -1,0 +1,14 @@
+<%- content_for :tabs do -%>
+  <%= tab 'Edit', edit_attachment_path(@attachment) if can? :update, @attachment %>
+<%- end -%>
+
+<%- content_for :breadcrumbs do -%>
+  <%= crumb 'Attachments', users_path if can? :index, Attachment %>
+  <%= crumb @attachment.file_file_name, @attachment %>
+<% end %>
+
+<%= title "Are you sure you want to continue?" -%>
+This will delete attachment <%= link_to @attachment.file_file_name, @attachment %>.
+<% form_for @attachment, :html => {:method => 'delete'} do |f| %>
+  <%= submit_tag 'Delete' %> or <%= link_to 'Cancel', request.referer || @attachment, {:class => 'cancel'} %>
+<% end %>

@@ -1,0 +1,11 @@
+<%- content_for :tabs do -%>
+  <%= tab 'View', @customer %>
+  <%= tab 'New project', new_customer_project_path(@customer.id) %>
+<%- end -%>
+
+<%- content_for :breadcrumbs do -%>
+  <%= crumb @customer.name, @customer %>
+<%- end -%>
+
+<%= title "Editing customer" -%>
+<%= render :partial => "form" %>

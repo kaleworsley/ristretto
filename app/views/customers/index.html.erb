@@ -1,0 +1,15 @@
+<%- content_for :tabs do -%>
+  <%= tab 'New customer', new_customer_path %>
+<%- end -%>
+
+<%- content_for :breadcrumbs do -%>
+  <%= crumb 'Customers', customers_path %>
+<%- end -%>
+
+<div class="customers">
+  <%= title "Customers" -%>
+  <ul>
+<%= render :partial => 'customer', :collection => @customers %>
+  </ul>
+</div>
+<%= will_paginate @customers %>

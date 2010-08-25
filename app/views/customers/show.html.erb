@@ -1,0 +1,24 @@
+<%- content_for :tabs do -%>
+  <%= tab 'Edit', edit_customer_path(@customer)                  if can? :edit, @customer %>
+  <%= tab 'New project', new_customer_project_path(@customer.id) if can? :create, Project %>
+<%- end -%>
+
+<%- content_for :breadcrumbs do -%>
+  <%= crumb @customer.name, @customer %>
+<%- end -%>
+
+<div class="customers">
+    <%= title @customer.name %>
+    <%- if @customer.projects.size != 0 -%>
+    <h3>Projects:</h3>
+    <ul class="projects">
+      <% if current_user.is_staff? %>
+        <%= render :partial => 'projects/project', :collection => @customer.projects %>
+      <% else %>
+        <%= render :partial => 'projects/project', :collection => @customer.projects.find(:all, :conditions => {:id => current_user.current_projects_ids}) %>
+      <% end %>
+    </ul>
+    <%- else -%>
+    <h3>No Projects!</h3>
+    <%- end -%>
+</div>

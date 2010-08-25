@@ -1,0 +1,24 @@
+development:
+  host: localhost
+  name: Ristretto Dev
+  tagline: Project Management and Time-tracking
+  default_email: ristretto@localhost
+  exception_notifications: false
+
+test:
+  host: test.host
+  name: Ristretto Test
+  tagline: Project Management and Time-tracking
+  default_email: test@test.host
+  exception_notifications: false
+
+production:
+  host: ristretto.example.com
+  name: Ristretto
+  tagline: Project Management and Time-tracking
+  default_email: ristretto@example.com
+  exception_notifications: true
+  exception_recipients:
+    - dev1@example.com
+    - dev2@example.com
+    - dev3@example.com

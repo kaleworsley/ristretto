@@ -1,0 +1,19 @@
+<%- content_for :breadcrumbs do -%>
+  <%= crumb @task.project.customer.name, @task.project.customer%>
+  <%= crumb @task.project.name, @task.project %>
+  <%= crumb @task.name, @task %>
+  <%= crumb 'New timeslice', new_task_timeslice_path(@task) %>
+<%- end -%>
+
+<%- content_for :tabs do -%>
+  <%= tab 'Timeslices', task_timeslices_path(@task) if can? :index, Timeslice %>
+<%- end -%>
+
+<%= title "New timeslice" -%>
+<%= javascript_tag("TIMESLICE_GRANULARITY = #{current_user.minute_step}") %>
+<% javascript "jquery.timeentry.min" %>
+<% javascript "timeslice.new" %>
+<% form_for [@task, @timeslice] do |form| %>
+<%= hidden_field_tag 'timeslice[task_id]', @task.id %>
+  <%= render :partial => form, :locals => {:timeslice => @timeslice} %>
+<% end %>

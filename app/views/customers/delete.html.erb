@@ -1,0 +1,16 @@
+<%- content_for :tabs do -%>
+  <%= tab 'Edit', edit_customer_path(@customer)               if can? :edit, @customer %>
+  <%= tab 'New project', new_customer_project_path(@customer) if can? :create, Project %>
+<%- end -%>
+
+<%- content_for :breadcrumbs do -%>
+  <%= crumb @customer.name, @customer %>
+<%- end -%>
+
+<%= title "Are you sure you want to continue?" -%>
+
+This will delete <%= link_to @customer.name, @customer %>, and all of the associated projects, tasks, etc.
+<% form_for @customer, :html => {:method => 'delete'} do |f| %>
+  <%= submit_tag 'Delete' %> or <%= link_to 'Cancel', customers_path %>
+<% end %>
+

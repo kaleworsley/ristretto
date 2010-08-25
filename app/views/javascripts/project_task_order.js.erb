@@ -1,0 +1,16 @@
+$(document).ready(function() {
+$('ul.tasks').before('<%= escape_javascript(link_to image_tag('reorder.png', :alt => "Reorder"), '#', :id => 'reorder-tasks') %>');
+$('#reorder-tasks').click(function() {
+    $(this).after("<%= escape_javascript(link_to image_tag('stop.png', :alt => "Stop"), '#', :id => 'stop-reorder-tasks') %>")
+    $('ul.tasks').before("<div id=\"task-order\"><%= escape_javascript(render :partial => 'projects/task_order.html.erb', :object => @tasks) %></div>").hide();
+    taskOrder();
+    $(this).hide();
+    $('#stop-reorder-tasks').click(function() {
+    $('ul.tasks').load(document.location + ' ul.tasks li');
+    $('ul.tasks').show();
+    $(this).remove();
+    $('#task-order').remove();
+    $('#reorder-tasks').show();
+      });
+    });
+});

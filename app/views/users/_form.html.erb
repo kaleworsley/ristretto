@@ -1,0 +1,47 @@
+<% form_for @user do |form| %>
+  <% flash[:error] = form.error_messages %>
+  <div class="form-item form-item-block">
+    <%= form.label :name %>
+    <%= form.text_field :name %>
+  </div>
+  <div class="form-item form-item-block">
+    <%= form.label :first_name %>
+    <%= form.text_field :first_name %>
+  </div>
+  <div class="form-item form-item-block">
+    <%= form.label :last_name %>
+    <%= form.text_field :last_name %>
+  </div>
+  <div class="form-item form-item-block">
+    <%= form.label :email %>
+    <%= form.text_field :email %>
+  </div>
+  <div class="form-item form-item-block">
+    <%= form.label :password %>
+    <%= form.password_field :password %>
+  </div>
+  <div class="form-item form-item-block">
+    <%= form.label :password_confirmation %>
+    <%= form.password_field :password_confirmation %>
+  </div>
+  <% if !current_user.nil? && current_user.is_staff %>
+  <div class="form-item form-item-block">
+    <%= form.label :is_staff %>
+    <%= form.check_box :is_staff %>
+  </div>
+
+  <div class="form-item form-item-block">
+    <%= form.label :minute_step %>
+    <%= form.select :minute_step, User.minute_steps_for_select %> <div class="field-description">Default minute increments for timeslices.</div>
+  </div>
+  <% end %>
+  <% unless @user.new_record? %>
+  <div class="form-item form-item-block">
+    <%= label_tag :reset_api_key, "Reset API key?" %>
+    <%= check_box_tag :reset_api_key %>
+  </div>
+  <% end %>
+  <div class="form-item form-item-block">
+    <%= form.submit 'Save' %>
+  </div>
+<% end %>

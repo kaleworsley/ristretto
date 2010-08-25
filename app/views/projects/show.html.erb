@@ -1,0 +1,73 @@
+<%- content_for :breadcrumbs do -%>
+  <%= crumb @project.customer.name, @project.customer %>
+  <%= crumb @project.name, @project %>
+<%- end -%>
+
+<%- content_for :tabs do -%>
+  <%= tab 'Edit', edit_project_path(@project)                         if can? :update, @project %>
+  <%= tab 'New task', new_project_task_path(@project)                 if can? :create, @project.tasks.build %>
+  <%= tab 'New stakeholder', new_project_stakeholder_path(@project)   if can? :create, Stakeholder %>
+  <%= tab 'New project', new_customer_project_path(@project.customer) if can? :create, @project %>
+<%- end -%>
+
+<%- javascript "project.watch" -%>
+
+<%= title @project.name %>
+<%= notification_button_toggle(@project) %>
+<div class="clear-both"></div>
+<div class="project-info">
+  <% unless @project.deadline.nil? %>
+  <strong>Deadline:</strong>
+  <span><%= @project.deadline.strftime('%d/%m/%Y') %></span>
+  <% end %>
+  <strong><%= "Estimate:" unless @project.fixed_price %><%= "Quote:" if @project.fixed_price %></strong>
+  <span><%= pluralize(@project.estimate, @project.estimate_unit.humanize.singularize).downcase %> <% if @project.estimate && @project.estimate_unit == 'hours' && current_user.is_staff? && @project.rate.present? %>(<%= number_to_currency(@project.estimate * @project.rate) %>)<% end %></span>
+  <% if (@project.fixed_price && current_user.is_staff?) || !@project.fixed_price %>
+  /
+  <strong>Chargeable:</strong>
+  <span><%= pluralize((@project.total_chargeable_duration/60/60).round(2), 'hour') %> <% if @project.total_chargeable_duration && @project.estimate_unit == 'hours' && current_user.is_staff? && @project.rate.present? %>(<%= number_to_currency((@project.total_chargeable_duration/60/60).round(2) * @project.rate) %>)<% end %></span>
+  <% end %>
+</div>
+
+<div class="quick-add">
+  <h4 class="hideform addlink">Add a task</h4>
+  <% javascript 'ajax' %>
+  <% javascript 'project.show' %>
+  <% form_for [@project, @task] do |f| %>
+    <div class="form-item form-item-block">
+      <%= f.label :name %>
+      <%= f.text_field :name %>
+    </div>
+    <div class="form-item form-item-block">
+      <%= f.submit 'Add' %>
+    </div>
+  <% end %>
+</div>
+
+<div id="tasks">
+  <%- if @project.tasks.size != 0 -%>
+    <%= javascript_tag "var IS_STAFF = true;" if current_user.is_staff? %>
+    <%= javascript_tag "var IS_STAFF = false;" unless current_user.is_staff? %>
+    <%- javascript "project.task_order" -%>
+    <%= render :partial => 'task_order', :locals => {:project => @project} %>
+  <%- else -%>
+    <strong>No Tasks!</strong>
+  <%- end -%>
+</div>
+
+<div class="stakeholders">
+  <% if @project.users.size != 0 %>
+  <h3>Stakeholders<% if current_user.is_staff? %><span class="right"><%= link_to image_tag('edit.png', :alt => "Edit"), project_stakeholders_path(@project), {:class => 'edit'} %></span><% end %></h3>
+  <ul class="stakeholders">
+    <% @project.stakeholders.sort_by {|s| s.user.full_name}.each do |stakeholder| %>
+    <li id="stakeholder-<%= stakeholder.id %>">
+      <%= gravatar(stakeholder.user, 32) %>
+      <div><%= link_to stakeholder.user.full_name, stakeholder.user %></div>
+      <div><%= stakeholder.role.humanize %></div>
+    </li>
+    <% end %>
+  </ul>
+  <% else %>
+  <strong>No Stakeholders!</strong>
+  <% end %>
+</div>

@@ -1,0 +1,28 @@
+stakeholders = new Array();
+<% for stakeholder in @stakeholders -%>
+stakeholders.push(new Array(<%= stakeholder.project_id %>, '<%= %Q{#{User.find(stakeholder.user_id).full_name} - #{stakeholder.role.humanize}} %>', <%= stakeholder.user_id %>));
+<% end -%>
+
+function projectSelected() {
+    project_id = $('#task_project_id').val();
+    $('#task_assigned_to').html('');
+    $.each(stakeholders, function(key, stakeholder) {
+       if (stakeholder[0] == project_id) {
+        $('#task_assigned_to').append('<option value="' + stakeholder[2] + '">' + stakeholder[1] + '</option>');
+       }
+    });
+
+    if ($('#task_assigned_to').children().length == 0) {
+        $('#task_assigned_to').hide();
+    }
+    else {
+        $('#task_assigned_to').show();
+    }
+}
+
+$(document).ready(function () {
+  $('#task_project_id').change(function() {
+    projectSelected();
+  });
+  $('#task_project_id').change();
+});

@@ -1,0 +1,20 @@
+<%- content_for :breadcrumbs do -%>
+  <%= crumb @timeslice.task.project.customer.name, @timeslice.task.project.customer %>
+  <%= crumb @timeslice.task.project.name, @timeslice.task.project %>
+  <%= crumb @timeslice.task.name, @timeslice.task %>
+  <% unless @timeslice.description.blank? %>
+    <%= crumb @timeslice.description, @timeslice %>
+  <% else %>
+    <%= crumb '(blank)', @timeslice %>
+  <% end %>
+<%- end -%>
+
+<%- content_for :tabs do -%>
+    <%= tab 'View', @timeslice if can? :show, @timeslice %>
+<%- end -%>
+
+<%= title "Editing timeslice" -%>
+
+<% form_for @timeslice do |form| %>
+  <%= render :partial => form, :locals => {:timeslice => @timeslice} %>
+<% end %>
