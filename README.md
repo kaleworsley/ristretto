@@ -31,16 +31,18 @@ Setup
     cd ristretto
     cp config/database.example.yml config/database.yml
     cp config/settings.example.yml config/settings.yml
-
-Copy the output of `rake secret` into `:secret` in `environment.rb` below `config.action_controller.session`
-
     rake db:create
     rake db:schema:load
     rake user:new NAME=yourname FIRST_NAME=your LAST_NAME=name EMAIL=example@example.com PASSWORD=yourpassword
     rake user:is_staff NAME=yourname
     ./script/server
 
-Licence
+Other steps
+-----------
+
+You should probably replace the `secret` key in settings.yml by copying the output of `rake secret`.
+
+License
 =======
 
 Ristretto - Project Management and Time-tracking
