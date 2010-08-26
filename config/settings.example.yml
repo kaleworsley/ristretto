@@ -1,22 +1,23 @@
-development:
-  host: localhost
-  name: Ristretto Dev
-  tagline: Project Management and Time-tracking
-  default_email: ristretto@localhost
+common: &default_settings
   exception_notifications: false
-
-test:
-  host: test.host
-  name: Ristretto Test
-  tagline: Project Management and Time-tracking
-  default_email: test@test.host
-  exception_notifications: false
-
-production:
-  host: ristretto.example.com
-  name: Ristretto
+  secret: 68ed05b3f6133fb2ef3f27d5a9e80af8d9e2139a7a071103340e6a0b728898e8f7dfef4b97e0df6c78be7b38c5182b85c8ec7c4cb2460ef11f21680ea5b5a400
   tagline: Project Management and Time-tracking
   default_email: ristretto@example.com
+
+development:
+  <<: *default_settings
+  host: localhost
+  name: Ristretto Dev
+
+test:
+  <<: *default_settings
+  host: test.host
+  name: Ristretto Test
+
+production:
+  <<: *default_settings
+  host: ristretto.example.com
+  name: Ristretto
   exception_notifications: true
   exception_recipients:
     - dev1@example.com

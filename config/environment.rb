@@ -11,6 +11,12 @@ RAILS_GEM_VERSION = '2.3.8' unless defined? RAILS_GEM_VERSION
 require File.join(File.dirname(__FILE__), 'boot')
 
 Rails::Initializer.run do |config|
+  # Load settings file
+  if File.exists?(File.join(File.dirname(__FILE__), 'settings.yml'))
+    settings = YAML.load(File.open(File.join(File.dirname(__FILE__), 'settings.yml')))
+    SETTINGS = settings[RAILS_ENV]
+  end
+
   # Settings in config/environments/* take precedence over those specified here.
   # Application configuration should go into files in config/initializers
   # -- all .rb files in that directory are automatically loaded.
@@ -65,7 +71,7 @@ Rails::Initializer.run do |config|
   # no regular words or you'll be exposed to dictionary attacks.
   config.action_controller.session = {
     :key => '_ristretto_session',
-    :secret      => ''
+    :secret      => SETTINGS['secret']
   }
 
   # Use the database for sessions instead of the cookie-based default,
@@ -81,11 +87,6 @@ Rails::Initializer.run do |config|
   # Activate observers that should always be running
   # Please note that observers generated using script/generate observer need to have an _observer suffix
   # config.active_record.observers = :cacher, :garbage_collector, :forum_observer
-  
-  if File.exists?(File.join(File.dirname(__FILE__), 'settings.yml'))
-    settings = YAML.load(File.open(File.join(File.dirname(__FILE__), 'settings.yml')))
-    SETTINGS = settings[RAILS_ENV]
-  end
 end
 
 Time::DATE_FORMATS[:time_only] = '%H:%M'
