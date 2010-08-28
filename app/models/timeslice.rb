@@ -24,6 +24,30 @@ class Timeslice < ActiveRecord::Base
     }
   }
 
+  named_scope :uninvoiced, :conditions => ['(timeslices.ar IS NULL) OR (timeslices.ar = 0)'], :include => [:task => { :project => :customer }]
+  named_scope :recent_sales_orders, lambda { |user|
+    if user.is_staff
+      {
+        :include => { :task => :project },
+        :group => :ar,
+        :limit => 10, 
+        :order => 'timeslices.ar DESC'
+      }
+    else
+      {
+        :conditions => {
+          :task_id => user.current_projects_tasks_ids
+        },
+        :include => { 
+          :task => :project
+        }, 
+        :group => :ar,
+        :limit => 10,
+        :order => 'timeslices.ar DESC'
+      }
+    end
+  }
+
   # Paginate
   def self.page(page)
     paginate :per_page => 50, :page => page

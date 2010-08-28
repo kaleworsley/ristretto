@@ -49,7 +49,7 @@ class TimeslicesController < ApplicationController
 
 
   def update_ar
-    @timeslices = Timeslice.find(:all, :conditions => ['(timeslices.ar IS NULL) OR (timeslices.ar = 0)'], :include => [:task => { :project => :customer }])
+    @timeslices = Timeslice.uninvoiced
     @tasks = @timeslices.collect {|timeslice| timeslice.task}.uniq
     @projects = @tasks.collect {|task| task.project}.uniq
     @customers = @projects.collect {|project| project.customer}.uniq
@@ -90,15 +90,14 @@ class TimeslicesController < ApplicationController
 
   def sales_order_tracker
 
+    @recent = Timeslice.recent_sales_orders
     if current_user.is_staff?
-      @recent = Timeslice.find(:all, :include => { :task => :project }, :group => :ar, :limit => 10, :order => 'timeslices.ar DESC')
       if params[:ar_val].blank? == false
         redirect_to sales_order_tracker_path(:ar => params[:ar_val])
       end
       @ar = params[:ar]
       @timeslices = Timeslice.find(:all, :conditions => {:ar => @ar}) || nil
     else
-      @recent = Timeslice.find(:all, :conditions => {:task_id => current_user.current_projects_tasks_ids}, :include => { :task => :project }, :group => :ar, :limit => 10, :order => 'timeslices.ar DESC')
       if params[:ar_val].blank? == false
         redirect_to sales_order_tracker_path(:ar => params[:ar_val])
       end
