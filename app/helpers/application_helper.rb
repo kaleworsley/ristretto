@@ -93,35 +93,36 @@ module ApplicationHelper
     end
   end
 
-  def notification_button_toggle(instance)
+  def notification_button_toggle(object)
     content_tag :div, :class => 'notifications-toggle' do
-      if current_user.ignore_mail_from?(instance)
-        button_to("Enable notifications", { :action => 'enable_mail', :id => instance.id }, { :method => :put, :class => 'notifications-toggle', :title => "Enable notification for this #{instance.class.to_s}" })
+      if current_user.ignore_mail_from?(object)
+        button_to("Enable notifications", { :action => 'enable_mail', :id => object.id }, { :method => :put, :class => 'notifications-toggle', :title => "Enable notification for this #{object.class.to_s}" })
       else
-        button_to("Disable notification", { :action => 'disable_mail', :id => instance.id }, { :method => :put, :class => 'notifications-toggle', :title => "Disable notification for this #{instance.class.to_s}" })
+        button_to("Disable notification", { :action => 'disable_mail', :id => object.id }, { :method => :put, :class => 'notifications-toggle', :title => "Disable notification for this #{object.class.to_s}" })
       end
     end
   end
 
-  def action_link(instance, action)
-    link_to image_tag("#{action}.png", :alt => "#{action} #{instance.class}".titlecase, :title => "#{action} #{instance.class}".titlecase, :class => action), {
-    :controller => instance.class.to_s.tableize,
+  def action_link(object, action, text = nil)
+    text ||= "#{action} #{object.class}".titlecase
+    link_to image_tag("#{action}.png", :alt => "#{action} #{object.class}".titlecase, :title => text, :class => action), {
+    :controller => object.class.to_s.tableize,
     :action => action,
-    :id => instance,
+    :id => object,
     },
     :class => action
   end
 
-  def show_link(instance)
-    action_link(instance, 'show')
+  def show_link(object)
+    action_link(object, 'show') if can?(:read, object)
   end
 
-  def edit_link(instance)
-    action_link(instance, 'edit')
+  def edit_link(object)
+    action_link(object, 'edit') if can?(:update, object)
   end
 
-  def delete_link(instance)
-    action_link(instance, 'delete')
+  def delete_link(object)
+    action_link(object, 'delete') if can?(:destroy, object)
   end
 
   def markdown(text)

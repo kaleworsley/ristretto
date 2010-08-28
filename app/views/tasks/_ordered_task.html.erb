@@ -23,8 +23,8 @@
     <ul class="edit-links">
       <li class="comment"><%= link_to image_tag('comment.png', :alt => 'Comment'), task_path(ordered_task) + '#comment-form' %></li>
       <li class="view"><%= show_link ordered_task %></li>
-      <li class="edit"><%= edit_link ordered_task if can? :edit, ordered_task %></li>
-      <li class="delete"><%= delete_link ordered_task if can? :delete, ordered_task %></li>
+      <li class="edit"><%= edit_link ordered_task %></li>
+      <li class="delete"><%= delete_link ordered_task %></li>
     </ul>
 
     <div class="inlinebar"><%= totals.join(',') %></div>

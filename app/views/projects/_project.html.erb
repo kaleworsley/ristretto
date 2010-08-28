@@ -8,7 +8,7 @@
     <li class="done"><%= project.tasks.done.length %> done</li>
   </ul>
   <ul class="edit-links">
-    <li class="edit"><%= edit_link project if can? :edit, project %></li>
-    <li class="delete"><%= delete_link project if can? :destroy, project %></li>
+    <li class="edit"><%= edit_link project %></li>
+    <li class="delete"><%= delete_link project %></li>
   </ul>
 <% end %>
