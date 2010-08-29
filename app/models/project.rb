@@ -27,7 +27,7 @@ class Project < ActiveRecord::Base
 
   # Returns true if a given user is the project manager of this project
   def mine?(user)
-    stakeholders.find(:first, :conditions => {:role => 'project_manager', :user_id => user.id}).present?
+    stakeholders.project_manager(user).present?
   end
 
   # Return a hash of available project states suitable for the select helper
