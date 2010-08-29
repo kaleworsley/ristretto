@@ -1,6 +1,6 @@
 class ReportsController < ApplicationController
   def timestats
-    @staff = User.find(:all, :conditions => {:is_staff => 1}, :include => :timeslices)
+    @staff = User.staff.find(:include => :timeslices)
     respond_to do |format|
       format.html
     end
