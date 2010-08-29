@@ -129,7 +129,7 @@ class User < ActiveRecord::Base
   def current_projects_tasks_ids
     current_projects_tasks.map(&:id)
   end
-  
+
   def current_projects_comments_ids
     current_projects_comments.map(&:id)
   end
@@ -225,11 +225,11 @@ class User < ActiveRecord::Base
   end
 
   def current_projects_attachments(params = nil)
-    options = {  
+    options = {
       :conditions => ["(attachable_type = 'Task' AND attachable_id IN (?)) OR (attachable_type = 'Project' AND attachable_id IN (?)) OR (attachable_type = 'Comment' AND attachable_id IN (?))", current_projects_tasks_ids, current_projects_ids, current_projects_comments_ids],
     }
     options.merge!(params) unless params.nil?
-    
+
     ActiveRecord::Attachment.all options
   end
 
@@ -323,7 +323,7 @@ class User < ActiveRecord::Base
       }
     end
   end
-  
+
   def stakeholder_activity_items(limit = 10)
     current_projects_recent_stakeholders(limit).collect do |stakeholder|
       {
