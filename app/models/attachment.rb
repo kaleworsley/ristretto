@@ -11,6 +11,10 @@ class Attachment < ActiveRecord::Base
     @_paperclip_attachments[name] ||= Attachment.new(name, self, self.class.attachment_definitions[name])
   end
 
+  def to_s
+    file_file_name
+  end
+
   def self.page(page)
     paginate :per_page => 50, :page => page
   end
