@@ -9,7 +9,7 @@
   </div>
   <div class="activity">
     <%= render :partial => 'activity_item',
-      :collection => @timeslices.select {|t| t.date == date},
+      :collection => @activity_items.select {|a| a[:date].to_date == date},
       :as => :timeslice %>
   </div>
 </div>

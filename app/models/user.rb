@@ -1,3 +1,5 @@
+include ActionView::Helpers::DateHelper
+
 class User < ActiveRecord::Base
   # Create revisions
   versioned :except => [:perishable_token, :last_request_at]
@@ -143,6 +145,19 @@ class User < ActiveRecord::Base
     current_projects_timeslices(:order => 'started DESC', :limit => limit)
   end
 
+
+  def current_projects_recent_tasks(limit = 10)
+    current_projects_tasks(:order => 'created_at DESC', :limit => limit)
+  end
+
+  def current_projects_recent_comments(limit = 10)
+    current_projects_comments(:order => 'created_at DESC', :limit => limit)
+  end
+
+  def current_projects_recent_projects(limit = 10)
+    current_projects(:order => 'created_at DESC', :limit => limit)
+  end
+
   # Returns an array of all tasks of any project on which this
   # user is a stakeholder
   def current_projects_tasks(params = nil)
@@ -153,6 +168,17 @@ class User < ActiveRecord::Base
     options.merge!(params) unless params.nil?
 
     Task.all options
+  end
+
+  # Returns an array of all comment of any project on which this
+  # user is a stakeholder
+  def current_projects_comments(params = nil)
+    options = {
+      :conditions => {:task_id => current_projects_tasks_ids},
+    }
+    options.merge!(params) unless params.nil?
+
+    Comment.all options
   end
 
   # Get all chargeable timeslices or all chargeable timeslices on a date
@@ -181,4 +207,59 @@ class User < ActiveRecord::Base
     current_projects.collect(&:customer).uniq
   end
 
+  def timeslice_activity_items(limit = 10)
+    current_projects_recent_timeslices(limit).collect do |timeslice|
+      {
+        :user => timeslice.user,
+        :parent => timeslice.task.project,
+        :subject => timeslice.task,
+        :action => ' spent ' + distance_of_time_in_words(timeslice.started, timeslice.finished) + ' on ',
+        :date => timeslice.started,
+        :object => timeslice
+      }
+    end
+  end
+
+  def task_activity_items(limit = 10)
+    current_projects_recent_tasks(limit).collect do |task|
+      {
+        :user => task.user,
+        :parent => task.project,
+        :subject => task,
+        :action => ' created task ',
+        :date => task.created_at,
+        :object => task
+      }
+    end
+  end
+
+  def comment_activity_items(limit = 10)
+    current_projects_recent_comments(limit).collect do |comment|
+      {
+        :user => comment.user,
+        :parent => comment.task.project,
+        :subject => comment.task,
+        :action => ' created a comment on ',
+        :date => comment.created_at,
+        :object => comment
+      }
+    end
+  end
+
+  def project_activity_items(limit = 10)
+    current_projects_recent_projects(limit).collect do |project|
+      {
+        :user => project.user,
+        :parent => project.customer,
+        :subject => project,
+        :action => ' created project ',
+        :date => project.created_at,
+        :object => project
+      }
+    end
+  end
+
+  def activity_items(limit = 10)
+    comment_activity_items(limit) + task_activity_items(limit) + timeslice_activity_items(limit) + project_activity_items(limit)
+  end
 end

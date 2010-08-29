@@ -1,8 +1,9 @@
 <div class="activity-item">
-  <div class="project-info"><%= link_to timeslice.task.project, timeslice.task.project %></div>
+  <div class="parent-info"><%= link_to activity_item[:parent], activity_item[:parent] %></div>
   <div class="activity-info">
-    <em><%=h timeslice.user %></em> spent
-    <%= distance_of_time_in_words(timeslice.started, timeslice.finished) %> on
-    <strong><%=h timeslice.task %></strong>
+    <em><%=link_to activity_item[:user], activity_item[:user] %></em>
+    <%= activity_item[:action] %>
+    <strong><%= link_to activity_item[:subject], activity_item[:subject] %></strong>
+    <%= time_ago_in_words(activity_item[:date], true) %> ago
   </div>
 </div>

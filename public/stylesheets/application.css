@@ -3077,7 +3077,7 @@ body.dashboard #content .panel.searching li.match {
   margin-bottom: 1em;
 }
 
-#recent-activity div.project-info {
+#recent-activity div.parent-info {
   text-align: right;
   float: right;
   width: 40%;

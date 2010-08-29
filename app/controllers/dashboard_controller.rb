@@ -26,8 +26,10 @@ class DashboardController < ApplicationController
       # default to 'project_activity'
     else
       @projects = current_user.current_projects.current.find(:all, :order => :weight)
-      @timeslices = current_user.current_projects_recent_timeslices(20)
-      @activity_dates = @timeslices.collect {|t| t.date}.uniq
+      @activity_items = current_user.activity_items
+      @activity_items = @activity_items.sort_by {|a| a[:date]}
+      @activity_items.reverse!
+      @activity_dates = @activity_items.collect {|a| a[:date].to_date}.uniq
       @partial = 'project_activity'
     end
 
