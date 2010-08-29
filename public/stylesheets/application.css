@@ -3050,6 +3050,7 @@ body.dashboard #content .panel.searching li.match {
   width: 4em;
   text-align: center;
   float: left;
+  font-size: 0.8em;
 }
 
 #recent-activity div.day {
@@ -3064,7 +3065,7 @@ body.dashboard #content .panel.searching li.match {
 }
 
 #recent-activity div.activity {
-  margin-left: 6em;
+  margin-left: 4.5em;
 }
 
 #recent-activity div.day-activity {
@@ -3076,6 +3077,55 @@ body.dashboard #content .panel.searching li.match {
   padding-bottom: 0.8em;
   margin-bottom: 1em;
 }
+
+#recent-activity div.activity-item a.gravatar {
+  display: block;
+  float: left;
+  margin-right: 10px;
+}
+
+#recent-activity div.activity-item div.activity-info a {
+  color: #000;
+}
+
+#recent-activity div.activity-item span.time {
+  display: block;
+}
+
+#recent-activity div.activity-item a.subject {
+  background-repeat: no-repeat;
+  background-position: 0% 50%;
+  padding-left: 20px;
+}
+
+#recent-activity div.activity-item a.subject.task {
+  background-image: url("/images/object_icons/task.png");
+}
+
+#recent-activity div.activity-item a.subject.project {
+  background-image: url("/images/object_icons/project.png");
+}
+
+#recent-activity div.activity-item a.subject.timeslice {
+  background-image: url("/images/object_icons/timeslice.png");
+}
+
+#recent-activity div.activity-item a.subject.comment {
+  background-image: url("/images/object_icons/comment.png");
+}
+
+#recent-activity div.activity-item a.subject.attachment {
+  background-image: url("/images/object_icons/attachment.png");
+}
+
+#recent-activity div.activity-item a.subject.stakeholder {
+  background-image: url("/images/object_icons/stakeholder.png");
+}
+
+#recent-activity div.activity-item a.subject.customer {
+  background-image: url("/images/object_icons/customer.png");
+}
+
 
 #recent-activity div.parent-info {
   text-align: right;
