@@ -3230,3 +3230,57 @@ body.reports.reports-user_projects .panels .panel {
   width: 32%;
   margin-bottom: 10px;
 }
+
+body.projects-show #tasks div.task.bug {
+  background-image: url("/images/task_icons/bug.png");
+  background-position: 99% 50%;
+  background-repeat: no-repeat;
+}
+
+body.projects-show #tasks div.task.content {
+  background-image: url("/images/task_icons/content.png");
+  background-position: 99% 50%;
+  background-repeat: no-repeat;
+}
+
+body.projects-show #tasks div.task.database {
+  background-image: url("/images/task_icons/database.png");
+  background-position: 99% 50%;
+  background-repeat: no-repeat;
+}
+
+body.projects-show #tasks div.task.feature {
+  background-image: url("/images/task_icons/feature.png");
+  background-position: 99% 50%;
+  background-repeat: no-repeat;
+}
+
+body.projects-show #tasks div.task.markup {
+  background-image: url("/images/task_icons/markup.png");
+  background-position: 99% 50%;
+  background-repeat: no-repeat;
+}
+
+body.projects-show #tasks div.task.permissions {
+  background-image: url("/images/task_icons/permissions.png");
+  background-position: 99% 50%;
+  background-repeat: no-repeat;
+}
+
+body.projects-show #tasks div.task.scope-creep {
+  background-image: url("/images/task_icons/scope-creep.png");
+  background-position: 99% 50%;
+  background-repeat: no-repeat;
+}
+
+body.projects-show #tasks div.task.style {
+  background-image: url("/images/task_icons/style.png");
+  background-position: 99% 50%;
+  background-repeat: no-repeat;
+}
+
+body.projects-show #tasks div.task.system {
+  background-image: url("/images/task_icons/system.png");
+  background-position: 99% 50%;
+  background-repeat: no-repeat;
+}

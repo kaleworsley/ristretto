@@ -36,6 +36,8 @@ class Task < ActiveRecord::Base
     named_scope stategroup, :conditions => { :state => states }
   end
 
+  TAGS = ["bug", "content", "database", "feature", "markup", "permissions", "scope creep", "style", "system"]
+
   # Return a hash of available task states suitable for the select helper
   def Task.states_for_select
     STATES.collect { |state| [state.humanize, state] }
@@ -135,8 +137,6 @@ class Task < ActiveRecord::Base
   end
 
   def tag_classes
-    tags = ["bug", "feature", "new feature", "scope creep"]
-
-    tags.find_all {|tag| has_tag? tag}.collect(&:parameterize).join(' ')
+    TAGS.find_all {|tag| has_tag? tag}.collect(&:parameterize).join(' ')
   end
 end
