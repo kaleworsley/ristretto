@@ -1,5 +1,5 @@
 include ActionView::Helpers::DateHelper
-
+  # TODO: Rename poorly-named methods.
 class User < ActiveRecord::Base
   # Create revisions
   versioned :except => [:perishable_token, :last_request_at]
@@ -122,8 +122,20 @@ class User < ActiveRecord::Base
     current_projects.map(&:id)
   end
 
+  def current_customers_ids
+    current_customers.map(&:id)
+  end
+
   def current_projects_tasks_ids
     current_projects_tasks.map(&:id)
+  end
+  
+  def current_projects_comments_ids
+    current_projects_comments.map(&:id)
+  end
+
+  def current_projects_stakeholders_ids
+    current_projects_stakeholders.map(&:id)
   end
 
   # Returns an array of all timeslices assigned to any project on which this
@@ -145,7 +157,6 @@ class User < ActiveRecord::Base
     current_projects_timeslices(:order => 'started DESC', :limit => limit)
   end
 
-
   def current_projects_recent_tasks(limit = 10)
     current_projects_tasks(:order => 'created_at DESC', :limit => limit)
   end
@@ -156,6 +167,19 @@ class User < ActiveRecord::Base
 
   def current_projects_recent_projects(limit = 10)
     current_projects(:order => 'created_at DESC', :limit => limit)
+  end
+
+  def current_projects_recent_attachments(limit = 10)
+    current_projects_attachments(:order => 'created_at DESC', :limit => limit)
+  end
+
+  def current_projects_recent_stakeholders(limit = 10)
+    current_projects_stakeholders(:order => 'created_at DESC', :limit => limit)
+  end
+
+
+  def current_customers_recent_customers(limit = 10)
+    current_customers_customers(:order => 'created_at DESC', :limit => limit)
   end
 
   # Returns an array of all tasks of any project on which this
@@ -179,6 +203,34 @@ class User < ActiveRecord::Base
     options.merge!(params) unless params.nil?
 
     Comment.all options
+  end
+
+  def current_projects_stakeholders(params = nil)
+    options = {
+      :conditions => {:project_id => current_projects_ids},
+    }
+    options.merge!(params) unless params.nil?
+
+    Stakeholder.all options
+  end
+
+
+  def current_customers_customers(params = nil)
+    options = {
+      :conditions => {:id => current_customers_ids},
+    }
+    options.merge!(params) unless params.nil?
+
+    Customer.all options
+  end
+
+  def current_projects_attachments(params = nil)
+    options = {  
+      :conditions => ["(attachable_type = 'Task' AND attachable_id IN (?)) OR (attachable_type = 'Project' AND attachable_id IN (?)) OR (attachable_type = 'Comment' AND attachable_id IN (?))", current_projects_tasks_ids, current_projects_ids, current_projects_comments_ids],
+    }
+    options.merge!(params) unless params.nil?
+    
+    ActiveRecord::Attachment.all options
   end
 
   # Get all chargeable timeslices or all chargeable timeslices on a date
@@ -259,7 +311,46 @@ class User < ActiveRecord::Base
     end
   end
 
+  def attachment_activity_items(limit = 10)
+    current_projects_recent_attachments(limit).collect do |attachment|
+      {
+        :user => attachment.user,
+        :parent => attachment.attachable,
+        :subject => attachment,
+        :action => ' uploaded ',
+        :date => attachment.created_at,
+        :object => attachment
+      }
+    end
+  end
+  
+  def stakeholder_activity_items(limit = 10)
+    current_projects_recent_stakeholders(limit).collect do |stakeholder|
+      {
+        :user => stakeholder.user,
+        :parent => stakeholder.project.customer,
+        :subject => stakeholder.project,
+        :action => ' was added to project ',
+        :date => stakeholder.created_at,
+        :object => stakeholder
+      }
+    end
+  end
+
+  def customer_activity_items(limit = 10)
+    current_customers_recent_customers(limit).collect do |customer|
+      {
+        :user => customer.user,
+        :parent => customer,
+        :subject => customer,
+        :action => ' created customer ',
+        :date => customer.created_at,
+        :object => customer
+      }
+    end
+  end
+
   def activity_items(limit = 10)
-    comment_activity_items(limit) + task_activity_items(limit) + timeslice_activity_items(limit) + project_activity_items(limit)
+    comment_activity_items(limit) + task_activity_items(limit) + timeslice_activity_items(limit) + project_activity_items(limit) + attachment_activity_items(limit) + stakeholder_activity_items(limit) + customer_activity_items(limit)
   end
 end
