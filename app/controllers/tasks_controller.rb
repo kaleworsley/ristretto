@@ -82,10 +82,7 @@ class TasksController < ApplicationController
 
   # GET /tasks/1/edit
   def edit
-    @project = @task.project
-
     @attachment = Attachment.new
-
     @stakeholders = @task.project.stakeholders.collect {|stakeholder| stakeholder.user}
   end
 
@@ -175,9 +172,9 @@ class TasksController < ApplicationController
     end
 
     def find_project
-      if params[:project_id]
+      if params[:project_id].present?
         @project = Project.find(params[:project_id])
-      elsif @task
+      elsif @task.present?
         @project = @task.project
       end
     end
