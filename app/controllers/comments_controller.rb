@@ -3,7 +3,7 @@ class CommentsController < ApplicationController
   load_and_authorize_resource :through => :task
 
   before_filter :find_comment, :only => [:edit, :show, :update, :destroy, :delete]
-  before_filter :find_task, :only => [:index, :new, :create]
+  before_filter :find_task
   after_filter :new_attachments, :only => [:create, :update]
 
   # GET /comments
@@ -45,7 +45,6 @@ class CommentsController < ApplicationController
 
   # GET /comments/1/edit
   def edit
-    @task = @comment.task
     @attachment = Attachment.new
   end
 
@@ -58,13 +57,10 @@ class CommentsController < ApplicationController
     respond_to do |format|
       if @comment.save
 
-        @comment.task.project.update_attributes(:updated_at => DateTime.now.to_s(:db));
-        @comment.task.project.save
+        @comment.task.project.touch
         # Send notifications to recipients
-        if params[:notify][:notify]
-          @comment.task.recipients.reject {|u| u == @comment.user}.each do |recipient|
-            Mailer.deliver_task_comment(@comment, recipient)
-          end
+        if params[:notify][:notify] == '1'
+          @comment.deliver_notifications
         end
         flash[:notice] = 'Comment was successfully created.'
         format.html { redirect_to(@task) }
@@ -85,7 +81,7 @@ class CommentsController < ApplicationController
       if @comment.update_attributes(params[:comment])
 
         flash[:notice] = 'Comment was successfully updated.'
-        format.html { redirect_to(@comment.task) }
+        format.html { redirect_to(@task) }
         format.xml  { head :ok }
       else
         @attachment = Attachment.new
@@ -101,7 +97,7 @@ class CommentsController < ApplicationController
     @comment.destroy
     flash[:notice] = 'Comment has been removed'
     respond_to do |format|
-      format.html { redirect_to(@comment.task) }
+      format.html { redirect_to(@task) }
       format.xml  { head :ok }
     end
   end
@@ -127,6 +123,10 @@ class CommentsController < ApplicationController
   end
 
   def find_task
-    @task = Task.find(params[:task_id])
+    if params[:task_id].present?
+      @task = Task.find(params[:task_id])
+    else
+      @task = @comment.task
+    end
   end
 end

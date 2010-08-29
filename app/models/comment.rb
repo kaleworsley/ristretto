@@ -14,4 +14,10 @@ class Comment < ActiveRecord::Base
   def has_stakeholder?(user)
     task.project.has_stakeholder?(user)
   end
+
+  def deliver_notifications
+    task.recipients.reject {|u| u == user}.each do |recipient|
+      Mailer.deliver_task_comment(self, recipient)
+    end
+  end
 end
