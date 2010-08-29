@@ -1,6 +1,6 @@
 class ProjectsController < ApplicationController
 
-  load_and_authorize_resource :through => :customer
+  load_and_authorize_resource
 
   before_filter :find_project, :only => [:edit, :delete, :show, :update, :destroy, :update_task_order, :watch, :enable_mail, :disable_mail]
   before_filter :find_customer, :only => [:index, :new, :create]

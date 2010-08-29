@@ -1,10 +1,9 @@
 class TasksController < ApplicationController
 
+  load_and_authorize_resource
+
   # TODO Make start time configurable per user
   DAYSTART = '08:00:00'
-
-
-  load_and_authorize_resource :through => :project
 
   before_filter :find_task, :only => [:edit, :delete, :show, :update, :destroy, :enable_mail, :disable_mail]
   before_filter :find_project
@@ -40,8 +39,7 @@ class TasksController < ApplicationController
   # GET /tasks/1
   # GET /tasks/1.xml
   def show
-    @comment = Comment.new
-    @comment.task_id = @task.id
+    @comment = Comment.new({:task => @task})
     @attachment = Attachment.new
     @timeslices = current_user.timeslices.by_date(DateTime.now.beginning_of_day, DateTime.now.end_of_day)
     @timeslice = Timeslice.new
@@ -69,7 +67,7 @@ class TasksController < ApplicationController
   # GET /tasks/new
   # GET /tasks/new.xml
   def new
-    @task = Task.new
+    @task = Task.new(:project => @project)
     @task.user = current_user
 
     @attachment = Attachment.new

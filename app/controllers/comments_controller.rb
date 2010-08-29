@@ -1,6 +1,6 @@
 class CommentsController < ApplicationController
 
-  load_and_authorize_resource :through => :task
+  load_and_authorize_resource
 
   before_filter :find_comment, :only => [:edit, :show, :update, :destroy, :delete]
   before_filter :find_task

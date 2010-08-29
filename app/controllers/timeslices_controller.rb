@@ -1,9 +1,9 @@
 class TimeslicesController < ApplicationController
 
+  load_and_authorize_resource
+
   # TODO Make start time configurable per user
   DAYSTART = '08:00:00'
-
-  load_and_authorize_resource :through => :task
 
   before_filter :find_task, :only => [:new, :create, :index]
   before_filter :find_timeslice, :only => [:show, :edit, :update, :destroy, :delete]
@@ -90,7 +90,8 @@ class TimeslicesController < ApplicationController
 
   def sales_order_tracker
 
-    @recent = Timeslice.recent_sales_orders
+    @recent = Timeslice.recent_sales_orders(current_user)
+    @recent = @recent.select {|s| s.ar && s.ar != ''}
     if current_user.is_staff?
       if params[:ar_val].blank? == false
         redirect_to sales_order_tracker_path(:ar => params[:ar_val])

@@ -1,6 +1,6 @@
 class StakeholdersController < ApplicationController
 
-  load_and_authorize_resource :through => :project
+  load_and_authorize_resource
 
   before_filter :find_stakeholder, :only => [:show, :edit, :update, :destroy, :delete]
   before_filter :find_project, :only => [:show, :edit, :new, :index, :create, :delete]

@@ -19,4 +19,7 @@ class Attachment < ActiveRecord::Base
     paginate :per_page => 50, :page => page
   end
 
+  def has_stakeholder?(user)
+    attachable.has_stakeholder?(user)
+  end
 end

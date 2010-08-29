@@ -12,7 +12,7 @@ class Comment < ActiveRecord::Base
 
   # Check the comment's task's project for a stakeholder
   def has_stakeholder?(user)
-    task.project.has_stakeholder?(user)
+    task.has_stakeholder?(user)
   end
 
   def deliver_notifications
