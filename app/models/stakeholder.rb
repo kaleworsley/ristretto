@@ -23,7 +23,7 @@ class Stakeholder < ActiveRecord::Base
       end
     }
   end
-  
+
   # Return a hash of available stakeholder roles suitable for the select helper
   def Stakeholder.roles_for_select
     ROLES.collect { |role| [role.humanize, role] }

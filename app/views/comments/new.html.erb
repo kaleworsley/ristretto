@@ -13,5 +13,5 @@
 <%= title "New comment" -%>
 
 <% form_for [@task, @comment], :html => { :multipart => true } do |form| %>
-  <%= render :partial => 'form', :locals => {:form => form, :comment => @comment, :attachment => @attachment} %>
+  <%= render :partial => form, :locals => {:form => form, :comment => @comment, :attachment => @attachment} %>
 <% end %>

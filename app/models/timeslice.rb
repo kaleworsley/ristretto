@@ -30,7 +30,7 @@ class Timeslice < ActiveRecord::Base
       {
         :include => { :task => :project },
         :group => :ar,
-        :limit => 10, 
+        :limit => 10,
         :order => 'timeslices.ar DESC'
       }
     else
@@ -38,9 +38,9 @@ class Timeslice < ActiveRecord::Base
         :conditions => {
           :task_id => user.current_projects_tasks_ids
         },
-        :include => { 
+        :include => {
           :task => :project
-        }, 
+        },
         :group => :ar,
         :limit => 10,
         :order => 'timeslices.ar DESC'
