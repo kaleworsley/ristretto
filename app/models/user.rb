@@ -29,6 +29,8 @@ class User < ActiveRecord::Base
   has_many :stakeholders, :dependent => :destroy
   has_many :current_projects, :through => :stakeholders, :source => :project
 
+  named_scope :staff, :conditions => {:is_staff => 1}
+
   # Adds an object to a users ignore mail list
   def ignore_mail_from(instance)
     return true if ignore_mail_from?(instance)
