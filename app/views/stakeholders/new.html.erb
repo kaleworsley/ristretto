@@ -11,5 +11,5 @@
 <%= title "New stakeholder" -%>
 
 <% form_for [@project, @stakeholder] do |form| %>
-  <%= render form %>
+  <%= render :partial => form, :locals => {:form => form, :stakeholder => @stakeholder, :valid_users => @valid_users} %>
 <% end %>

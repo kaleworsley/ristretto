@@ -14,5 +14,5 @@
 <%= title "Editing task" -%>
 
 <% form_for @task, :html => { :multipart => true } do |form| %>
-  <%= render :partial => form, :locals => {:task => @task} %>
+  <%= render :partial => form, :locals => {:task => @task, :project => @project, :attachment => @attachment} %>
 <% end %>

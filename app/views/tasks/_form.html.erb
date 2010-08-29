@@ -21,25 +21,25 @@
   <% end %>
   <div class="form-item form-item-block">
     <%= form.label :estimate %>
-    <%= form.text_field :estimate, :size => 4 %> <%= @project.estimate_unit.humanize unless @project.estimate_unit.blank? %>
+    <%= form.text_field :estimate, :size => 4 %> <%= project.estimate_unit.humanize unless project.estimate_unit.blank? %>
   </div>
   <div class="form-item form-item-block">
     <%= form.label :assigned_to %>
-    <%= form.collection_select :assigned_to_id, @project.users, :id, :to_s, :include_blank => '-- Un-assigned --'  %>
+    <%= form.collection_select :assigned_to_id, project.users, :id, :to_s, :include_blank => '-- Un-assigned --'  %>
   </div>
   <div class="form-item form-item-block">
     <%= form.label :description %>
     <%= form.text_area :description, {:class => 'markdown'} %>
   </div>
 
-  <% unless @task.attachments.blank? %>
+  <% unless task.attachments.blank? %>
     <ul class="attachments">
-      <%= render @task.attachments %>
+      <%= render task.attachments %>
     </ul>
   <% end %>
   <div id="attachments">
     <div class="form-item form-item-block">
-      <% fields_for "new_attachments[]", @attachment do |f| %>
+      <% fields_for "new_attachments[]", attachment do |f| %>
         <%= f.label :file %>
         <%= f.file_field :file %>
       <% end %>

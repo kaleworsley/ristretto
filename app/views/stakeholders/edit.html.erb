@@ -12,5 +12,5 @@
 <%= title "Editing stakeholder" %>
 
 <% form_for @stakeholder do |form| %>
-  <%= render form %>
+  <%= render :partial => form, :locals => {:form => form, :stakeholder => @stakeholder} %>
 <% end %>
