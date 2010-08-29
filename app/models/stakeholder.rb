@@ -14,6 +14,16 @@ class Stakeholder < ActiveRecord::Base
   ROLES = ['project_manager', 'customer_representative', 'developer', 'designer',
            'support', 'accounts', 'scrum_master']
 
+  ROLES.each do |role|
+    named_scope role, lambda { |user|
+      if user.present?
+        { :conditions => { :role => role, :user_id => user.id } }
+      else
+        { :conditions => { :role => role } }
+      end
+    }
+  end
+  
   # Return a hash of available stakeholder roles suitable for the select helper
   def Stakeholder.roles_for_select
     ROLES.collect { |role| [role.humanize, role] }
