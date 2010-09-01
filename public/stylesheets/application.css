@@ -858,6 +858,11 @@ table#timesheet-week tr td.right {
   text-align: right;
 }
 
+table#timesheet-week tr td.edit,
+table#timesheet-week tr td.delete {
+  width: 16px;
+}
+
 table#timesheet-week tr.subtotal {
   border-top: 1px solid black;
 }
