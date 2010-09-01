@@ -79,7 +79,7 @@ def test_index_routes
 
   def test_should_redirect_index_if_logged_out
     get :index
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_index
@@ -92,7 +92,7 @@ def test_index_routes
 
   def test_should_redirect_show_if_logged_out
     get :show, :id => comments(:comment1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_show_comment
@@ -105,7 +105,7 @@ def test_index_routes
 
   def test_redirect_new_if_logged_out
     get :new
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_new
@@ -117,7 +117,7 @@ def test_index_routes
   def test_should_redirect_create_if_logged_out
     post :create, :comment => {:name => 'Test comment',
                                 :user_id => users(:user1).id }
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_create_comment
@@ -129,7 +129,7 @@ def test_index_routes
 
   def test_should_redirect_edit_if_logged_out
     get :edit, :id => comments(:comment1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_edit
@@ -141,7 +141,7 @@ def test_index_routes
 
   def test_should_redirect_update_if_logged_out
     put :update, :id => comments(:comment1).id, :comment => { :name => 'Test comment'}
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_update_comment
@@ -153,7 +153,7 @@ def test_index_routes
 
   def test_should_redirect_destroy_if_logged_out
     delete :destroy, :id => comments(:comment1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_destroy_comment

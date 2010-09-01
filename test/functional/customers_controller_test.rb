@@ -151,7 +151,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   def test_should_redirect_index_if_logged_out
     get :index
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_index_if_staff
@@ -171,7 +171,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   def test_should_redirect_show_if_logged_out
     get :show, :id => customers(:customer1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_show_customer_if_staff
@@ -194,7 +194,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   def test_redirect_new_if_logged_out
     get :new
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_new_if_staff
@@ -213,7 +213,7 @@ class CustomersControllerTest < ActionController::TestCase
   def test_should_redirect_create_if_logged_out
     post :create, :customer => {:name => 'Test customer',
                                 :user_id => users(:user1).id }
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_create_customer_if_staff
@@ -233,7 +233,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   def test_should_redirect_edit_if_logged_out
     get :edit, :id => customers(:customer1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_edit_if_staff
@@ -252,7 +252,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   def test_should_redirect_update_if_logged_out
     put :update, :id => customers(:customer1).id, :customer => { :name => 'Test customer'}
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_update_customer_if_staff
@@ -269,7 +269,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   def test_should_redirect_delete_if_logged_out
     get :delete, :id => customers(:customer1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_delete_if_staff
@@ -288,7 +288,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   def test_should_redirect_destroy_if_logged_out
     delete :destroy, :id => customers(:customer1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_destroy_customer_if_staff

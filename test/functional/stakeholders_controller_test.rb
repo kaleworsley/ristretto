@@ -107,7 +107,7 @@ class StakeholdersControllerTest < ActionController::TestCase
 
   def test_should_redirect_index_if_logged_out
     get :index
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_index
@@ -120,7 +120,7 @@ class StakeholdersControllerTest < ActionController::TestCase
 
   def test_should_redirect_show_if_logged_out
     get :show, :id => stakeholders(:stakeholder1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_show_stakeholder
@@ -133,7 +133,7 @@ class StakeholdersControllerTest < ActionController::TestCase
 
   def test_redirect_new_if_logged_out
     get :new
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_new
@@ -146,7 +146,7 @@ class StakeholdersControllerTest < ActionController::TestCase
     post :create, :stakeholder => { :user_id => users(:user1).id,
                                     :project_id => projects(:project1).id,
                                     :role => 'project_manager'}
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_create_stakeholder
@@ -159,7 +159,7 @@ class StakeholdersControllerTest < ActionController::TestCase
 
   def test_should_redirect_edit_if_logged_out
     get :edit, :id => stakeholders(:stakeholder1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_edit
@@ -174,7 +174,7 @@ class StakeholdersControllerTest < ActionController::TestCase
                  :stakeholder => { :user_id => users(:user1).id,
                                    :project_id => projects(:project1).id,
                                    :role => 'project_manager'}
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_update_stakeholder
@@ -188,7 +188,7 @@ class StakeholdersControllerTest < ActionController::TestCase
 
   def test_should_redirect_destroy_if_logged_out
     delete :destroy, :id => stakeholders(:stakeholder1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_destroy_stakeholder
