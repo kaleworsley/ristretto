@@ -40,10 +40,11 @@ class ApplicationController < ActionController::Base
   # Before filter to check for user login in any controller
   def require_login
     unless current_user
+      store_location
       respond_to do |format|
         format.html do
           flash[:warning] = 'You must be logged in to view this page'
-          redirect_to login_path.to_s + "?redirect=" + request.path.to_s
+          redirect_to login_path
         end
         format.xml do
           render :nothing => true, :status => :forbidden
@@ -56,6 +57,7 @@ class ApplicationController < ActionController::Base
   # Before filter to check that the user isn't logged it
   def require_no_login
     if current_user
+      store_location
       flash[:notice] = "You must be logged out to access this page"
       redirect_to root_path
       return false
@@ -65,6 +67,15 @@ class ApplicationController < ActionController::Base
   # 404 Page
   def show_404
     render_404
+  end
+
+  def store_location
+    session[:return_to] = request.request_uri
+  end
+  
+  def redirect_back_or_default(default)
+    redirect_to(session[:return_to] || default)
+    session[:return_to] = nil
   end
 
   # Extract timeslice data from the cookies array
