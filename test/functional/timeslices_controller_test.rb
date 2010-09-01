@@ -132,7 +132,7 @@ class TimeslicesControllerTest < ActionController::TestCase
 
   def test_should_redirect_show_if_logged_out
     get :show, :id => timeslices(:timeslice1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_show_timeslice
@@ -145,7 +145,7 @@ class TimeslicesControllerTest < ActionController::TestCase
 
   def test_redirect_new_if_logged_out
     get :new
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_new
@@ -164,7 +164,7 @@ class TimeslicesControllerTest < ActionController::TestCase
                                 :ar => nil,
                                 :ap => nil
                                 }
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_create_task
@@ -185,7 +185,7 @@ class TimeslicesControllerTest < ActionController::TestCase
 
   def test_should_redirect_edit_if_logged_out
     get :edit, :id => timeslices(:timeslice1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_edit
@@ -227,7 +227,7 @@ class TimeslicesControllerTest < ActionController::TestCase
                                 :ap => nil,
                                 :task_id => tasks(:task1).id
                                 }
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_update_timeslice
@@ -247,7 +247,7 @@ class TimeslicesControllerTest < ActionController::TestCase
 
   def test_should_redirect_destroy_if_logged_out
     delete :destroy, :id => timeslices(:timeslice1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_destroy_timeslice

@@ -35,7 +35,7 @@ class UsersControllerTest < ActionController::TestCase
 
   def test_should_not_show_user_when_not_logged_in
     get :show, :id => users(:user1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_show_own_user_when_logged_in
@@ -93,7 +93,7 @@ class UsersControllerTest < ActionController::TestCase
 
   def test_should_not_edit_user_when_not_logged_in
     get :edit
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_not_create_user_when_logged_in

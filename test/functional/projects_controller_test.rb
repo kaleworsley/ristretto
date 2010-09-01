@@ -154,7 +154,7 @@ class ProjectsControllerTest < ActionController::TestCase
 
   def test_should_redirect_index_if_logged_out
     get :index
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_index_if_staff
@@ -184,7 +184,7 @@ class ProjectsControllerTest < ActionController::TestCase
 
   def test_should_redirect_show_if_logged_out
     get :show, :id => projects(:project1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_show_project_if_is_staff
@@ -228,7 +228,7 @@ class ProjectsControllerTest < ActionController::TestCase
 
   def test_redirect_new_if_logged_out
     get :new
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_new_if_is_staff
@@ -247,7 +247,7 @@ class ProjectsControllerTest < ActionController::TestCase
   def test_should_redirect_create_if_logged_out
     post :create, :project => {:name => 'Test project',
                                 :user_id => users(:user1).id }
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_create_project_if_is_staff
@@ -284,7 +284,7 @@ class ProjectsControllerTest < ActionController::TestCase
 
   def test_should_redirect_edit_if_logged_out
     get :edit, :id => projects(:project1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_edit_if_is_staff
@@ -303,7 +303,7 @@ class ProjectsControllerTest < ActionController::TestCase
 
   def test_should_redirect_update_if_logged_out
     put :update, :id => projects(:project1).id, :project => { :name => 'Test project'}
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_update_project_if_staff
@@ -320,7 +320,7 @@ class ProjectsControllerTest < ActionController::TestCase
 
   def test_should_redirect_delete_if_logged_out
     get :delete, :id => projects(:project1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_delete_if_staff
@@ -339,7 +339,7 @@ class ProjectsControllerTest < ActionController::TestCase
 
   def test_should_redirect_destroy_if_logged_out
     delete :destroy, :id => projects(:project1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_destroy_project_if_staff

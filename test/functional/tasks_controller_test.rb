@@ -111,7 +111,7 @@ class TasksControllerTest < ActionController::TestCase
 
   def test_should_redirect_index_if_logged_out
     get :index
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_index
@@ -125,7 +125,7 @@ class TasksControllerTest < ActionController::TestCase
 
   def test_should_redirect_show_if_logged_out
     get :show, :id => tasks(:task1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_show_task
@@ -139,7 +139,7 @@ class TasksControllerTest < ActionController::TestCase
 
   def test_redirect_new_if_logged_out
     get :new
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_new
@@ -152,7 +152,7 @@ class TasksControllerTest < ActionController::TestCase
   def test_should_redirect_create_if_logged_out
     post :create, :task => {:name => 'Test task',
                                 :user_id => users(:user1).id }
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_create_task
@@ -166,7 +166,7 @@ class TasksControllerTest < ActionController::TestCase
 
   def test_should_redirect_edit_if_logged_out
     get :edit, :id => tasks(:task1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_edit
@@ -179,7 +179,7 @@ class TasksControllerTest < ActionController::TestCase
 
   def test_should_redirect_update_if_logged_out
     put :update, :id => tasks(:task1).id, :task => { :name => 'Test task'}
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_update_task
@@ -194,7 +194,7 @@ class TasksControllerTest < ActionController::TestCase
 
   def test_should_redirect_delete_if_logged_out
     get :delete, :id => tasks(:task1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_get_delete
@@ -207,7 +207,7 @@ class TasksControllerTest < ActionController::TestCase
 
   def test_should_redirect_destroy_if_logged_out
     delete :destroy, :id => tasks(:task1).id
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 
   def test_should_destroy_task

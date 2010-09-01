@@ -19,6 +19,6 @@ class UserSessionsControllerTest < ActionController::TestCase
   def test_should_deny_destroy_if_not_logged_in
     delete :destroy
     assert_equal 'You must be logged in to view this page', flash[:warning]
-    assert_redirected_to login_path.to_s + "?redirect=" + @request.path.to_s
+    assert_redirected_to login_path
   end
 end
