@@ -34,14 +34,25 @@
 <div id="timesheet-table">
 <table id="timesheet-week">
     <thead>
-      <tr><th>Project #</th><th>Project</th><th>Task #</th><th>Task</th><th>Time</th><th>Description</th><th>Duration</th><th>Chargeable</th></tr>
+      <tr>
+        <th>Project #</th>
+        <th>Project</th>
+        <th>Task #</th>
+        <th>Task</th>
+        <th>Time</th>
+        <th>Description</th>
+        <th>Duration</th>
+        <th>Chargeable</th>
+        <th></th>
+        <th></th>
+      </tr>
     </thead>
     <tbody>
       <% (@date.beginning_of_week..@date.end_of_week).each do |date|
         table_class = (date == Date.today) ? date.strftime('%A').downcase + ' today' : date.strftime('%A').downcase
         %>
       <tr class="day-heading <%= table_class %>">
-        <td colspan="8">
+        <td colspan="10">
           <%= date.strftime('%A') %>
         </td>
       </tr>
@@ -55,18 +66,22 @@
         <td><%= timeslice.description %></td>
         <td class="right"><%= timeslice.duration_in_hours %></td>
         <td class="right"><%= timeslice.chargeable %></td>
+	<td class="edit"><%= edit_link timeslice %></td>
+	<td class="delete"><%= delete_link timeslice %></td>
       </tr>
       <% end %>
       <tr class="subtotal <%= table_class %>">
         <td colspan="6"></td>
         <td><%= (Timeslice.total_duration(current_user.timeslices.by_date(date))/60/60).to_f.round(2) %> hours</td>
         <td><%= (Timeslice.total_chargeable_duration(current_user.timeslices.by_date(date))/60/60).to_f.round(2) %> hours</td>
+        <td colspan="2"></td>
   </tr>
       <% end %>
       <tr class="total">
     <td colspan="6"></td>
     <td><%= (Timeslice.total_duration(current_user.timeslices.by_date(@date.beginning_of_week, @date.end_of_week))/60/60).to_f.round(2) %> hours</td>
     <td><%= (Timeslice.total_chargeable_duration(current_user.timeslices.by_date(@date.beginning_of_week, @date.end_of_week))/60/60).to_f.round(2) %> hours</td>
+    <td colspan="2"></td>
   </tr>
     </tbody>
   </table>
