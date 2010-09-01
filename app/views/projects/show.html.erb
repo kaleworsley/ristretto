@@ -5,6 +5,7 @@
 
 <%- content_for :tabs do -%>
   <%= tab 'Edit', edit_project_path(@project)                         if can? :update, @project %>
+  <%= tab 'Import tasks', import_project_tasks_path(@project)         if can? :create, @project.tasks.build %>
   <%= tab 'New task', new_project_task_path(@project)                 if can? :create, @project.tasks.build %>
   <%= tab 'New stakeholder', new_project_stakeholder_path(@project)   if can? :create, Stakeholder %>
   <%= tab 'New project', new_customer_project_path(@project.customer) if can? :create, @project %>

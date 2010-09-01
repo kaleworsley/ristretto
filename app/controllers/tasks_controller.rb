@@ -11,6 +11,26 @@ class TasksController < ApplicationController
   before_filter :find_tasks, :only => [:index]
   after_filter :new_attachments, :only => [:create, :update]
 
+  def import
+    
+  end
+
+  def import_save
+    @tasks =  params[:tasks]
+    if @tasks.present?
+      @tasks.split("\n").each do |task|
+        t = @project.tasks.build({:name => task.strip})
+        t.user = current_user
+        t.save
+        logger.debug t.errors.full_messages.inspect
+      end
+      redirect_to @project
+      else 
+      flash[:warning] = 'Task import was empty.'
+      render :action => "import"
+    end
+  end
+
   # Enable email notifications for this task
   def enable_mail
     current_user.receive_mail_from(@task)
