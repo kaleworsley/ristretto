@@ -21,15 +21,15 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/timeslices.ics', :controller => 'timeslices', :action => 'ical'
   
   map.resources :customers, :member => { :delete => :get } do |customer|
-      customer.resources :projects, :member => { :delete => :get, :update_task_order => :put, :update_project_order => :put, :watch => :get, :enable_mail => :put, :disable_mail => :put }, :shallow => true do |project|
-        project.resources :tasks, :member => { :delete => :get, :enable_mail => :put, :disable_mail => :put }, :shallow => true do |task|
-          task.resources :comments, :shallow => true, :member => { :delete => :get }
-          task.resources :timeslices, :shallow => true, :member => { :delete => :get }
-        end
-        project.resources :stakeholders, :shallow => true, :member => { :delete => :get }
+    customer.resources :projects, :member => { :delete => :get, :update_task_order => :put, :update_project_order => :put, :watch => :get, :enable_mail => :put, :disable_mail => :put }, :shallow => true do |project|
+      project.resources :tasks, :member => { :delete => :get, :enable_mail => :put, :disable_mail => :put }, :collection => {:import => :get, :import_save => :post}, :shallow => true do |task|
+        task.resources :comments, :shallow => true, :member => { :delete => :get }
+        task.resources :timeslices, :shallow => true, :member => { :delete => :get }
       end
+      project.resources :stakeholders, :shallow => true, :member => { :delete => :get }
+    end
   end
-
+  
   map.resources :users, :member => { :delete => :get }
   map.resources :password_resets
   map.resources :attachments, :member => { :delete => :get, :download => :get }
