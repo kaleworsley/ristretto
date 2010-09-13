@@ -136,6 +136,15 @@ ul.primary-nav li.projects:hover {
   background-image: url("/images/nav-projects-mo.png");
 }
 
+ul.primary-nav li.reports {
+  background-image: url("/images/nav-reports.png");
+  background-repeat: no-repeat;
+}
+
+ul.primary-nav li.reports:hover {
+  background-image: url("/images/nav-reports-mo.png");
+}
+
 ul.primary-nav li.time {
   background-image: url("/images/nav-time.png");
   background-repeat: no-repeat;
@@ -170,19 +179,19 @@ div#header ul.primary-nav li:hover ul {
   display: block;
 }
 
-ul.primary-nav li.projects span, ul.primary-nav li.time span, ul.primary-nav li.people span, ul.primary-nav li.sales span {
+ul.primary-nav li.projects span, ul.primary-nav li.time span, ul.primary-nav li.people span, ul.primary-nav li.sales span, ul.primary-nav li.reports span {
   display: block;
   overflow: hidden;
   height: 75px;
 }
 
-ul.primary-nav li.projects a, ul.primary-nav li.time a, ul.primary-nav li.people a, ul.primary-nav li.sales a {
+ul.primary-nav li.projects a, ul.primary-nav li.time a, ul.primary-nav li.people a, ul.primary-nav li.sales a, ul.primary-nav li.reports a {
   display: block;
   padding: 200px 0 0 0;
 }
 
 ul.primary-nav li.projects a {
-  width: 53px;
+  width: 44px;
 }
 
 div#header ul.primary-nav ul {

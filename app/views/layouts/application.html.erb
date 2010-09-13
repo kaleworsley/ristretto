@@ -34,15 +34,22 @@
         <%= nav_li('Update AR', update_ar_path) if current_user.is_staff %>
       <% end %>
 
-      <% nav_li('Projects', '#', nil, {:class => 'projects'}) do %>
+      <% nav_li('Projects', projects_path, nil, {:class => 'projects'}) do %>
         <%= nav_li('Projects', projects_path) %>
         <%= nav_li('Order Projects', project_order_path) if current_user.is_staff %>
         <%= nav_li('Tasks', tasks_path) if current_user.is_staff%>
-        <%= nav_li('Reports', reports_path) if current_user.is_staff%>
       <% end %>
       <% if current_user.is_staff %>
+
+      <% nav_li('Reports', reports_path, nil, {:class => 'reports'}) do %>
+        <%= nav_li 'Staff time statistics', reports_path('timestats') %>
+        <%= nav_li 'Staff timesheets', reports_path('timesheets') %>
+        <%= nav_li 'Monthly project report', reports_path('monthly_report') %>
+        <%= nav_li 'Projects per user', reports_path('user_projects') %>
+        <%= nav_li 'Stakeholders per project', reports_path('project_stakeholders') %>
+      <% end %>
+
         <% nav_li('Timesheet', timesheet_path(Date.today), 'timeslices', {:class => 'time'}) do %>
-          <%= nav_li('Timesheet', timesheet_path(Date.today), 'timeslices') %>
           <% unless @unsaved_timeslices.blank? %>
             <li class="unsaved-timeslice-title"><span class="title">Unsaved</span></li>
             <% @unsaved_timeslices.each do |index,task| %>
@@ -69,7 +76,7 @@
       <% end %>
     <%- end -%>
 
-    <% nav_li('People', '#', nil, {:class => 'people'}) do %>
+    <% nav_li('People', customers_path, nil, {:class => 'people'}) do %>
       <%- if current_user -%>
         <%= nav_li('Customers', customers_path) if current_user.is_staff %>
         <%= nav_li('Users', users_path) if current_user.is_staff %>
