@@ -351,6 +351,6 @@ class User < ActiveRecord::Base
   end
 
   def activity_items(limit = 10)
-    comment_activity_items(limit) + task_activity_items(limit) + timeslice_activity_items(limit) + project_activity_items(limit) + attachment_activity_items(limit) + stakeholder_activity_items(limit) + customer_activity_items(limit)
+    comment_activity_items(limit) + task_activity_items(limit) + timeslice_activity_items(limit) + project_activity_items(limit) + stakeholder_activity_items(limit) + customer_activity_items(limit)
   end
 end
