@@ -88,42 +88,42 @@ $(document).ready(function() {
   $('#timeslice_description').keyup(function() {
     var val = $(this).val();
     createCookie('timesliceDescription:'+task_id, val, 365);
-    });
+  });
   
   $('#task_autocomplete').keyup(function() {
     var val = $(this).val();
     createCookie('timesliceTaskAutocomplete', val, 365);
-    });
+  });
   
   $('#timeslice_started_time').change(function() {
     var val = $(this).val();
     createCookie('timesliceStarted:'+task_id, val, 365);
-    });
+  });
   
   $('#timeslice_finished_time').change(function() {
     var val = $(this).val();
     createCookie('timesliceFinished:'+task_id, val, 365);
-    });
+  });
   
   $('#timeslice_started_4i, #timeslice_started_5i').change(function() {
     var val = $('#timeslice_started_4i').val() + ':' + $('#timeslice_started_5i').val();
     createCookie('timesliceStarted:'+task_id, val, 365);
-    });
+  });
 
   $('#timeslice_finished_4i, #timeslice_finished_5i').change(function() {
     var val = $('#timeslice_finished_4i').val() + ':' + $('#timeslice_finished_5i').val();
     createCookie('timesliceFinished:'+task_id, val, 365);
-    });
+  });
 
   $('#task_autocomplete').keyup(function() {
     var val = $(this).val();
     createCookie('timesliceTaskAutocomplete', val, 365);
-    });
+  });
   
   $('#timeslice_task_id').change(function() {
     var val = $(this).val();
     createCookie('timesliceTaskId', val, 365);
-    });
+  });
 
   if (readCookie('timesliceTaskAutocomplete') != null) {
     $('#task_autocomplete').val(readCookie('timesliceTaskAutocomplete'));
@@ -154,59 +154,59 @@ $(document).ready(function() {
     $('#timeslice_finished_4i').val(readCookie('timesliceFinished:'+task_id).split(':')[0]);
     $('#timeslice_finished_5i').val(readCookie('timesliceFinished:'+task_id).split(':')[1]);
   }
- 
+  
   $('body.tasks-show .time-details div.started').prepend('<span class="clock-now"><a href="#" title="Set the started time to now"><img src="/images/clock.png" alt="Clock"></a></span>');
   $('body.tasks-show .time-details div.finished').prepend('<span class="clock-now"><a href="#" title="Set the finished time to now"><img src="/images/clock.png" alt="Clock"></a></span>');
 
   $('body.tasks-show .time-details div.started span.clock-now a').click(function() {
-	  var now = new Date();
-	  var time = pad0(now.getHours()) + ':' + pad0(now.getMinutes());
-	  $('#timeslice_started_time').val(time);
-      });
+	var now = new Date();
+	var time = pad0(now.getHours()) + ':' + pad0(now.getMinutes());
+	$('#timeslice_started_time').val(time);
+  });
 
   $('body.tasks-show .time-details div.finished span.clock-now a').click(function() {
-	  var now = new Date();
-	  var time = pad0(now.getHours()) + ':' + pad0(now.getMinutes());
-	  $('#timeslice_finished_time').val(time);
-      });
+	var now = new Date();
+	var time = pad0(now.getHours()) + ':' + pad0(now.getMinutes());
+	$('#timeslice_finished_time').val(time);
+  });
   
 
-    $('body.tasks-show .time-details').append('<span class="clock start"><a href="#"><img src="/images/clock-start.png" alt="Clock"></a></span>');
-    $('body.tasks-show .time-details').find('.clock.start a').live('click', function() {
-      var title = $('#content h2.title:first').text();
-      var now = new Date();
-      var time = $('#timeslice_started_time').val();
-      flashNotice('Starting timer for "' + title + '"...');
-      createCookie('timesliceStarted:'+task_id, time, 365);
-      removeCookie('timesliceFinished:'+task_id);
-      createCookie('timesliceTimer:'+task_id, true, 365);
-      $(this).find('img').attr('src', '/images/clock-stop.png');
-      $(this).parent().toggleClass('start');
-      $(this).parent().toggleClass('stop');
-      updateFinished = true;
-      updateFinishedTime();
-      $('#timeslice_started_time').attr('readonly', 'readonly');
-      $('#timeslice_finished_time').attr('readonly', 'readonly');
-      return false;
-    });
-    
-    $('body.tasks-show .time-details').find('.clock.stop a').live('click', function() {
-      var title = $('#content h2.title:first').text();
-      var now = new Date();
-      var time = pad0(now.getHours()) + ':' + pad0(now.getMinutes());
-      flashNotice('Stopping timer for "' + title + '"...');
-      createCookie('timesliceFinished:'+task_id, time, 365);
-      removeCookie('timesliceTimer:'+task_id);
-      $(this).find('img').attr('src', '/images/clock-start.png');
-      $(this).parent().toggleClass('start');
-      $(this).parent().toggleClass('stop');
-      updateFinished = false;
-      $('#timeslice_started_time').removeAttr('readonly');
-      $('#timeslice_finished_time').removeAttr('readonly');
-      return false;
-    });
-    
-      
+  $('body.tasks-show .time-details').append('<span class="clock start"><a href="#"><img src="/images/clock-start.png" alt="Clock"></a></span>');
+  $('body.tasks-show .time-details').find('.clock.start a').live('click', function() {
+    var title = $('#content h2.title:first').text();
+    var now = new Date();
+    var time = $('#timeslice_started_time').val();
+    flashNotice('Starting timer for "' + title + '"...');
+    createCookie('timesliceStarted:'+task_id, time, 365);
+    removeCookie('timesliceFinished:'+task_id);
+    createCookie('timesliceTimer:'+task_id, true, 365);
+    $(this).find('img').attr('src', '/images/clock-stop.png');
+    $(this).parent().toggleClass('start');
+    $(this).parent().toggleClass('stop');
+    updateFinished = true;
+    updateFinishedTime();
+    $('#timeslice_started_time').attr('readonly', 'readonly');
+    $('#timeslice_finished_time').attr('readonly', 'readonly');
+    return false;
+  });
+  
+  $('body.tasks-show .time-details').find('.clock.stop a').live('click', function() {
+    var title = $('#content h2.title:first').text();
+    var now = new Date();
+    var time = pad0(now.getHours()) + ':' + pad0(now.getMinutes());
+    flashNotice('Stopping timer for "' + title + '"...');
+    createCookie('timesliceFinished:'+task_id, time, 365);
+    removeCookie('timesliceTimer:'+task_id);
+    $(this).find('img').attr('src', '/images/clock-start.png');
+    $(this).parent().toggleClass('start');
+    $(this).parent().toggleClass('stop');
+    updateFinished = false;
+    $('#timeslice_started_time').removeAttr('readonly');
+    $('#timeslice_finished_time').removeAttr('readonly');
+    return false;
+  });
+  
+  
   if (readCookie('timesliceTimer:'+task_id)) {
     $('body.tasks-show .time-details').find('.clock a img').attr('src', '/images/clock-stop.png');
     $('body.tasks-show .time-details').find('.clock').toggleClass('start');
@@ -222,9 +222,9 @@ $(document).ready(function() {
 function limitRange(input) {
   return {
     minTime: (input.id == 'timeslice_finished_time' ?
-      $('#timeslice_started_time').timeEntry('getTime') : null),
+              $('#timeslice_started_time').timeEntry('getTime') : null),
     maxTime: (input.id == 'timeslice_started_time' ?
-      $('#timeslice_finished_time').timeEntry('getTime') : null)
+              $('#timeslice_finished_time').timeEntry('getTime') : null)
   }
 }
 

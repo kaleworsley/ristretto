@@ -35,12 +35,12 @@ $(document).ready(function() {
     },
     eventClick: function( event, jsEvent, view ) {
       $('<div id="popup" />').load('/timeslices/' + event.id + '/edit #content', function() {
-          ajaxifyForm($('#popup form'), function() {
-            $('#popup').dialog('close');
-	    $('#popup').remove();
-            $('#timesheet').fullCalendar('refetchEvents');
-          });
-        }).dialog({
+        ajaxifyForm($('#popup form'), function() {
+          $('#popup').dialog('close');
+	      $('#popup').remove();
+          $('#timesheet').fullCalendar('refetchEvents');
+        });
+      }).dialog({
         'modal': true,
         maxWidth: $(document).width(),
         maxHeight: $(document).height(),
@@ -48,10 +48,10 @@ $(document).ready(function() {
         width: $(document).width() / 2,
         height: $(document).height() / 2,
         close: function() {$(this).remove()}
-        });
+      });
     },
     eventAfterRender: function( event, element, view ) {
-	      /*
+	  /*
 	      element.bt({
 		      fill: '#F3F3F3',
 			  cornerRadius: 4,
@@ -72,7 +72,7 @@ $(document).ready(function() {
 		      
 		  });
 	  */
-	  }
+	}
   });
 
   $('#timesheet').before('<div class="toggle-calendar calendar"><a href="#">Calendar off</a></div>');
@@ -80,35 +80,35 @@ $(document).ready(function() {
   $('#timesheet-table').hide();
   $('.week-nav').hide();
   $('.toggle-calendar a').click(function() {
-      $(this).parent().toggleClass('calendar');
-      $(this).parent().toggleClass('timesheet');
-      
-      if ($(this).parent().hasClass('timesheet')) {
-          createCookie('timesheetView', 'timesheet', 365);
-          $('.day-nav').hide();
-          $('.week-nav').show();
-          $('#timesheet').hide();
-          $('#timesheet-table').html('');
-          $('#timesheet-table').show();
-          $('#timesheet-table').addClass('loading');
-          $('#timesheet-table').load(document.location + ' #timesheet-table', function() {
-            $('#timesheet-table').removeClass('loading');
-            });
-          $(this).text('Calendar on');
-      }
-      
-      if ($(this).parent().hasClass('calendar')) {
-          createCookie('timesheetView', 'calendar', 365);
-          $('.day-nav').show();
-          $('.week-nav').hide();
-          $('#timesheet').show();
-          $('#timesheet').fullCalendar('refetchEvents');
-          $('#timesheet').fullCalendar('render');
-          $('#timesheet-table').hide();
-          $(this).text('Calendar off');
-      }
-      return false;
-    });
+    $(this).parent().toggleClass('calendar');
+    $(this).parent().toggleClass('timesheet');
+    
+    if ($(this).parent().hasClass('timesheet')) {
+      createCookie('timesheetView', 'timesheet', 365);
+      $('.day-nav').hide();
+      $('.week-nav').show();
+      $('#timesheet').hide();
+      $('#timesheet-table').html('');
+      $('#timesheet-table').show();
+      $('#timesheet-table').addClass('loading');
+      $('#timesheet-table').load(document.location + ' #timesheet-table', function() {
+        $('#timesheet-table').removeClass('loading');
+      });
+      $(this).text('Calendar on');
+    }
+    
+    if ($(this).parent().hasClass('calendar')) {
+      createCookie('timesheetView', 'calendar', 365);
+      $('.day-nav').show();
+      $('.week-nav').hide();
+      $('#timesheet').show();
+      $('#timesheet').fullCalendar('refetchEvents');
+      $('#timesheet').fullCalendar('render');
+      $('#timesheet-table').hide();
+      $(this).text('Calendar off');
+    }
+    return false;
+  });
   if (readCookie('timesheetView') == 'timesheet') {
     $('.toggle-calendar a').click();
   }
@@ -125,9 +125,9 @@ function saveTimeslice(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent
   $.post('/timeslices/' + event.id + '.js', object, null, 'script');
   $('body').ajaxError(function(e, xhr, settings, exception) {
     if (xhr.status == '422') {
-	// TODO: Make this work
-	//revertFunc();
+	  // TODO: Make this work
+	  //revertFunc();
     }
-   });
+  });
 }
 

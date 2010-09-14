@@ -15,8 +15,8 @@ $(document).ready(function() {
       $(this).parents('.form-item').html($(this).parents('.form-item').html());
     }
     else {
-	$(this).parents('.form-item').slideUp(500, function() { $(this).remove(); });
+      $(this).parents('.form-item').slideUp(500, function() { $(this).remove(); });
     }
     return false;
-    });
+  });
 });

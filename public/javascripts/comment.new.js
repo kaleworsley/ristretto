@@ -11,7 +11,7 @@ $(document).ready(function() {
   $('#new_comment').submit(function() {
     //Remove cookie on submit
     removeCookie('commentBody'+task_id);
-    });
+  });
 
   // Onload, if cooment body is blank, and the cookie isn't empty, fill the textarea
   if (readCookie('commentBody'+task_id) != null) {
