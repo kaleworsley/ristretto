@@ -103,9 +103,11 @@ module ApplicationHelper
     end
   end
 
-  def action_link(object, action, text = nil)
+  def action_link(object, action, text = nil, label = false)
     text ||= "#{action} #{object.class}".titlecase
-    link_to image_tag("#{action}.png", :alt => "#{action} #{object.class}".titlecase, :title => text, :class => action), {
+    link = image_tag("#{action}.png", :alt => "#{action} #{object.class}".titlecase, :title => text, :class => action)
+    link += ' ' + text if label
+    link_to link, {
     :controller => object.class.to_s.tableize,
     :action => action,
     :id => object,
@@ -113,16 +115,16 @@ module ApplicationHelper
     :class => action
   end
 
-  def show_link(object)
-    action_link(object, 'show') if can?(:read, object)
+  def show_link(object, label = false)
+    action_link(object, 'show', nil, label) if can?(:read, object)
   end
 
-  def edit_link(object)
-    action_link(object, 'edit') if can?(:update, object)
+  def edit_link(object, label = false)
+    action_link(object, 'edit', nil, label) if can?(:update, object)
   end
 
-  def delete_link(object)
-    action_link(object, 'delete') if can?(:destroy, object)
+  def delete_link(object, label = false)
+    action_link(object, 'delete', nil, label) if can?(:destroy, object)
   end
 
   def markdown(text)
