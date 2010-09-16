@@ -1630,19 +1630,23 @@ form#task_order_form .task_order > .content {
 }
 
 div.task_order div.task {
-  padding: 5px 15px 5px 10px;
-  margin: 0;
+  padding: 5px 5px 5px 10px;
+  border-color: #EEEEEE;
+  border-style: solid;
+  border-width: 1px 0;
+  margin: 5px 0;
   clear: both;
   overflow: auto;
+  background-repeat: repeat-x;
+  background-image: url("/images/gradient.png");
 }
 
 div.task_order div.task:hover {
   background-color: #d6d6d6;
   border-style: solid;
-  border-width: 1px 0 1px 0;
+  border-width: 1px 0;
   border-color: #c3c3c3;
   color: black;
-  padding: 4px 15px 4px 10px;
 }
 
 div.task_order div.task div.handle {
@@ -1652,7 +1656,7 @@ div.task_order div.task div.handle {
 }
 
 div.task_order div.task div.heading {
-  padding: 0 10px 0 0;
+  padding: 0;
   margin: 0 0 0 25px;
 }
 
@@ -1660,20 +1664,22 @@ div.task_order div.task div.heading span.title {
   display: block;
   float: left;
   padding: 0;
-  margin: 0 10px 0 0;
-  width: 50%;
+  margin: 0 10px 3px 0;
+  width: 100%;
+  border-bottom: 1px dotted #eee; 
 }
 
-div.task_order div.task div.heading span.title a:link {
-  color: black;
-  text-decoration: none;
+div.task_order div.task:hover div.heading span.title {
+  border-bottom: 1px dotted #c3c3c3; 
 }
 
-div.task_order div.task div.heading span.title a:visited {
-  color: black;
-  text-decoration: none;
+div.task_order div.task div.heading span.title a {
+  margin-right: 20px;
+  display: block;
 }
 
+div.task_order div.task div.heading span.title a:link,
+div.task_order div.task div.heading span.title a:visited,
 div.task_order div.task div.heading span.title a:hover {
   color: black;
   text-decoration: none;
@@ -1685,15 +1691,21 @@ div.task_order div.task div.heading span.cypher {
   padding: 0;
   margin: 0 10px 0 0;
   width: auto;
+  font-size: 0.8em;
+  cursor: pointer;
 }
 
 div.task_order div.task div.heading span.cypher select {
   font-size: 11px;
 }
 
+div.task_order div.task select {
+  border: 1px solid;
+}
+
 div.task_order div.task div.heading span.comment-count {
   display: block;
-  float: left;
+  float: right;
   padding: 0 0px 0 0px;
   margin: 0 0 0 5px;
   background-image: url("/images/comment2.png");
@@ -1776,6 +1788,21 @@ div.task_order div.expanded div.inlinebar {
   float: right;
 }
 
+div.task_order div.options {
+  float: right;
+  width: 16px;
+  height: 16px;
+  margin-left: 5px;
+}
+
+div.task_order div.options a {
+  width: 16px;
+  height: 16px;
+  display: block;
+  background-image: url("/images/options.png");
+  background-repeat: no-repeat;
+}
+
 div.task_order .current-state {
   -moz-border-radius: 2px 2px 2px 2px;
   -webkit-border-radius: 2px 2px 2px 2px;
@@ -1784,17 +1811,18 @@ div.task_order .current-state {
   font-weight: bold;
   font-size: 12px;
   padding: 2px;
-  margin: 0 0;
+  margin: 0 0 0 5px;
   height: 12px;
-  width: 16px;
   line-height: 12px;
   text-align: center;
   vertical-align: middle;
   color: #333333;
   overflow: hidden;
+/*
   background-image: url("/images/status.png");
   background-repeat: no-repeat;
   background-position: left 50%;
+*/
   font-size: 10px;
   text-align: center;
   color: white;
@@ -1802,20 +1830,55 @@ div.task_order .current-state {
   font-weight: bold;
 }
 
+div.task_order .state-button {
+  -moz-border-radius: 2px 2px 2px 2px;
+  -webkit-border-radius: 2px 2px 2px 2px;
+  border-radius: 2px 2px 2px 2px;
+  float: right;
+  font-weight: bold;
+  font-size: 12px;
+  padding: 2px 3px;
+  margin: 0 0 0 5px;
+  height: 12px;
+  line-height: 14px;
+  text-align: center;
+  vertical-align: middle;
+  color: #333333;
+  overflow: hidden;
+  font-size: 10px;
+  text-align: center;
+  color: white;
+/*  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);*/
+  font-weight: bold;
+}
+
+div.task_order .state-button a {
+  color: #fff;
+  text-decoration: none;
+}
+
+div.task_order ul.edit-links {
+  display: none;
+}
+
+div.task_order .current-state a {
+  color: white;
+}
+
 div.task_order div.ui-state-active div.current-state {
   background: none !important;
 }
 
 div.task_order .current-state.started, .state.started {
-  background-color: #6cb601;
-}
-
-div.task_order .current-state.accepted, .state.accepted {
   background-color: #ef9401;
 }
 
+div.task_order .current-state.accepted, .state.accepted {
+  background-color: #02B006;
+}
+
 div.task_order .current-state.rejected, .state.rejected {
-  background-color: #ef5001;
+  background-color: #B50702;
 }
 
 div.task_order .current-state.not_started, .state.not_started {
@@ -1833,6 +1896,34 @@ div.task_order .current-state.duplicate, .state.duplicate {
 div.task_order .current-state.change_of_scope, .state.change_of_scope {
   background-color: #9401ef;
 }
+
+div.bt-content ul.edit-links {
+  list-style: none;
+  margin: 0px;
+  padding: 0px;
+  display: block;
+}
+
+div.bt-content ul.edit-links li.task_id {
+  display: none;
+}
+
+body.projects-show .expand-collapse {
+  display: none;
+}
+
+div.bt-content ul.edit-links li {
+  margin: 0px;
+}
+
+div.bt-content ul.edit-links li a {
+  text-decoration: none;
+}
+
+div.bt-content ul.edit-links li a img { 
+  vertical-align: middle;
+}
+
 
 #tasks-to-action .panel .content {
   font-size: 13px;
@@ -3295,56 +3386,56 @@ body.reports.reports-user_projects .panels .panel {
   margin-bottom: 10px;
 }
 
-body.projects-show #tasks div.task.bug {
+body.projects-show #tasks div.task.bug span.title {
   background-image: url("/images/task_icons/bug.png");
-  background-position: 99% 50%;
+  background-position: 100% 0%;
   background-repeat: no-repeat;
 }
 
-body.projects-show #tasks div.task.content {
+body.projects-show #tasks div.task.content span.title {
   background-image: url("/images/task_icons/content.png");
-  background-position: 99% 50%;
+  background-position: 100% 0%;
   background-repeat: no-repeat;
 }
 
-body.projects-show #tasks div.task.database {
+body.projects-show #tasks div.task.database span.title {
   background-image: url("/images/task_icons/database.png");
-  background-position: 99% 50%;
+  background-position: 100% 0%;
   background-repeat: no-repeat;
 }
 
-body.projects-show #tasks div.task.feature {
+body.projects-show #tasks div.task.feature span.title {
   background-image: url("/images/task_icons/feature.png");
-  background-position: 99% 50%;
+  background-position: 100% 0%;
   background-repeat: no-repeat;
 }
 
-body.projects-show #tasks div.task.markup {
+body.projects-show #tasks div.task.markup span.title {
   background-image: url("/images/task_icons/markup.png");
-  background-position: 99% 50%;
+  background-position: 100% 0%;
   background-repeat: no-repeat;
 }
 
-body.projects-show #tasks div.task.permissions {
+body.projects-show #tasks div.task.permissions span.title {
   background-image: url("/images/task_icons/permissions.png");
-  background-position: 99% 50%;
+  background-position: 100% 0%;
   background-repeat: no-repeat;
 }
 
-body.projects-show #tasks div.task.scope-creep {
+body.projects-show #tasks div.task.scope-creep span.title {
   background-image: url("/images/task_icons/scope-creep.png");
-  background-position: 99% 50%;
+  background-position: 100% 0%;
   background-repeat: no-repeat;
 }
 
-body.projects-show #tasks div.task.style {
+body.projects-show #tasks div.task.style span.title {
   background-image: url("/images/task_icons/style.png");
-  background-position: 99% 50%;
+  background-position: 100% 0%;
   background-repeat: no-repeat;
 }
 
-body.projects-show #tasks div.task.system {
+body.projects-show #tasks div.task.system span.title {
   background-image: url("/images/task_icons/system.png");
-  background-position: 99% 50%;
+  background-position: 100% 0%;
   background-repeat: no-repeat;
 }

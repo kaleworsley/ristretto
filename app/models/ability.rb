@@ -1,7 +1,7 @@
 class Ability
   include CanCan::Ability
 
-  def initialize(user)
+  def initialize(user, request)
 
     user ||= User.new
 
@@ -61,7 +61,8 @@ class Ability
       # Non-staff can update or destroy tasks if they're a stakeholder in the
       # project the task is associated with and is the creator of the task
       can [:update, :destroy, :delete], Task do |task|
-        task && task.has_stakeholder?(user) && task.user_id == user.id
+        # FIXME: This needs a re-think
+        task && task.has_stakeholder?(user) && (task.user_id == user.id || (request.params["task"] && request.params["task"].keys.eql?(['state'])))
       end
 
       # Attachments
