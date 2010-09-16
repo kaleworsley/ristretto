@@ -139,4 +139,20 @@ class Task < ActiveRecord::Base
   def tag_classes
     TAGS.find_all {|tag| has_tag? tag}.collect(&:parameterize).join(' ')
   end
+
+  # Returns an array of expected state progressions for this task.  For
+  # example, a task in state 'not_started' is expected to progress to
+  # 'started'.  A task in state 'delivered' is expected to progress to
+  # 'accepted or 'rejected'
+  def next_states
+    case state
+    when "not_started": ["started"]
+    when "started": ["delivered"]
+    when "delivered": ["accepted","rejected"]
+    when "rejected": ["started"]
+    else
+      []
+    end
+  end
+
 end

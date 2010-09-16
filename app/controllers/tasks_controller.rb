@@ -141,7 +141,7 @@ class TasksController < ApplicationController
         format.html { redirect_to(@task) }
         format.xml  { head :ok }
         format.js do
-          task = {:task => {:description => help.markdown(@task.description), :cypher => @task.assigned_to.try(:initials) || '---', :state => @task.state, :assigned_to => @task.assigned_to.try(:full_name) || 'Un-assigned'}}
+          task = {:task => {:description => help.markdown(@task.description), :cypher => @task.assigned_to.try(:initials) || '---', :state => @task.state, :assigned_to => @task.assigned_to.try(:full_name) || 'Un-assigned', :next_states => @task.next_states}}
           render :json => task
         end
       else
