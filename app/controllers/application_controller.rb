@@ -141,4 +141,9 @@ class ApplicationController < ActionController::Base
   def current_user
     @current_user = current_user_session && current_user_session.record
   end
+
+  def current_ability
+    @current_ability ||= Ability.new(current_user, request)
+  end
+
 end
