@@ -1641,7 +1641,8 @@ div.task_order div.task {
   background-image: url("/images/gradient.png");
 }
 
-div.task_order div.task:hover {
+div.task_order div.task:hover,
+div.task_order div.task.ui-sortable-helper {
   background-color: #d6d6d6;
   border-style: solid;
   border-width: 1px 0;
