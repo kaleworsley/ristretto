@@ -22,4 +22,15 @@ class Attachment < ActiveRecord::Base
   def has_stakeholder?(user)
     attachable.has_stakeholder?(user)
   end
+
+  def activity_item
+    {
+      :user => self.user,
+      :parent => self.attachable,
+      :subject => self,
+      :action => ' uploaded ',
+      :date => self.created_at,
+      :object => self
+    }
+  end
 end

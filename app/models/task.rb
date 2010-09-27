@@ -155,4 +155,15 @@ class Task < ActiveRecord::Base
     end
   end
 
+
+  def activity_item
+    {
+      :user => self.user,
+      :parent => self.project,
+      :subject => self,
+      :action => ' created task ',
+      :date => self.created_at,
+      :object => self
+    }
+  end
 end

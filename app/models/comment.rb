@@ -20,4 +20,15 @@ class Comment < ActiveRecord::Base
       Mailer.deliver_task_comment(self, recipient)
     end
   end
+
+  def activity_item
+    {
+      :user => self.user,
+      :parent => self.task.project,
+      :subject => self.task,
+      :action => ' created a self on ',
+      :date => self.created_at,
+      :object => self
+    }
+  end
 end

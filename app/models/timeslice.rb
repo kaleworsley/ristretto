@@ -178,6 +178,17 @@ class Timeslice < ActiveRecord::Base
     return self.date == timeslice.date
   end
 
+  def activity_item
+    {
+      :user => self.user,
+      :parent =>   self.task.project,
+      :subject => self.task,
+      :action => ' spent ' + distance_of_time_in_words(self.started, self.finished) + ' on ',
+      :date => self.started,
+      :object => self
+    }
+  end
+
   private
     def started_and_finished_set?
       started && finished && !user_id.nil?

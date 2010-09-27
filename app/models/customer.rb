@@ -35,4 +35,15 @@ class Customer < ActiveRecord::Base
   def self.page(page)
     paginate :per_page => 50, :page => page
   end
+
+  def activity_item
+    {
+      :user => self.user,
+      :parent => self,
+      :subject => self,
+      :action => ' created customer ',
+      :date => self.created_at,
+      :object => self
+    }
+  end
 end

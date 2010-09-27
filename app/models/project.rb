@@ -136,4 +136,15 @@ class Project < ActiveRecord::Base
   def full_name
     "#{customer.name}: #{name}"
   end
+
+  def activity_item
+    {
+      :user => self.user,
+      :parent => self.customer,
+      :subject => self,
+      :action => ' created project ',
+      :date => self.created_at,
+      :object => self
+    }
+  end
 end

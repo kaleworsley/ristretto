@@ -33,4 +33,15 @@ class Stakeholder < ActiveRecord::Base
     project + " - " + user
   end
 
+
+  def activity_item
+    {
+      :user => self.user,
+      :parent => self.project.customer,
+      :subject => self.project,
+      :action => ' was added to project ',
+      :date => self.created_at,
+      :object => self
+    }
+  end
 end
