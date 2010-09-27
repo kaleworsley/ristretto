@@ -166,7 +166,7 @@ class User < ActiveRecord::Base
   end
 
   def current_projects_recent_projects(limit = 10)
-    current_projects(:order => 'created_at DESC', :limit => limit)
+    current_projects.find(:all, :order => 'created_at DESC', :limit => limit)
   end
 
   def current_projects_recent_attachments(limit = 10)
@@ -260,97 +260,40 @@ class User < ActiveRecord::Base
   end
 
   def timeslice_activity_items(limit = 10)
-    current_projects_recent_timeslices(limit).collect do |timeslice|
-      {
-        :user => timeslice.user,
-        :parent => timeslice.task.project,
-        :subject => timeslice.task,
-        :action => ' spent ' + distance_of_time_in_words(timeslice.started, timeslice.finished) + ' on ',
-        :date => timeslice.started,
-        :object => timeslice
-      }
-    end
+    current_projects_recent_timeslices(limit).collect(&:activity_item)
   end
 
   def task_activity_items(limit = 10)
-    current_projects_recent_tasks(limit).collect do |task|
-      {
-        :user => task.user,
-        :parent => task.project,
-        :subject => task,
-        :action => ' created task ',
-        :date => task.created_at,
-        :object => task
-      }
-    end
+    current_projects_recent_tasks(limit).collect(&:activity_item)
   end
 
   def comment_activity_items(limit = 10)
-    current_projects_recent_comments(limit).collect do |comment|
-      {
-        :user => comment.user,
-        :parent => comment.task.project,
-        :subject => comment.task,
-        :action => ' created a comment on ',
-        :date => comment.created_at,
-        :object => comment
-      }
-    end
+    current_projects_recent_comments(limit).collect(&:activity_item)
   end
 
   def project_activity_items(limit = 10)
-    current_projects_recent_projects(limit).collect do |project|
-      {
-        :user => project.user,
-        :parent => project.customer,
-        :subject => project,
-        :action => ' created project ',
-        :date => project.created_at,
-        :object => project
-      }
-    end
+    current_projects_recent_projects(limit).collect(&:activity_item)
   end
 
   def attachment_activity_items(limit = 10)
-    current_projects_recent_attachments(limit).collect do |attachment|
-      {
-        :user => attachment.user,
-        :parent => attachment.attachable,
-        :subject => attachment,
-        :action => ' uploaded ',
-        :date => attachment.created_at,
-        :object => attachment
-      }
-    end
+    current_projects_recent_attachments(limit).collect(&:activity_item)
   end
 
   def stakeholder_activity_items(limit = 10)
-    current_projects_recent_stakeholders(limit).collect do |stakeholder|
-      {
-        :user => stakeholder.user,
-        :parent => stakeholder.project.customer,
-        :subject => stakeholder.project,
-        :action => ' was added to project ',
-        :date => stakeholder.created_at,
-        :object => stakeholder
-      }
-    end
+    current_projects_recent_stakeholders(limit).collect(&:activity_item)
   end
 
   def customer_activity_items(limit = 10)
-    current_customers_recent_customers(limit).collect do |customer|
-      {
-        :user => customer.user,
-        :parent => customer,
-        :subject => customer,
-        :action => ' created customer ',
-        :date => customer.created_at,
-        :object => customer
-      }
-    end
+    current_customers_recent_customers(limit).collect(&:activity_item)
   end
-
+  
   def activity_items(limit = 10)
-    comment_activity_items(limit) + task_activity_items(limit) + timeslice_activity_items(limit) + project_activity_items(limit) + attachment_activity_items(limit) + stakeholder_activity_items(limit) + customer_activity_items(limit)
+    comment_activity_items(limit) +
+      task_activity_items(limit) +
+      timeslice_activity_items(limit) +
+      project_activity_items(limit) +
+      attachment_activity_items(limit) +
+      stakeholder_activity_items(limit) +
+      customer_activity_items(limit)
   end
 end
