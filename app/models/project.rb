@@ -114,7 +114,7 @@ class Project < ActiveRecord::Base
 
   # Paginate
   def self.page(page)
-    paginate :per_page => 50, :page => page
+    paginate :per_page => 50, :page => page, :order => 'name'
   end
 
   # Todo tasks
