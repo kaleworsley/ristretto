@@ -6,7 +6,7 @@
       <div class="options"></div>
       <div class="state-buttons">
         <% ordered_task.next_states.each do |state| %>
-        <div class="state-button state <%= state %>" rel="<%= state %>" title="<%= ordered_task.state.humanize %>"><%= link_to state.humanize.gsub(/ed$/,''), edit_task_path(ordered_task) %></div>
+        <div class="state-button state <%= state %>" title="<%= state.humanize.gsub(/ed$/,'') %>"><%= link_to state.humanize.gsub(/ed$/,''), '#', :rel => state %></div>
         <% end %>
       </div>
       <% if ordered_task.comments.count > 0 %>
