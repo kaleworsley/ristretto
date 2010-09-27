@@ -10,7 +10,8 @@
       <% content_tag :div, {:id => 'user-' + user.id.to_s, :class => 'staff'} do %>
 
       <%
-          # chargeable
+         # TODO: Get rid of this.
+         # chargeable
           chargeable = user.chargeable.collect {|t| t.duration}
           totals_by_week = user.chargeable.sort_by(&:week).group_by(&:week).collect { |week, timeslices| (Timeslice.total_duration(timeslices)/60/60).round(2) }
           totals_by_day = user.chargeable.sort_by(&:day_number).group_by(&:day_name).collect { |day, timeslices| (Timeslice.total_duration(timeslices)/60/60).round(2) }
@@ -34,11 +35,11 @@
       <div class="stats">
         <div class="stat">
           <strong>Chargeable time to date:</strong>
-          <span><%= pluralize(Timeslice.total_chargeable_duration(user.timeslices)/60/60, 'hour') %></span>
+          <span><%= pluralize((Timeslice.total_chargeable_duration(user.timeslices)/60/60.to_f).round(2), 'hour') %></span>
         </div>
         <div class="stat">
           <strong>Non-chargeable time to date:</strong>
-          <span><%= pluralize(Timeslice.total_nonchargeable_duration(user.timeslices)/60/60, 'hour') %></span>
+          <span><%= pluralize((Timeslice.total_nonchargeable_duration(user.timeslices)/60/60.to_f).round(2), 'hour') %></span>
         </div>
         <div class="stat">
           <strong>Average chargeable time per week:</strong>
