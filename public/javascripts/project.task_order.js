@@ -16,7 +16,8 @@ $(document).ready(function() {
 function taskOrder() {
   //Add blank anchor to the handles
   $('div.task_order div.tasks div.handle').each(function() {
-    $(this).prepend('<a href=""></a>');
+    $(this).prepend('<a href="#"></a>');
+    $(this).find('a').click(function() { return false; });
   });
   //Add blank anchor to the options
   $('div.task_order div.tasks div.options').each(function() {
@@ -41,11 +42,11 @@ function taskOrder() {
 	    color: '#000'
       },
       postShow: function(box) {
-	    
+
 	    var task_id = $(box).find('.task_id').text();
 	    var title = $('div#task-'+ task_id).find('.title').text();
 	    $(box).find('.clock.start a').live('click', function() {
-	      
+
 	      var now = new Date();
 	      var time = pad0(now.getHours()) + ':' + pad0(now.getMinutes());
 	      flashNotice('Starting timer for "' + title + '"...');
@@ -56,12 +57,12 @@ function taskOrder() {
 	      $(this).parent().toggleClass('start');
 	      $(this).parent().toggleClass('stop');
 	      $(this).find('span.label').text('Stop Timer');
-	      
+
 	      return false;
 	    });
-	    
+
 	    $(box).find('.clock.stop a').live('click', function() {
-	      
+
 	      var now = new Date();
 	      var time = pad0(now.getHours()) + ':' + pad0(now.getMinutes());
 	      flashNotice('Stopping timer for "' + title + '"...');
@@ -71,10 +72,10 @@ function taskOrder() {
 	      $(this).parent().toggleClass('start');
 	      $(this).parent().toggleClass('stop');
 	      $(this).find('span.label').text('Start Timer');
-	      
+
 	      return false;
 	    });
-	    
+
 	    if (readCookie('timesliceTimer:'+task_id)) {
 	      $(box).find('.clock a img').attr('src', '/images/clock-stop.png');
 	      $(box).find('.clock').toggleClass('start');
@@ -95,39 +96,18 @@ function taskOrder() {
   //Makes the tasks sortable
   if (IS_STAFF) {
     $('div.task_order > div.tasks').sortable({
+      'axis': 'y',
+      'containment': 'parent',
       'handle': '.handle',
       'cursor': 'move',
-      'connectWith': 'div.task_order div.tasks',
       'delay': 250,
       'placeholder': 'ui-state-highlight',
-      receive: function(event, ui) {
-        removeTaskState(ui.item);
-        // Changes the hidden 'state' field, 'state-button' div, and classes to
-        // the new values
-        switch (ui.item.parents('div.task_order').attr('id')) {
-        case 'task_order_todo':
-          ui.item.addClass('rejected');
-          ui.item.find('.state input[type=hidden]').val('rejected');
-          ui.item.find('.state-button').addClass('rejected').attr('title', 'Rejected').attr('bt-xtitle', 'Rejected').html('R');
-          break;
-        case 'task_order_doing':
-          ui.item.addClass('started');
-          ui.item.find('.state input[type=hidden]').val('started');
-          ui.item.find('.state-button').addClass('delivered').attr('title', 'Started').attr('bt-xtitle', 'Started').html('Deliver');
-          break;
-        case 'task_order_done':
-          ui.item.addClass('accepted');
-          ui.item.find('.state input[type=hidden]').val('accepted');
-          ui.item.find('.state-button').addClass('accepted').attr('title', 'Accepted').attr('bt-xtitle', 'Accepted').html('A');
-          break;
-        }
-      },
       stop: function(event, ui) {
 	    updateTaskOrder();
       }
     }).disableSelection();
-  }  
-  
+  }
+
   if (IS_STAFF) {
     $('.task').each(function() {
       $('ul.edit-links', this).append('<li><span class="clock start"><a href="#"><img src="/images/clock-start.png" alt="Clock"> <span class="label">Start Timer</span></a></span></li>');
@@ -145,7 +125,7 @@ function taskOrder() {
 	    $(this).parent().toggleClass('stop');
 	    return false;
       });
-      
+
       $(this).find('.clock.stop a').live('click', function() {
 	    var title = $(this).parents('div.task').find('.title').text();
 	    var now = new Date();
@@ -158,17 +138,18 @@ function taskOrder() {
 	    $(this).parent().toggleClass('stop');
 	    return false;
       });
-      
+
       if (readCookie('timesliceTimer:'+task_id)) {
 	    $(this).find('.clock a img').attr('src', '/images/clock-stop.png');
 	    $(this).find('.clock').toggleClass('start');
 	    $(this).find('.clock').toggleClass('stop');
-      } 
+      }
     });
-    
+
     updateClockTitle();
-  }                 
-  if (IS_STAFF) {  
+  }
+
+  if (IS_STAFF) {
     $('div.task_order div.task:not(.edit-active) span.cypher').live('click', function() {
       var self = $(this);
       $(this).parents('div.task').addClass('edit-active');
@@ -184,68 +165,55 @@ function taskOrder() {
       });
     });
   }
-  
-  $('div.task_order div.task:not(.edit-active) div.state-button a').live('click', function(event) {
-    $(this).html('Working');
-    var task_id = $(this).parents('div.task').find('.handle .task-id').val();
-    var next_state = $(this).parents('div.state-button').attr('rel');
-    $(this).parents('div.task').addClass('edit-active');
-    $.post('/tasks/' + task_id, '_method=put&task[state]=' + next_state, function(data) {
-      var buttons = '';
-      $.each(data.task.next_states, function(i, state) {
-        var state_title = state.charAt(0).toUpperCase() + state.slice(1);
-        buttons +='<div title="' + state_title + '" rel="' + state + '" class="state-button state ' + state + '"><a href="/tasks/' + task_id + '/edit">' + state_title.replace(/ed$/,'') + '</a></div>'
-      })
-      $('div#task-' + task_id + ' div.state-buttons').html(buttons);
-    }, 'json');
 
+  $('div.task_order div.task:not(.edit-active) div.state-button a').live('click', function(event) {
+    $(this).parents('div.state-buttons').hide();
+    var task_id = $(this).parents('div.task').find('.handle .task-id').val();
+    var next_state = $(this).attr('rel');
+    $(this).parents('div.task').addClass('edit-active');
+    var weight = '';
     switch (next_state) {
     case 'started':
-	  $(this).parents('div.task').slideUp('slow', function() {
-	    $(this).appendTo('#task_order_doing div.tasks').slideDown('slow', function() {
-	      if (IS_STAFF) {
-            updateTaskOrder();
-          }
-	    });
-	  });
+	  $(this).parents('div.task').slideUp('fast', function() {
+	    $(this).appendTo('#task_order_doing div.tasks').slideDown('fast', function() {});
+      });
+      if (IS_STAFF) {
+        weight = '&task[weight]=' + ($('#task_order_doing div.tasks').children().length+2);
+      }
 	  //doing
 	  break;
     case 'rejected':
-	  $(this).parents('div.task').slideUp('slow', function() {
-	    $(this).prependTo('#task_order_todo div.tasks').slideDown('slow', function() {
-	      if (IS_STAFF) {
-            updateTaskOrder();
-          }
-	    });
-	  });
+	  $(this).parents('div.task').slideUp('fast', function() {
+	    $(this).prependTo('#task_order_todo div.tasks').slideDown('fast', function() {});
+      });
+      if (IS_STAFF) {
+        weight = '&task[weight]=-' + ($(this).prependTo('#task_order_todo div.tasks').children().length+2);
+      }
 	  //todo
 	  break;
     case 'accepted':
-	  $(this).parents('div.task').slideUp('slow', function() { 
-	    $(this).appendTo('#task_order_done div.tasks').slideDown('slow', function() {
-	      if (IS_STAFF) {
-            updateTaskOrder();
-          }
-	    });
+	  $(this).parents('div.task').slideUp('fast', function() {
+	    $(this).prependTo('#task_order_done div.tasks').slideDown('fast', function() {});
 	  });
+      if (IS_STAFF) {
+        weight = '&task[weight]=-' + ($('#task_order_done div.tasks').children().length+2);
+      }
 	  //done
-	  break;	  
-    }      
-    //updated = Math.round(new Date().getTime()/1000.0);
+	  break;
+    }
+    $.post('/tasks/' + task_id, '_method=put&task[state]=' + next_state + weight, function(data) {
+      var buttons = '';
+      $.each(data.task.next_states, function(i, state) {
+        var state_title = state.charAt(0).toUpperCase() + state.slice(1);
+        buttons +='<div title="' + state_title + '" class="state-button state ' + state + '"><a href="#" rel="' + state + '">' + state_title.replace(/ed$/,'') + '</a></div>'
+      })
+      $('div#task-' + task_id + ' div.state-buttons').html(buttons);
+      $('div#task-' + task_id + ' div.state-buttons').show();
+      $('div#task-' + task_id).removeClass('edit-active');
+    }, 'json');
+    
     return false;
   });
-}
-
-//Remove state classes from a task
-function removeTaskState(task) {
-  task.find('.state-button').attr('class', 'state-button');
-  task.removeClass('not_started');
-  task.removeClass('started');
-  task.removeClass('delivered');
-  task.removeClass('rejected');
-  task.removeClass('accepted');
-  task.removeClass('change_of_scope');
-  task.removeClass('duplicate');
 }
 
 function updateClockTitle() {
@@ -262,11 +230,9 @@ function updateClockTitle() {
 }
 
 function updateTaskOrder() {
-  var count = 1; 
   //Update the orders of the tasks
-  $('.order input[type=hidden]').each(function() {
-    $(this).val(count)
-    ++count;
+  $('.order input[type=hidden]').each(function(i, element) {
+    $(this).val(i)
   });
   //Save changes (ajax)
   $('#task_order_form').submit();
