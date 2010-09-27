@@ -167,51 +167,48 @@ function taskOrder() {
   }
 
   $('div.task_order div.task:not(.edit-active) div.state-button a').live('click', function(event) {
-    $(this).parents('div.state-buttons').hide();
+    $(this).parents('div.task').addClass('edit-active');
     var task_id = $(this).parents('div.task').find('.handle .task-id').val();
     var next_state = $(this).attr('rel');
-    $(this).parents('div.task').addClass('edit-active');
+    var task = $('div#task-' + task_id);
     var weight = '';
     switch (next_state) {
     case 'started':
-	  $(this).parents('div.task').slideUp('fast', function() {
-	    $(this).appendTo('#task_order_doing div.tasks').slideDown('fast', function() {});
+	  task.slideUp('fast', function() {
+	    task.appendTo('#task_order_doing div.tasks').slideDown('fast');
       });
       if (IS_STAFF) {
         weight = '&task[weight]=' + ($('#task_order_doing div.tasks').children().length+2);
       }
-	  //doing
 	  break;
     case 'rejected':
-	  $(this).parents('div.task').slideUp('fast', function() {
-	    $(this).prependTo('#task_order_todo div.tasks').slideDown('fast', function() {});
+	  task.slideUp('fast', function() {
+	    task.prependTo('#task_order_todo div.tasks').slideDown('fast');
       });
       if (IS_STAFF) {
-        weight = '&task[weight]=-' + ($(this).prependTo('#task_order_todo div.tasks').children().length+2);
+        weight = '&task[weight]=-' + ($('#task_order_todo div.tasks').children().length+2);
       }
-	  //todo
 	  break;
     case 'accepted':
-	  $(this).parents('div.task').slideUp('fast', function() {
-	    $(this).prependTo('#task_order_done div.tasks').slideDown('fast', function() {});
+	  task.slideUp('fast', function() {
+	    task.prependTo('#task_order_done div.tasks').slideDown('fast');
 	  });
       if (IS_STAFF) {
         weight = '&task[weight]=-' + ($('#task_order_done div.tasks').children().length+2);
       }
-	  //done
 	  break;
     }
+
     $.post('/tasks/' + task_id, '_method=put&task[state]=' + next_state + weight, function(data) {
       var buttons = '';
       $.each(data.task.next_states, function(i, state) {
         var state_title = state.charAt(0).toUpperCase() + state.slice(1);
         buttons +='<div title="' + state_title + '" class="state-button state ' + state + '"><a href="#" rel="' + state + '">' + state_title.replace(/ed$/,'') + '</a></div>'
       })
-      $('div#task-' + task_id + ' div.state-buttons').html(buttons);
-      $('div#task-' + task_id + ' div.state-buttons').show();
-      $('div#task-' + task_id).removeClass('edit-active');
+      task.find('div.state-buttons').html(buttons);
+      task.removeClass('edit-active');
     }, 'json');
-    
+
     return false;
   });
 }

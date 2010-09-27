@@ -1656,6 +1656,10 @@ div.task_order div.task div.handle {
   margin: 0;
 }
 
+div.task_order div.task.edit-active .state-buttons {
+  display: none;
+}
+
 div.task_order div.task div.heading {
   padding: 0;
   margin: 0 0 0 25px;
