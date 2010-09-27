@@ -81,9 +81,10 @@ module ApplicationHelper
     content = '<span>' + link_to(text, target) + '</span>'
 
     if block_given?
-      content += '<ul>'
-      content += capture(&block)
-      content += '</ul>'
+      subcontent = capture(&block)
+      if subcontent.present?
+        content += "<ul>#{subcontent}</ul>"
+      end
     end
     out = content_tag(:li, content, tag_opts)
     if block_called_from_erb?(block)
