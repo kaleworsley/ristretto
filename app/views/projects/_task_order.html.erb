@@ -2,7 +2,7 @@
 
 <% ['todo', 'done', 'doing'].each do |stategroup| %>
   <div id="task_order_<%= stategroup %>" class="panel three task_order">
-    <h3><%= stategroup.to_s.capitalize %><div class="expand-collapse expand"></div><div class="expand-collapse collapse"></div></h3>
+    <h3><%= stategroup.to_s.capitalize %></h3>
     <div class="tasks content">
       <%= render :partial => 'tasks/ordered_task',
                  :collection => project.tasks.send(stategroup) %>
