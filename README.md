@@ -13,9 +13,9 @@ Requirements
 
     gem install authlogic -v 2.1.6
     gem install vestal_versions -v 1.0.2
-    gem install bluecloth -v 2.0.7
+    gem install bluecloth -v 2.0.9
     gem install will_paginate -v 2.3.15
-    gem install cancan -v 1.3.3
+    gem install cancan -v 1.3.4
     gem install paperclip -v 2.3.3
     gem install exception_notification -v 2.3.3.0
     gem install icalendar -v 1.1.5
