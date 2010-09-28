@@ -1,2 +1,6 @@
+<%- content_for :breadcrumbs do -%>
+  <%= crumb 'Login', login_path %>
+<%- end -%>
+
 <%= title "Login" -%>
 <%= render :partial => @user_session %>

@@ -1,3 +1,7 @@
+<%- content_for :breadcrumbs do -%>
+  <%= crumb 'Register', register_path %>
+<%- end -%>
+
 <%= title "Register" -%>
 <% form_for @user do |form| %>
   <%= render form %>

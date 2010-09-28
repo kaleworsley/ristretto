@@ -1,4 +1,8 @@
-<h1>Change My Password</h1>
+<%- content_for :breadcrumbs do -%>
+  <%= crumb 'Reset password', reset_path %>
+<%- end -%>
+
+<%= title "Change My Password" %>
 
 <% form_for @user, :url => password_reset_path, :method => :put do |form| %>
   <% flash[:error] = form.error_messages %>
