@@ -2,7 +2,25 @@
  * TODO: Split this up into multiple files again
  */
 
+/**
+ * Colours
+ * -------
+ * 
+ * Light blue: #65b5ff;
+ * Dark blue: #00386a;
+ * Mid blue: #3377B5;
+ * Body dark grey: #575757;
+ * Nav mid gray: #C6C6C6;
+ * Nav border gray: #7D7D7D;
+ * Page light grey: #fdfdfd;
+ * Post info light grey: #F3F3F3;
+ * Post info border grey: #939393;
+ */
 
+
+/**
+ * Fonts
+ */
 @font-face {
     font-family: 'ChunkFiveRegular';
     src: url('/fonts/Chunkfive-webfont.eot');
@@ -43,6 +61,7 @@ ul#breadcrumbs {
 }
 
 ul#breadcrumbs li {
+  background: transparent;
   list-style: none;
   padding: 0;
   margin: 0;
@@ -76,31 +95,11 @@ ul#breadcrumbs li:first-child a {
   padding-left: 4px;
 }
 
-ul#breadcrumbs li:last-child span.end {
-  margin-right: 0px;
-  top: -1px;
-  right: 1px;
-}
-
-ul#breadcrumbs li:last-child:hover span.end, ul#breadcrumbs li:last-child:active span.end {
-  display: none;
-}
-
 ul#breadcrumbs li:last-child a {
   -moz-border-radius: 0px 4px 4px 0px;
   -webkit-border-radius: 0px 4px 4px 0px;
   border-radius: 0px 4px 4px 0px;
   padding-right: 6px;
-}
-
-ul#breadcrumbs li span.end {
-  background-position: 50% 50%;
-  background-repeat: repeat-x;
-  width: 20px;
-  height: 24px;
-  display: block;
-  position: absolute;
-  top: 0;
 }
 
 ul#breadcrumbs li a:active {
@@ -469,7 +468,7 @@ ul#context-links li a:active {
   border-color: #939393;
   border-style: solid;
   border-width: 1px;
-  width: 99%;
+  width: 100%;
 }
 
 .panel > h3 {
@@ -490,6 +489,9 @@ ul#context-links li a:active {
   overflow: auto;
 }
 
+.panel.small-panel > .content {
+  height: auto;
+}
 .panel.no-padding > .content {
   padding: 0px;
 }
@@ -559,6 +561,7 @@ label {
   min-width: 175px;
   display: inline-block;
   vertical-align: top;
+  font-weight: bold;
 }
 
 .fieldWithErrors input {
@@ -604,6 +607,7 @@ input[type='button'], input[type='submit'] {
   border-bottom: 1px solid rgba(0, 0, 0, 0.25);
   position: relative;
   cursor: pointer;
+  margin-bottom: 3px;
 }
 
 input[type='button']:hover, input[type='submit']:hover {
@@ -1100,41 +1104,6 @@ body.dashboard-not_staff_dashboard #project-list div.project div.heading {
   overflow: auto;
 }
 
-body.projects-index div#content {
-  margin: 0;
-  padding: 25px;
-}
-
-body.projects-index div.projects {
-  -moz-border-radius: 10px 10px 10px 10px;
-  -webkit-border-radius: 10px 10px 10px 10px;
-  border-radius: 10px 10px 10px 10px;
-  -moz-box-shadow: 0 0 3px #888888;
-  -webkit-box-shadow: 0 0 3px #888888;
-  box-shadow: 0 0 3px #888888;
-  margin: 0 0 15px 0;
-  padding: 0;
-  background-color: #f3f3f3;
-  border-color: #939393;
-  border-style: solid;
-  border-width: 1px;
-  list-style: none;
-  overflow: auto;
-}
-
-body.projects-index div.projects h2 {
-  -moz-border-radius: 10px 10px 0px 0px;
-  -webkit-border-radius: 10px 10px 0px 0px;
-  border-radius: 10px 10px 0px 0px;
-  background-color: #dadada;
-  border-bottom: 1px solid #cccccc;
-  font-size: 16px;
-  font-weight: normal;
-  margin: 0;
-  overflow: auto;
-  padding: 5px 10px 5px 10px;
-}
-
 div.projects ul {
   margin: 0;
   padding: 0;
@@ -1143,7 +1112,7 @@ div.projects ul {
 div.projects li {
   clear: both;
   overflow: auto;
-  padding: 2px 15px 2px 15px;
+  padding: 2px 15px 3px 15px;
   margin: 0;
   font-size: 13px;
 }
@@ -1154,7 +1123,7 @@ div.projects li:hover {
   border-width: 1px 0 1px 0;
   border-color: #c3c3c3;
   color: black;
-  padding: 1px 15px 1px 15px;
+  padding: 1px 15px 2px 15px;
   margin: 0;
 }
 
@@ -1257,19 +1226,23 @@ form#project_order_form .project_order > .content {
   font-weight: bold;
 }
 
-.current-state.current {
+.current-state.current,
+.state.current {
   background-color: #6cb601;
 }
 
-.current-state.complete {
+.current-state.complete,
+.state.complete {
   background-color: #ef9401;
 }
 
-.current-state.postponed {
+.current-state.postponed,
+.state.postponed {
   background-color: #ef5001;
 }
 
-.current-state.proposed {
+.current-state.proposed,
+.state.proposed {
   background-color: #018aef;
 }
 
@@ -1535,7 +1508,7 @@ body.projects-show div.stakeholders h3, body.reports-project_stakeholders div.st
   background-color: #dadada;
   border-bottom: 1px #cccccc solid;
   font-weight: normal;
-  font-size: 16px;
+  font-size: 15px;
   color: black;
 }
 
@@ -1547,41 +1520,6 @@ body.projects-show div.stakeholders h3 span.right, body.reports-project_stakehol
 #task_order_todo .clock,
 #task_order_done .clock {
   display: none;
-}
-
-body.customers div#content {
-  margin: 0;
-  padding: 25px;
-}
-
-div.customers {
-  -moz-border-radius: 10px 10px 10px 10px;
-  -webkit-border-radius: 10px 10px 10px 10px;
-  border-radius: 10px 10px 10px 10px;
-  -moz-box-shadow: 0 0 3px #888888;
-  -webkit-box-shadow: 0 0 3px #888888;
-  box-shadow: 0 0 3px #888888;
-  margin: 0 0 15px 0;
-  padding: 0;
-  background-color: #f3f3f3;
-  border-color: #939393;
-  border-style: solid;
-  border-width: 1px;
-  list-style: none;
-  overflow: auto;
-}
-
-body.customers div.customers h2 {
-  -moz-border-radius: 10px 10px 0px 0px;
-  -webkit-border-radius: 10px 10px 0px 0px;
-  border-radius: 10px 10px 0px 0px;
-  background-color: #dadada;
-  border-bottom: 1px solid #cccccc;
-  font-size: 16px;
-  font-weight: normal;
-  margin: 0;
-  overflow: auto;
-  padding: 5px 10px 5px 10px;
 }
 
 div.customers ul {
@@ -1603,7 +1541,7 @@ div.customers li:hover {
   border-width: 1px 0 1px 0;
   border-color: #c3c3c3;
   color: black;
-  padding: 1px 15px 1px 15px;
+  padding: 1px 15px 2px 15px;
 }
 
 div.customers li:hover * {
@@ -1766,66 +1704,6 @@ div.task_order div.task div.content {
   overflow: auto;
 }
 
-div.task_order div.expanded {
-  background-color: #d6d6d6;
-  border-style: solid;
-  border-width: 1px 0 1px 0;
-  border-color: #c3c3c3;
-  color: black;
-  padding: 4px 0px 4px 0px;
-  margin: 0 0 5px 0;
-}
-
-div.task_order div.expanded:hover {
-  padding: 4px 0px 4px 0px;
-}
-
-div.task_order div.expanded div.handle {
-  float: left;
-  padding: 4px 10px 0 10px;
-  margin: 0;
-}
-
-div.task_order div.expanded div.heading {
-  padding: 0 25px 0 0px;
-  margin: 0 0 0 25px;
-}
-
-div.task_order div.expanded div.heading span.title {
-  margin: 0 5px 0 0;
-}
-
-div.task_order div.expanded div.description {
-  padding: 0 0 5px 0;
-  margin: 0;
-}
-
-div.task_order div.expanded ul.edit-links {
-  padding: 0 0 5px 0;
-  margin: 0;
-  clear: both;
-  overflow: auto;
-  float: left;
-}
-
-div.task_order div.expanded ul.edit-links li {
-  float: left;
-  padding: 0 5px 0 0;
-  margin: 0;
-  clear: none;
-}
-
-div.task_order div.expanded ul.edit-links li:hover {
-  background-color: transparent;
-  border-width: 0;
-  padding: 0 5px 0 0;
-  margin: 0;
-}
-
-div.task_order div.expanded div.inlinebar {
-  float: right;
-}
-
 div.task_order div.options {
   float: right;
   width: 16px;
@@ -1856,11 +1734,6 @@ div.task_order .current-state {
   vertical-align: middle;
   color: #333333;
   overflow: hidden;
-/*
-  background-image: url("/images/status.png");
-  background-repeat: no-repeat;
-  background-position: left 50%;
-*/
   font-size: 10px;
   text-align: center;
   color: white;
@@ -1886,7 +1759,6 @@ div.task_order .state-button {
   font-size: 10px;
   text-align: center;
   color: white;
-/*  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.6);*/
   font-weight: bold;
 }
 
@@ -2136,37 +2008,6 @@ div.bt-content ul.edit-links li a img {
   background-color: #018aef;
 }
 
-body.tasks-index div.tasks {
-  -moz-border-radius: 10px 10px 10px 10px;
-  -webkit-border-radius: 10px 10px 10px 10px;
-  border-radius: 10px 10px 10px 10px;
-  -moz-box-shadow: 0 0 3px #888888;
-  -webkit-box-shadow: 0 0 3px #888888;
-  box-shadow: 0 0 3px #888888;
-  margin: 0 0 15px 0;
-  padding: 0;
-  background-color: #f3f3f3;
-  border-color: #939393;
-  border-style: solid;
-  border-width: 1px;
-  list-style: none;
-  overflow: auto;
-}
-
-body.tasks div.tasks h2 {
-  -moz-border-radius: 10px 10px 0px 0px;
-  -webkit-border-radius: 10px 10px 0px 0px;
-  border-radius: 10px 10px 0px 0px;
-  background-color: #dadada;
-  border-bottom: 1px solid #cccccc;
-  font-size: 16px;
-  font-weight: normal;
-  margin: 0;
-  overflow: auto;
-  padding: 5px 10px 5px 10px;
-  float: none;
-}
-
 div.tasks ul {
   margin: 0;
   padding: 0;
@@ -2186,7 +2027,7 @@ div.tasks li:hover {
   border-width: 1px 0 1px 0;
   border-color: #c3c3c3;
   color: black;
-  padding: 3px 15px 3px 15px;
+  padding: 3px 15px 2px 15px;
   margin: 0;
 }
 
@@ -2241,11 +2082,6 @@ div.tasks li ul li:hover {
   border-width: 0;
   margin: 0 10px 0 0;
   padding: 0;
-}
-
-body.tasks div#content {
-  margin: 0;
-  padding: 25px;
 }
 
 body.tasks h2.title {
@@ -2311,8 +2147,12 @@ body.tasks form#new_attachment div.form-item {
 div#attachments {
   clear: both;
   margin: 0;
-  padding: 5px;
+ padding: 5px 0;
   overflow: auto;
+}
+
+form a.add {
+  margin: 0px;
 }
 
 div#attachments div.form-item {
@@ -2502,11 +2342,6 @@ table.timeslices {
   width: 100%;
 }
 
-body.timeslices-update_ar div#content {
-  margin: 0;
-  padding: 25px;
-}
-
 body.timeslices-update_ar div.sales {
   -moz-border-radius: 10px 10px 10px 10px;
   -webkit-border-radius: 10px 10px 10px 10px;
@@ -2528,7 +2363,7 @@ body.timeslices-update_ar div.sales h2 {
   border-radius: 10px 10px 0px 0px;
   background-color: #dadada;
   border-bottom: 1px solid #cccccc;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: normal;
   margin: 0 0 5px 0;
   overflow: auto;
@@ -3485,4 +3320,19 @@ body.projects-show #tasks div.task.system span.title {
   background-image: url("/images/task_icons/system.png");
   background-position: 100% 0%;
   background-repeat: no-repeat;
+}
+
+
+#task-details.panel {
+  margin: 0px;
+}
+
+table td.delete,
+table td.show,
+table td.edit,
+table th.delete,
+table th.show,
+table th.edit {
+  text-align: center;
+  width: 16px;
 }
