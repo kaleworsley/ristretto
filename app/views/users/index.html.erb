@@ -6,39 +6,45 @@
   <%= crumb 'Users', users_path if can? :index, User %>
 <% end %>
 
+<% title "Users" -%>
+<div id="users" class="users panel">
+  <h3 class="title">Users</h3>
+  <div class="content">
+    <table class="users">
+      <thead>
+        <tr>
+          <th>Gravatar</th>
+          <th>Name</th>
+          <th>First name</th>
+          <th>Last name</th>
+          <% if current_user.is_staff? %>
+          <th>Email</th>
+          <th class="show"><%= image_tag 'show.png' %></th>
+          <th class="edit"><%= image_tag 'edit.png' %></th>
+          <th class="delete"><%= image_tag 'delete.png' %></th>
+          <% end %>
+        </tr>
+      </thead>
+      <tbody>
+        <% for user in @users %>
+        <tr>
+          <td><%= gravatar(user,40) %></td>
+          <td><%=h user.name %></td>
+          <td><%=h user.first_name %></td>
+          <td><%=h user.last_name %></td>
+          <% if current_user.is_staff? %>
+          <td><%=h user.email %></td>
+          <td class="show"><%= show_link user %></td>
+          <td class="edit"><%= edit_link user %></td>
+          <td class="delete"><%= delete_link user %></td>
+          <% end %>
+        </tr>
+        <% end %>
+      </tbody>
+    </table>
 
-<%= title "Users" %>
-
-<table class="users">
-  <thead>
-  <tr>
-    <th>Gravatar</th>
-    <th>Name</th>
-    <th>First name</th>
-    <th>Last name</th>
-    <% if current_user.is_staff? %>
-    <th>Email</th>
-    <th><%= image_tag 'show.png' %></th>
-    <th><%= image_tag 'edit.png' %></th>
-    <th><%= image_tag 'delete.png' %></th>
-    <% end %>
-  </tr>
-  </thead>
-<tbody>
-<% for user in @users %>
-  <tr>
-    <td><%= gravatar(user,40) %></td>
-    <td><%=h user.name %></td>
-    <td><%=h user.first_name %></td>
-    <td><%=h user.last_name %></td>
-    <% if current_user.is_staff? %>
-    <td><%=h user.email %></td>
-    <td><%= show_link user %></td>
-    <td><%= edit_link user %></td>
-    <td><%= delete_link user %></td>
-    <% end %>
-  </tr>
-<% end %>
-</tbody>
-</table>
-<%= will_paginate @users %>
+  </div>
+  <div class="panel-footer">
+    <%= will_paginate @users %>
+  </div>
+</div>

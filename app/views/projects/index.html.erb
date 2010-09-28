@@ -7,11 +7,15 @@
   <% end %>
 <%- end -%>
 
-<div class="projects">
-  <%= title "Projects" -%>
-  <ul>
-  <%= render :partial => 'project', :collection => @projects %>
-  </ul>
+<% title "Projects" -%>
+<div id="projects" class="projects panel">
+  <h3 class="title">Projects</h3>
+  <div class="content">
+    <ul>
+      <%= render @projects %>
+    </ul>
+  </div>
+  <div class="panel-footer">
+    <%= will_paginate @projects %>
+  </div>
 </div>
-
-<%= will_paginate @projects %>
