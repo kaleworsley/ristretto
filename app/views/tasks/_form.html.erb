@@ -1,5 +1,5 @@
 <% javascript 'attachment.new' %>
-  <% flash[:error] = form.error_messages %>
+  <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
 
   <% unless task.new_record? || !task.try(:has_stakeholder?, current_user) %>
   <div class="form-item form-item-block">

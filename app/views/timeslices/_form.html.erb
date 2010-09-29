@@ -1,5 +1,5 @@
 
-  <% flash[:error] = form.error_messages %>
+  <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
 
   <% unless timeslice.new_record? || !timeslice.try(:has_stakeholder?, current_user) %>
   <div class="form-item form-item-block">

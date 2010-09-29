@@ -1,4 +1,4 @@
-  <% flash[:error] = form.error_messages %>
+  <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
   <% if stakeholder.user.blank? %>
     <%= form.collection_select :user_id, valid_users, :id, :full_name %>
   <% else %>

@@ -5,7 +5,7 @@
 <%= title "Change My Password" %>
 
 <% form_for @user, :url => password_reset_path, :method => :put do |form| %>
-  <% flash[:error] = form.error_messages %>
+  <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
   <%= form.label :password %><br />
   <%= form.password_field :password %><br />
   <br />
