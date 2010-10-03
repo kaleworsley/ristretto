@@ -29,8 +29,7 @@ Setup
 
     git clone git://github.com/egressive/ristretto.git
     cd ristretto
-    cp config/database.example.yml config/database.yml
-    cp config/settings.example.yml config/settings.yml
+    rake ristretto:setup
     rake db:create
     rake db:schema:load
     rake user:new NAME=yourname FIRST_NAME=your LAST_NAME=name EMAIL=example@example.com PASSWORD=yourpassword
