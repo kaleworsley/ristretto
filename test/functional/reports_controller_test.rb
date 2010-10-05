@@ -1,8 +1,13 @@
 require 'test_helper'
 
 class ReportsControllerTest < ActionController::TestCase
-  # Replace this with your real tests.
-  test "the truth" do
-    assert true
+
+  setup :activate_authlogic
+
+  test "should get timestats" do
+    UserSession.create(users(:user1))
+    get :timestats
+    assert_response :success
+    assert_equal 1, assigns(:staff).length
   end
 end
