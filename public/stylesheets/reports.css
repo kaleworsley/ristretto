@@ -1,3 +1,12 @@
+/**
+ * Reports
+ */
+
+body.reports.reports-user_projects .panels .panel {
+  width: 32%;
+  margin-bottom: 10px;
+}
+
 #staff_time_stats, #hours_calendar {
   width: 48%;
 }
@@ -39,3 +48,4 @@
   background-color: #cc040b !important;
   border-color: #cc040b !important;
 }
+
