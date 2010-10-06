@@ -56,19 +56,4 @@
   <%- end -%>
 </div>
 
-<div class="stakeholders">
-  <% if @project.users.size != 0 %>
-  <h3>Stakeholders<% if current_user.is_staff? %><span class="right"><%= link_to image_tag('edit.png', :alt => "Edit"), project_stakeholders_path(@project), {:class => 'edit'} %></span><% end %></h3>
-  <ul class="stakeholders">
-    <% @project.stakeholders.sort_by {|s| s.user.full_name}.each do |stakeholder| %>
-    <li id="stakeholder-<%= stakeholder.id %>">
-      <%= gravatar(stakeholder.user, 32) %>
-      <div><%= link_to stakeholder.user.full_name, stakeholder.user %></div>
-      <div><%= stakeholder.role.humanize %></div>
-    </li>
-    <% end %>
-  </ul>
-  <% else %>
-  <strong>No Stakeholders!</strong>
-  <% end %>
-</div>
+<%= render :partial => 'stakeholders/list', :locals => {:project => @project}  %>
