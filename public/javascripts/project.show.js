@@ -10,6 +10,6 @@ $(document).ready(function() {
 
 function scaleToViewport() {
   height = $(window).height() - 300;
-  $('.panel > .content').css('height', height + 'px');
+  $('#tasks .panel > .content').css('height', height + 'px');
 }
 
