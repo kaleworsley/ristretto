@@ -12,9 +12,9 @@
       <%
          # TODO: Get rid of this.
          # chargeable
-          chargeable = user.chargeable.collect {|t| t.duration}
-          totals_by_week = user.chargeable.sort_by(&:week).group_by(&:week).collect { |week, timeslices| (Timeslice.total_duration(timeslices)/60/60).round(2) }
-          totals_by_day = user.chargeable.sort_by(&:day_number).group_by(&:day_name).collect { |day, timeslices| (Timeslice.total_duration(timeslices)/60/60).round(2) }
+          chargeable = user.timeslices.chargeable.collect {|t| t.duration}
+          totals_by_week = user.timeslices.chargeable.sort_by(&:week).group_by(&:week).collect { |week, timeslices| (Timeslice.total_duration(timeslices)/60/60).round(2) }
+          totals_by_day = user.timeslices.chargeable.sort_by(&:day_number).group_by(&:day_name).collect { |day, timeslices| (Timeslice.total_duration(timeslices)/60/60).round(2) }
           total_mean = chargeable.inject(0.0) { |sum, el| sum + el } / chargeable.size
           total_mean = 0 unless total_mean > 0
           week_mean = totals_by_week.inject(0.0) { |sum, el| sum + el } / totals_by_week.size
@@ -22,9 +22,9 @@
 
           #non chargeable
 
-          non_chargeable = user.non_chargeable.collect {|t| t.duration}
-          non_totals_by_week = user.non_chargeable.sort_by(&:week).group_by(&:week).collect { |week, timeslices| (Timeslice.total_duration(timeslices)/60/60).round(2) }
-          non_totals_by_day = user.non_chargeable.sort_by(&:day_number).group_by(&:day_name).collect { |day, timeslices| (Timeslice.total_duration(timeslices)/60/60).round(2) }
+          non_chargeable = user.timeslices.non_chargeable.collect {|t| t.duration}
+          non_totals_by_week = user.timeslices.non_chargeable.sort_by(&:week).group_by(&:week).collect { |week, timeslices| (Timeslice.total_duration(timeslices)/60/60).round(2) }
+          non_totals_by_day = user.timeslices.non_chargeable.sort_by(&:day_number).group_by(&:day_name).collect { |day, timeslices| (Timeslice.total_duration(timeslices)/60/60).round(2) }
           non_total_mean = non_chargeable.inject(0.0) { |sum, el| sum + el } / non_chargeable.size
           non_total_mean = 0 unless non_total_mean > 0
           non_week_mean = non_totals_by_week.inject(0.0) { |sum, el| sum + el } / non_totals_by_week.size

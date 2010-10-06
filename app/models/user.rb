@@ -26,12 +26,36 @@ class User < ActiveRecord::Base
   has_many :projects
   has_many :tasks
   has_many :assigned_tasks, :class_name => 'Task', :foreign_key => 'assigned_to_id'
-  has_many :timeslices
+
+  has_many :timeslices do
+    # Get all chargeable timeslices or all chargeable timeslices on a date
+    # or all chargeable timeslices between a range, for a user
+    def chargeable(start = nil, finish = nil)
+      if start.nil? && finish.nil?
+        return find_all {|t| t.chargeable}
+      elsif finish.nil? && !start.nil?
+        finish = start
+      end
+      by_date(start, finish).find_all {|t| t.chargeable}
+    end
+
+    # Get all non-chargeable timeslices or all non-chargeable timeslices on a date
+    # or all non-chargeable timeslices between a range, for a user
+    def non_chargeable(start = nil, finish = nil)
+      if start.nil? && finish.nil?
+        return find_all {|t| !t.chargeable}
+      elsif finish.nil? && !start.nil?
+        finish = start
+      end
+      by_date(start, finish).find_all {|t| !t.chargeable}
+    end
+  end
+
   has_many :comments
   has_many :stakeholders, :dependent => :destroy
   has_many :current_projects, :through => :stakeholders, :source => :project
 
-  named_scope :staff, :conditions => {:is_staff => 1}
+  named_scope :staff, :conditions => {:is_staff => true}
 
   # Adds an object to a users ignore mail list
   def ignore_mail_from(instance)
@@ -231,28 +255,6 @@ class User < ActiveRecord::Base
     options.merge!(params) unless params.nil?
 
     ::Attachment.all options
-  end
-
-  # Get all chargeable timeslices or all chargeable timeslices on a date
-  # or all chargeable timeslices between a range, for a user
-  def chargeable(start = nil, finish = nil)
-    if start.nil? && finish.nil?
-      return timeslices.find_all {|t| t.chargeable}
-    elsif finish.nil? && !start.nil?
-      finish = start
-    end
-    timeslices.by_date(start, finish).find_all {|t| t.chargeable}
-  end
-
-  # Get all non-chargeable timeslices or all non-chargeable timeslices on a date
-  # or all non-chargeable timeslices between a range, for a user
-  def non_chargeable(start = nil, finish = nil)
-    if start.nil? && finish.nil?
-      return timeslices.find_all {|t| !t.chargeable}
-    elsif finish.nil? && !start.nil?
-      finish = start
-    end
-    timeslices.by_date(start, finish).find_all {|t| !t.chargeable}
   end
 
   def current_customers
