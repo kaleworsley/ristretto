@@ -21,8 +21,15 @@ class Project < ActiveRecord::Base
   # Project estimate units
   ESTIMATE_UNITS = ['hours', 'points']
 
+  # Project kinds
+  KINDS = ['development', 'support']
+
   STATES.each do |state|
     named_scope state, :conditions => { :state => state }, :include => [{:tasks => :timeslices}, :customer, :stakeholders], :order => 'weight asc'
+  end
+
+  KINDS.each do |kind|
+    named_scope kind, :conditions => { :kind => kind }
   end
 
   # Returns true if a given user is the project manager of this project
@@ -38,6 +45,16 @@ class Project < ActiveRecord::Base
   # Project states
   def Project.states
     STATES
+  end
+
+  # Project kinds
+  def Project.kinds
+    KINDS
+  end
+
+  # Return a hash of available project kinds suitable for the select helper
+  def Project.kinds_for_select
+    KINDS.collect { |kind| [kind.humanize, kind] }
   end
 
   # Project estimate units
