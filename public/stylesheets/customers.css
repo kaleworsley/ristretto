@@ -1,0 +1,69 @@
+/**
+ * Customers
+ */
+
+div.customers ul {
+  margin: 0;
+  padding: 0;
+}
+
+div.customers li {
+  padding: 2px 15px 2px 15px;
+  margin: 0;
+  font-size: 13px;
+  clear: both;
+  overflow: auto;
+}
+
+div.customers li:hover {
+  background-color: #d6d6d6;
+  border-style: solid;
+  border-width: 1px 0 1px 0;
+  border-color: #c3c3c3;
+  color: black;
+  padding: 1px 15px 2px 15px;
+}
+
+div.customers li:hover * {
+  color: black;
+}
+
+div.customers li span.name {
+  display: block;
+  float: left;
+  width: 30%;
+}
+
+div.customers li span.name a {
+  display: block;
+}
+
+div.customers li ul {
+  display: block;
+  float: left;
+  list-style: none;
+}
+
+div.customers li span.projects {
+  display: block;
+  float: left;
+  width: 70px;
+}
+
+div.customers li ul li {
+  display: block;
+  float: left;
+  clear: none;
+  margin: 0 10px 0 0;
+}
+
+body.customers-show div.customers h3 {
+  font-size: 15px;
+  margin: 0;
+  padding: 5px 0 5px 15px;
+}
+
+body.customers-show ul.projects {
+  margin: 0 0 15px 0;
+  padding: 0;
+}

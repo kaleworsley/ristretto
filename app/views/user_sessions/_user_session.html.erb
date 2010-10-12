@@ -1,5 +1,5 @@
 <% form_for @user_session do |form| %>
-<% flash[:error] = form.error_messages %>
+<% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
 <div class="form-item form-item-block">
   <%= form.label :email %>
   <%= form.text_field :email %>

@@ -8,10 +8,15 @@
   <% end %>
 <%- end -%>
 
-<div class="tasks">
-  <%= title "Tasks" -%>
-  <ul>
-<%= render @tasks %>
-  </ul>
+<% title "Tasks" -%>
+<div id="tasks" class="tasks panel">
+  <h3 class="title">Tasks</h3>
+  <div class="content">
+    <ul>
+      <%= render @tasks %>
+    </ul>
+  </div>
+  <div class="panel-footer">
+    <%= will_paginate @tasks %>
+  </div>
 </div>
-<%= will_paginate @tasks %>

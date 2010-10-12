@@ -9,7 +9,6 @@
 <% javascript "jquery.timeentry.min" %>
 <% javascript "timeslice.timesheet" %>
 <% javascript "timeslice.new" %>
-<% stylesheet "fullcalendar" %>
 <div id="new_timeslice_wrapper" class="big">
   <%= render :partial => "timeslices/smart_add_form" %>
 </div>
@@ -43,8 +42,8 @@
         <th>Description</th>
         <th>Duration</th>
         <th>Chargeable</th>
-        <th></th>
-        <th></th>
+        <th class="edit"><%= image_tag 'edit.png' %></th>
+        <th class="delete"><%= image_tag 'delete.png' %></th>
       </tr>
     </thead>
     <tbody>
@@ -66,8 +65,8 @@
         <td><%= timeslice.description %></td>
         <td class="right"><%= timeslice.duration_in_hours %></td>
         <td class="right"><%= timeslice.chargeable %></td>
-	<td class="edit"><%= edit_link timeslice %></td>
-	<td class="delete"><%= delete_link timeslice %></td>
+	    <td class="edit"><%= edit_link timeslice %></td>
+	    <td class="delete"><%= delete_link timeslice %></td>
       </tr>
       <% end %>
       <tr class="subtotal <%= table_class %>">

@@ -28,36 +28,6 @@
 <div class="clear-both"></div>
 <%= post_info(@task, 'Requested by') %>
 
-<%- content_for :sidebar do -%>
-<p>
-  <strong>State:</strong>
-  <%= @task.state.humanize %>
-</p>
-
-<p>
-  <strong>Estimate:</strong>
-  <%= pluralize(@task.estimate.to_f.round(2), @task.estimate_unit.humanize.singularize) %>
-</p>
-
-<p>
-  <strong>Chargeable:</strong>
-  <%= pluralize((Timeslice.total_chargeable_duration(@task.timeslices)/60/60).to_f.round(2), 'Hour') %>
-</p>
-
-<p>
-  <strong>Non-chargeable:</strong>
-  <%= pluralize((Timeslice.total_nonchargeable_duration(@task.timeslices)/60/60).to_f.round(2), 'Hour') %>
-</p>
-<p>
-  <strong>Assigned to:</strong>
-  <% unless @task.assigned_to.blank? %>
-  <%= link_to @task.assigned_to, @task.assigned_to %>
-  <% else %>
-  Un-assigned
-  <% end %>
-</p>
-
-<% end %>
 <div class="content description">
   <%= markdown @task.description %>
 </div>
@@ -95,4 +65,37 @@
       <%= render :partial => 'timeslices/list', :locals => { :timeslices => @task.timeslices } %>
     <% end %>
   </div>
+</div>
+
+<div id="task-details" class="panel small-panel">
+<h3 class="title">Task details</h3>
+<div class="content">
+<p>
+  <strong>State:</strong>
+  <%= @task.state.humanize %>
+</p>
+
+<p>
+  <strong>Estimate:</strong>
+  <%= pluralize(@task.estimate.to_f.round(2), @task.estimate_unit.humanize.singularize) %>
+</p>
+
+<p>
+  <strong>Chargeable:</strong>
+  <%= pluralize((Timeslice.total_chargeable_duration(@task.timeslices)/60/60).to_f.round(2), 'Hour') %>
+</p>
+
+<p>
+  <strong>Non-chargeable:</strong>
+  <%= pluralize((Timeslice.total_nonchargeable_duration(@task.timeslices)/60/60).to_f.round(2), 'Hour') %>
+</p>
+<p>
+  <strong>Assigned to:</strong>
+  <% unless @task.assigned_to.blank? %>
+  <%= link_to @task.assigned_to, @task.assigned_to %>
+  <% else %>
+  Un-assigned
+  <% end %>
+</p>
+</div>
 </div>

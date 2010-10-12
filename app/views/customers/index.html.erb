@@ -6,10 +6,15 @@
   <%= crumb 'Customers', customers_path %>
 <%- end -%>
 
-<div class="customers">
-  <%= title "Customers" -%>
-  <ul>
-<%= render :partial => 'customer', :collection => @customers %>
-  </ul>
+<% title "Customers" -%>
+<div id="customers" class="customers panel">
+  <h3 class="title">Customers</h3>
+  <div class="content">
+    <ul>
+      <%= render @customers %>
+    </ul>
+  </div>
+  <div class="panel-footer">
+    <%= will_paginate @customers %>
+  </div>
 </div>
-<%= will_paginate @customers %>

@@ -1,7 +1,6 @@
 <% @body_classes = ['dashboard-' + @partial] %>
 <%= title "Dashboard" %>
 <% if current_user.is_staff? %>
-<% stylesheet "dashboard_staff" %>
 <script type="text/javascript">
 $(document).ready(function() {
   $('#dashboard-select').val(readCookie('dashboardView') || 'project_activity');
