@@ -17,6 +17,10 @@
 <%= notification_button_toggle(@project) %>
 <div class="clear-both"></div>
 <div class="project-info">
+  <% if @project.percentage_of_budget_used %>
+  <strong>Budget:</strong>
+  <span><%= number_to_percentage(@project.percentage_of_budget_used, :precision => 0) %></span>
+  <% end %>
   <% unless @project.deadline.nil? %>
   <strong>Deadline:</strong>
   <span><%= @project.deadline.strftime('%d/%m/%Y') %></span>
@@ -26,7 +30,7 @@
   <% if (@project.fixed_price && current_user.is_staff?) || !@project.fixed_price %>
   /
   <strong>Chargeable:</strong>
-  <span><%= pluralize((@project.total_chargeable_duration/60/60).round(2), 'hour') %> <% if @project.total_chargeable_duration && @project.estimate_unit == 'hours' && current_user.is_staff? && @project.rate.present? %>(<%= number_to_currency((@project.total_chargeable_duration/60/60).round(2) * @project.rate) %>)<% end %></span>
+  <span><%= pluralize(@project.total_chargeable_hours, 'hour') %> <% if @project.total_chargeable_duration && @project.estimate_unit == 'hours' && current_user.is_staff? && @project.rate.present? %>(<%= number_to_currency(@project.total_chargeable_hours * @project.rate) %>)<% end %></span>
   <% end %>
 </div>
 

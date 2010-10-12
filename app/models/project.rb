@@ -82,9 +82,15 @@ class Project < ActiveRecord::Base
     end
   end
 
-  # Total chargeable duration of timeslices for all tasks of a project
+  # Total chargeable duration of timeslices for all tasks of a project in seconds
   def total_chargeable_duration
     tasks.collect(&:total_chargeable_duration).inject(0.0) { |sum, el| sum + el }
+  end
+
+  # Total chargeable hours spent on the project so far, rounded to 2 decimal
+  # places
+  def total_chargeable_hours
+    (total_chargeable_duration / 1.hour).round(2)
   end
 
   # Collection of stakeholders users who have emails enabled
@@ -146,5 +152,12 @@ class Project < ActiveRecord::Base
       :date => self.created_at,
       :object => self
     }
+  end
+
+  # Returns the percentage of budget used.
+  def percentage_of_budget_used
+    if estimate_unit == 'hours' and estimate.present?
+      total_chargeable_hours / (estimate / 100)
+    end
   end
 end

@@ -62,4 +62,22 @@ class ProjectTest < ActiveSupport::TestCase
     @project.estimate = 10.2
     assert @project.save, 'saved project with invalid decimal estimate'
   end
+
+  test "should return total chargeable hours" do
+    assert_equal 0.00, @project.total_chargeable_hours
+    assert_equal 3.00, projects(:project1).total_chargeable_hours
+  end
+
+  test "should return percentage of budget used" do
+    @project.estimate_unit = "points"
+    assert_nil @project.percentage_of_budget_used
+
+    @project.estimate_unit = "hours"
+    assert_equal 0, @project.percentage_of_budget_used
+
+    @project.estimate = nil
+    assert_nil @project.percentage_of_budget_used
+
+    assert_equal 15, projects(:project1).percentage_of_budget_used
+  end
 end
