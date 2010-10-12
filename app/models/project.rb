@@ -25,6 +25,10 @@ class Project < ActiveRecord::Base
     named_scope state, :conditions => { :state => state }, :include => [{:tasks => :timeslices}, :customer, :stakeholders], :order => 'weight asc'
   end
 
+  # The overrunning? method will only test the project status if the percentage
+  # of budget used is greater than this value
+  OVERRUN_THRESHOLD = 50
+
   # Returns true if a given user is the project manager of this project
   def mine?(user)
     stakeholders.project_manager(user).present?
@@ -169,5 +173,12 @@ class Project < ActiveRecord::Base
     else
       0
     end
+  end
+
+  # Returns true if the project is overrunning.  Always returns false if used
+  # budget is below OVERRUN_THRESHOLD
+  def overrunning?
+    return false if percentage_of_budget_used < OVERRUN_THRESHOLD
+    percentage_of_budget_used > percentage_complete
   end
 end

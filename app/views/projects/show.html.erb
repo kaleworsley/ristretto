@@ -16,7 +16,7 @@
 <%= title @project.name %>
 <%= notification_button_toggle(@project) %>
 <div class="clear-both"></div>
-<div class="project-info">
+<div class="project-info<%= ' overrunning' if @project.overrunning? %>">
   <% if @project.percentage_of_budget_used %>
   <strong>Budget:</strong>
   <span><%= number_to_percentage(@project.percentage_of_budget_used, :precision => 0) %></span>

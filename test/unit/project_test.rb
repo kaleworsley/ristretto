@@ -87,4 +87,10 @@ class ProjectTest < ActiveSupport::TestCase
     assert tasks(:task2).update_attribute(:state, 'accepted')
     assert_equal 100, projects(:project2).percentage_complete
   end
+
+  test "should test if project is overrunning budget" do
+    assert !projects(:project1).overrunning?
+    projects(:project1).estimate = 6
+    assert projects(:project1).overrunning?
+  end
 end

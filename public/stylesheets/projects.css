@@ -440,6 +440,10 @@ body.projects div.project-info {
   overflow: auto;
 }
 
+body.projects div.project-info.overrunning span {
+  color: red;
+}
+
 
 
 body.projects form#new_task {
