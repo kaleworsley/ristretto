@@ -7,52 +7,52 @@ class ProjectTest < ActiveSupport::TestCase
                            :estimate => 100
   end
 
-  def test_should_save_project
+  test "should save project" do
     assert @project.save, 'saved a valid customer'
   end
 
-  def test_should_not_save_project_without_name
+  test "should not save project without name" do
     @project.name = nil
     assert !@project.save, 'saved a project without a name'
   end
 
-  def test_should_not_save_project_without_customer
+  test "should not save project without customer" do
     @project.customer = nil
     assert !@project.save, 'saved a project without a name'
   end
 
-  def test_should_delete_dependent_tasks
+  test "should delete dependent tasks" do
     assert_difference 'Task.count', -1 do
       projects(:project1).destroy
     end
   end
 
-  def test_should_delete_dependent_stakeholders
+  test "should delete dependent stakeholders" do
     assert_difference 'Stakeholder.count', -1 do
       projects(:project1).destroy
     end
   end
 
-  def test_should_return_if_user_is_stakeholder
+  test "should return if user is stakeholder" do
     assert projects(:project1).has_stakeholder?(users(:user1)),
       "project has stakeholder"
     assert !projects(:project1).has_stakeholder?(users(:user2)),
       "project doesn't have stakeholder"
   end
 
-  def test_should_add_stakeholder
+  test "should add stakeholder" do
     assert_difference 'Stakeholder.count' do
       assert_instance_of Stakeholder,
         projects(:project2).add_stakeholder(users(:user1))
     end
   end
 
-  def test_should_save_without_estimate
+  test "should save without estimate" do
     @project.estimate = nil
     assert @project.save, 'saved project without estimate'
   end
 
-  def test_should_not_save_with_invalid_estimate
+  test "should not save with invalid estimate" do
     @project.estimate = 'cheesemeister'
     assert !@project.save, 'saved project with a string estimate'
     @project.estimate = 0
