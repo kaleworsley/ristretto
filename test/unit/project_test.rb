@@ -80,4 +80,11 @@ class ProjectTest < ActiveSupport::TestCase
 
     assert_equal 15, projects(:project1).percentage_of_budget_used
   end
+
+  test "should return percentage complete" do
+    assert_equal 0, @project.percentage_complete
+    assert_equal 0, projects(:project1).percentage_complete
+    assert tasks(:task2).update_attribute(:state, 'accepted')
+    assert_equal 100, projects(:project2).percentage_complete
+  end
 end

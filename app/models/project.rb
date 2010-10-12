@@ -160,4 +160,14 @@ class Project < ActiveRecord::Base
       total_chargeable_hours / (estimate / 100)
     end
   end
+
+  # Returns the percentage of total tasks which have been completed for this
+  # project
+  def percentage_complete
+    if tasks.count > 0
+      tasks.done.count / (tasks.count.to_f / 100)
+    else
+      0
+    end
+  end
 end

@@ -21,6 +21,8 @@
   <strong>Budget:</strong>
   <span><%= number_to_percentage(@project.percentage_of_budget_used, :precision => 0) %></span>
   <% end %>
+  <strong>Complete:</strong>
+  <span><%= number_to_percentage(@project.percentage_complete, :precision => 0) %></span>
   <% unless @project.deadline.nil? %>
   <strong>Deadline:</strong>
   <span><%= @project.deadline.strftime('%d/%m/%Y') %></span>
