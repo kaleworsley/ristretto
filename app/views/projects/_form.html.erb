@@ -17,6 +17,11 @@
     <%= form.select :state, Project.states_for_select %>
   </div>
 
+  <div class="form-item form-item-block">
+    <%= form.label :kind %>
+    <%= form.select :kind, Project.kinds_for_select %>
+  </div>
+
   <% if project.new_record? %>
     <div class="form-item form-item-block">
       <%= label_tag 'is_member', "I'm involved in this project" %>

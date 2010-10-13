@@ -21,6 +21,9 @@ class Project < ActiveRecord::Base
   # Project estimate units
   ESTIMATE_UNITS = ['hours', 'points']
 
+  # Project kinds
+  KINDS = ['development', 'support']
+
   STATES.each do |state|
     named_scope state, :conditions => { :state => state }, :include => [{:tasks => :timeslices}, :customer, :stakeholders], :order => 'weight asc'
   end
@@ -28,6 +31,10 @@ class Project < ActiveRecord::Base
   # The overrunning? method will only test the project status if the percentage
   # of budget used is greater than this value
   OVERRUN_THRESHOLD = 50
+
+  KINDS.each do |kind|
+    named_scope kind, :conditions => { :kind => kind }
+  end
 
   # Returns true if a given user is the project manager of this project
   def mine?(user)
@@ -42,6 +49,16 @@ class Project < ActiveRecord::Base
   # Project states
   def Project.states
     STATES
+  end
+
+  # Project kinds
+  def Project.kinds
+    KINDS
+  end
+
+  # Return a hash of available project kinds suitable for the select helper
+  def Project.kinds_for_select
+    KINDS.collect { |kind| [kind.humanize, kind] }
   end
 
   # Project estimate units

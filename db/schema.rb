@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100727224244) do
+ActiveRecord::Schema.define(:version => 20101011012512) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "attachable_id"
@@ -54,6 +54,7 @@ ActiveRecord::Schema.define(:version => 20100727224244) do
     t.float    "rate"
     t.boolean  "fixed_price"
     t.date     "deadline"
+    t.string   "kind",                                         :default => "development"
   end
 
   add_index "projects", ["customer_id"], :name => "index_projects_on_customer_id"
@@ -72,12 +73,12 @@ ActiveRecord::Schema.define(:version => 20100727224244) do
     t.integer  "project_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "state",          :default => "not_started"
+    t.string   "state",                                         :default => "not_started"
     t.text     "description"
     t.integer  "user_id"
     t.integer  "assigned_to_id"
-    t.integer  "weight",         :default => 0
-    t.decimal  "estimate"
+    t.integer  "weight",                                        :default => 0
+    t.decimal  "estimate",       :precision => 10, :scale => 2
   end
 
   add_index "tasks", ["assigned_to_id"], :name => "index_tasks_on_assigned_to_id"
