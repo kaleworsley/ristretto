@@ -74,3 +74,13 @@ ul.attachments li {
   margin: 0;
   padding: 0 0 3px 0;
 }
+
+body.projects-show div.attachments {
+  margin: 0px;
+}
+
+body.projects-show div.attachments ul.attachments {
+  background-color: transparent;
+  border-color: transparent;
+  margin: 0px 0px;
+}
