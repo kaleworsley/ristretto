@@ -98,9 +98,6 @@ body.projects-show div.stakeholders h3, body.reports-project_stakeholders div.st
   padding: 5px 10px 5px 10px;
   background-color: #dadada;
   border-bottom: 1px #cccccc solid;
-  font-weight: normal;
-  font-size: 15px;
-  color: black;
 }
 
 body.projects-show div.stakeholders h3 span.right,
