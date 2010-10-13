@@ -63,13 +63,23 @@
 </div>
 
 <%= render :partial => 'stakeholders/list', :locals => {:project => @project}  %>
-<% if @project.attachments.present? %>
-<div class="attachments panel small-panel no-padding">
+<% if @project.attachments.present? || @project.more_attachments.present? %>
+<div class="attachments panel small-panel">
   <h3 class="title">Attachments</h3>
   <div class="content">
+    <% if @project.attachments.present? %>
     <ul class="attachments">
       <%= render @project.attachments %>
     </ul>
+    <% end %>
+    <% if @project.more_attachments.present? %>
+    <% if @project.attachments.present? %>
+    <h4 class="more">More...</h4>
+    <% end %>
+    <ul class="attachments task-attachments">
+      <%= render @project.more_attachments %>
+    </ul>
+    <% end %>
   </div>
 </div>
 <% end %>

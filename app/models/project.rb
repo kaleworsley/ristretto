@@ -198,4 +198,9 @@ class Project < ActiveRecord::Base
     return false if percentage_of_budget_used.nil? || percentage_of_budget_used < OVERRUN_THRESHOLD
     percentage_of_budget_used > percentage_complete
   end
+
+  # Returns an array of all child attachments (from tasks and their comments)
+  def more_attachments
+    tasks.collect(&:attachments).flatten + tasks.collect(&:comments).flatten.collect(&:attachments).flatten
+  end
 end
