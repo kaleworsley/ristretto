@@ -178,7 +178,7 @@ class Project < ActiveRecord::Base
   # Returns true if the project is overrunning.  Always returns false if used
   # budget is below OVERRUN_THRESHOLD
   def overrunning?
-    return false if percentage_of_budget_used < OVERRUN_THRESHOLD
+    return false if percentage_of_budget_used.nil? || percentage_of_budget_used < OVERRUN_THRESHOLD
     percentage_of_budget_used > percentage_complete
   end
 end
