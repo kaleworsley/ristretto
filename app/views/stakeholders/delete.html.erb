@@ -11,7 +11,8 @@
 
 
 <%= title "Are you sure you want to continue?" -%>
-This will delete stakeholder #<%=@stakeholder.id %>.
+This will remove <strong><%=h @stakeholder.user %></strong> from the
+project <strong><%=h @project %></strong>.
 <% form_for @stakeholder, :html => {:method => 'delete'} do |f| %>
   <%= submit_tag 'Delete' %> or <%= link_to 'Cancel', request.referer || @stakeholder, {:class => 'cancel'} %>
 <% end %>
