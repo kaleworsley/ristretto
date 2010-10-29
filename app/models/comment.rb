@@ -26,7 +26,7 @@ class Comment < ActiveRecord::Base
       :user => self.user,
       :parent => self.task.project,
       :subject => self.task,
-      :action => ' created a self on ',
+      :action => ' created a comment on ',
       :date => self.created_at,
       :object => self
     }
