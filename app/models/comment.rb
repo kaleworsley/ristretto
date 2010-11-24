@@ -21,6 +21,10 @@ class Comment < ActiveRecord::Base
     end
   end
 
+  def to_s
+    body.gsub(/\s/, '').slice(0, 30) + '...'
+  end
+
   def activity_item
     {
       :user => self.user,
