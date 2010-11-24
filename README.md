@@ -20,6 +20,12 @@ Requirements
     gem install exception_notification -v 2.3.3.0
     gem install icalendar -v 1.1.5
 
+For testing
+
+    gem install cucumber-rails -v 0.3.2
+    gem install cucumber -v 0.9.4
+    gem install factory_girl -v 1.3.2
+
 or
 
     rake gems:install
