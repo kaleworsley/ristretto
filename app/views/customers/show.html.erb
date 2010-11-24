@@ -15,9 +15,9 @@
     <div class="content">
       <ul class="projects">
         <% if current_user.is_staff? %>
-        <%= render :partial => 'projects/project', :collection => @customer.projects %>
+        <%= render :partial => 'projects/project', :collection => @customer.projects.sort_by(&:name) %>
         <% else %>
-        <%= render :partial => 'projects/project', :collection => @customer.projects.find(:all, :conditions => {:id => current_user.current_projects_ids}) %>
+        <%= render :partial => 'projects/project', :collection => @customer.projects.find(:all, :conditions => {:id => current_user.current_projects_ids}).sort_by(&:name) %>
         <% end %>
       </ul>
       <%- else -%>
