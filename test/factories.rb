@@ -9,5 +9,31 @@ end
 
 Factory.define :customer do |f|
   f.sequence(:name) { |n| "Customer #{n}" }
-  f.user Factory.create(:user)
+  f.association :user, :factory => :user
+end
+
+Factory.define :project do |f|
+  f.sequence(:name) { |n| "foo#{n}" }
+  f.association :user, :factory => :user
+  f.association :customer, :factory => :customer
+  f.state "current"
+  f.kind "development"
+  f.fixed_price false
+  f.rate 130
+  f.estimate 100
+  f.estimate_unit "hours"
+end
+
+Factory.define :task do |f|
+  f.association :project, :factory => :project
+  f.association :user, :factory => :user
+  f.sequence(:name) { |n| "foo#{n}" }
+  f.state "started"
+  f.estimate 4.5
+  f.assigned_to {|t| t.association(:stakeholder, :project => t.project).user }
+end
+
+Factory.define :stakeholder do |f|
+  f.association :user, :factory => :user
+  f.association :project, :factory => :project
 end
