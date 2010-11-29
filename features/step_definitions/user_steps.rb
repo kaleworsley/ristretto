@@ -8,3 +8,7 @@ Given /^I am logged in as "([^"]*)" with password "([^"]*)"$/ do |email, passwor
   fill_in "Password", :with => password
   click_button "Login" 
 end
+
+Given /^I am not logged in$/ do
+  visit logout_url
+end

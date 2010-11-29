@@ -12,6 +12,11 @@ module NavigationHelpers
       '/'
     when /the list of customers/
       customers_path
+    when /register page/
+      register_path
+    when /the list of projects/
+      projects_path
+
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:
     #
