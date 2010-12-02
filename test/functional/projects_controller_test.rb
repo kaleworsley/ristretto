@@ -162,7 +162,7 @@ class ProjectsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert assigns(:projects)
-    assert_equal 1, assigns(:projects).count
+    assert_equal 3, assigns(:projects).count
   end
 
   def test_should_get_index_if_not_staff
@@ -377,7 +377,7 @@ class ProjectsControllerTest < ActionController::TestCase
     get :index, :format => 'xml'
     assert_response :success
     assert_not_nil assigns(:projects)
-    assert_equal 1, assigns(:projects).length
+    assert_equal 3, assigns(:projects).length
     assert_equal 'application/xml; charset=utf-8', @response.headers['Content-Type']
   end
 

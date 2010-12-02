@@ -14,6 +14,11 @@ test:
   host: test.host
   name: Ristretto Test
 
+cucumber:
+  <<: *default_settings
+  host: cucumber.host
+  name: Ristretto Cucumber
+
 production:
   <<: *default_settings
   host: ristretto.example.com
