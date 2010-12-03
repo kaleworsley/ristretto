@@ -1,7 +1,4 @@
 class TasksController < ApplicationController
-
-  load_and_authorize_resource
-
   # TODO Make start time configurable per user
   DAYSTART = '08:00:00'
 
@@ -10,6 +7,8 @@ class TasksController < ApplicationController
   before_filter :find_customer
   before_filter :find_tasks, :only => [:index]
   after_filter :new_attachments, :only => [:create, :update]
+
+  load_and_authorize_resource :through => :project
 
   def import
     
