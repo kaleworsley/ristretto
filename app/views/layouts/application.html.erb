@@ -30,7 +30,7 @@
   <ul class="primary-nav">
     <%- if current_user -%>
       <% nav_li('Sales', '#', nil, {:class => 'sales'}) do %>
-        <%= nav_li('Sales order Tracker', sales_order_tracker_path) %>
+        <%= nav_li('Invoice Tracker', invoice_tracker_path) %>
         <%= nav_li('Update AR', update_ar_path) if current_user.is_staff %>
       <% end %>
 

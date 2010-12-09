@@ -25,7 +25,7 @@ class Timeslice < ActiveRecord::Base
   }
 
   named_scope :uninvoiced, :conditions => ['(timeslices.ar IS NULL) OR (timeslices.ar = 0)'], :include => [:task => { :project => :customer }]
-  named_scope :recent_sales_orders, lambda { |user|
+  named_scope :recent_invoices, lambda { |user|
     if user.is_staff
       {
         :include => { :task => :project },

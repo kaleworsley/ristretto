@@ -89,21 +89,28 @@ class TimeslicesController < ApplicationController
   end
 
   def sales_order_tracker
-
-    @recent = Timeslice.recent_sales_orders(current_user)
-    @recent = @recent.select {|s| s.ar && s.ar != ''}
-    if current_user.is_staff?
-      if params[:ar_val].blank? == false
-        redirect_to sales_order_tracker_path(:ar => params[:ar_val])
-      end
-      @ar = params[:ar]
-      @timeslices = Timeslice.find(:all, :conditions => {:ar => @ar}) || nil
+    if params[:ar].blank?
+      redirect_to invoice_tracker_path
     else
-      if params[:ar_val].blank? == false
-        redirect_to sales_order_tracker_path(:ar => params[:ar_val])
+      redirect_to invoice_tracker_path(params[:ar])
+    end
+  end
+
+  def invoice_tracker
+    @recent = Timeslice.recent_invoices(current_user)
+    @recent = @recent.select {|s| s.ar && s.ar != '' && s.ar != 0}
+    if current_user.is_staff?
+      if params[:invoice_val].blank? == false
+        redirect_to invoice_tracker_path(:invoice => params[:invoice_val])
       end
-      @ar = params[:ar]
-      @timeslices = Timeslice.find(:all, :conditions => {:ar => @ar, :task_id => current_user.current_projects_tasks_ids}) || nil
+      @invoice = params[:invoice]
+      @timeslices = Timeslice.find(:all, :conditions => {:ar => @invoice}) || nil
+    else
+      if params[:invoice_val].blank? == false
+        redirect_to invoice_tracker_path(:invoice => params[:invoice_val])
+      end
+      @invoice = params[:invoice]
+      @timeslices = Timeslice.find(:all, :conditions => {:ar => @invoice, :task_id => current_user.current_projects_tasks_ids}) || nil
     end
   end
 

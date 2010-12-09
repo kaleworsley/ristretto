@@ -11,6 +11,10 @@ ActionController::Routing::Routes.draw do |map|
   map.connect 'sales-order-tracker', :controller => 'timeslices', :action => 'sales_order_tracker'
   map.sales_order_tracker '/sales-order-tracker/:ar', :controller => 'timeslices', :action => 'sales_order_tracker',
   :defaults => { :ar => nil }
+
+  map.connect 'invoice-tracker', :controller => 'timeslices', :action => 'invoice_tracker'
+  map.invoice_tracker '/invoice-tracker/:invoice', :controller => 'timeslices', :action => 'invoice_tracker',
+  :defaults => { :invoice => nil }
   
   map.connect '/timesheet.:format', :controller => 'timeslices', :action => 'timesheet'
   map.timesheet '/timesheet/:date', :controller => 'timeslices', :action => 'timesheet',
