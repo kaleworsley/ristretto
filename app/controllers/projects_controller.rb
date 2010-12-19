@@ -238,9 +238,9 @@ class ProjectsController < ApplicationController
 
     def find_projects
       if @customer.nil?
-        if current_user.is_staff? 
+        if current_user.is_staff?
           @projects = Project.page(params[:page])
-        else 
+        else
           @projects = current_user.current_projects.page(params[:page])
         end
       else

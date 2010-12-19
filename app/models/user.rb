@@ -288,7 +288,7 @@ class User < ActiveRecord::Base
   def customer_activity_items(limit = 10)
     current_customers_recent_customers(limit).collect(&:activity_item)
   end
-  
+
   def activity_items(limit = 10)
     comment_activity_items(limit) +
       task_activity_items(limit) +
