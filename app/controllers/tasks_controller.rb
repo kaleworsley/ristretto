@@ -11,7 +11,7 @@ class TasksController < ApplicationController
   load_and_authorize_resource :through => :project
 
   def import
-    
+
   end
 
   def import_save
@@ -24,7 +24,7 @@ class TasksController < ApplicationController
         logger.debug t.errors.full_messages.inspect
       end
       redirect_to @project
-      else 
+      else
       flash[:warning] = 'Task import was empty.'
       render :action => "import"
     end
