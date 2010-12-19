@@ -132,9 +132,9 @@ $(document).ready(function() {
   }
   
   if (readCookie('timesliceTaskId') != null) {
-    $('#timeslice_task_id').val(readCookie('timesliceTaskId'));
-    $('#timeslice_task_id').change();
-    $('#timeslice_task_id').focusout();
+    $('body.timeslices-timesheet #timeslice_task_id').val(readCookie('timesliceTaskId'));
+    $('body.timeslices-timesheet #timeslice_task_id').change();
+    $('body.timeslices-timesheet #timeslice_task_id').focusout();
     //$('#timeslice_task_id option[value=' + readCookie('timesliceTaskId') + ']').attr('selected', 'selected');
   }
   
