@@ -89,4 +89,30 @@ class TaskTest < ActiveSupport::TestCase
     @task.state = 'change_of_scope'
     assert_equal [], @task.next_states
   end
+
+  # This method should assign the task to the passed user if the task is moving
+  # to state 'started' from any other state, and the task is not already assigned
+  # to a user.
+  test "should assign to user if starting" do
+    user = Factory.create(:user)
+    assert_nil @task.assigned_to
+    assert_not_equal 'started', @task.state
+    assert !@task.assign_to_if_starting(user)
+    assert_nil @task.assigned_to
+
+    @task.state = 'started'
+    assert @task.assign_to_if_starting(user)
+    assert_equal user, @task.assigned_to
+
+    # FIXME - Should be set in factory
+    @task.user = user
+    @task.name = 'Dummy task'
+    @task.state = 'not_started'
+    @task.save!
+
+    @task.state = 'started'
+    user2 = Factory.create(:user)
+    assert !@task.assign_to_if_starting(user)
+    assert_equal user, @task.assigned_to
+  end
 end
