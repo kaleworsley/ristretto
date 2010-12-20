@@ -411,3 +411,7 @@ body.timeslices-update_ar div.sales .ui-widget-header .ui-state-default {
 table.timeslices {
   width: 100%;
 }
+
+#timeslice_task_id {
+  width: 100%;
+}

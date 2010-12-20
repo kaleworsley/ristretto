@@ -5,7 +5,7 @@ class TimeslicesController < ApplicationController
   # TODO Make start time configurable per user
   DAYSTART = '08:00:00'
 
-  before_filter :find_task, :only => [:new, :create, :index]
+  before_filter :find_task, :only => [:new, :edit, :create, :index]
   before_filter :find_timeslice, :only => [:show, :edit, :update, :destroy, :delete]
   before_filter :set_dates, :only => [:index, :create, :timesheet]
   after_filter :copy_errors, :only => [:create, :update]
@@ -197,6 +197,10 @@ class TimeslicesController < ApplicationController
   # GET /timeslices
   # GET /timeslices.xml
   def index
+    if params[:task_id].nil?
+      redirect_to timesheet_path
+      return
+    end
     @timeslices = Timeslice.page(params[:page])
 
     respond_to do |format|
@@ -217,14 +221,17 @@ class TimeslicesController < ApplicationController
   # GET /timeslices/new
   # GET /timeslices/new.xml
   def new
-    @timeslice = Timeslice.new
-
-    @tasks = Hash.new
-    Task.find(:all).each { |task| @tasks[task.name] = task.id }
-    @timeslice.chargeable = true
-    if params[:task]
-      @timeslice.task_id = params[:task]
+    if params[:task_id]
+      @timeslice = @task.timeslices.build
+    else
+      if params[:start].present? && params[:end].present?
+        @timeslice = Timeslice.new(:started => Time.at(params[:start].to_i), :finished => Time.at(params[:end].to_i))
+      else
+        @timeslice = Timeslice.new
+      end
     end
+
+    @timeslice.chargeable = true
 
     respond_to do |format|
       format.html # new.html.erb
@@ -234,8 +241,7 @@ class TimeslicesController < ApplicationController
 
   # GET /timeslices/1/edit
   def edit
-    @tasks = Hash.new
-    Task.find(:all).each { |task| @tasks[task.name] = task.id }
+
   end
 
   # POST /timeslices
@@ -245,17 +251,26 @@ class TimeslicesController < ApplicationController
     if @timeslice.started.to_i == @timeslice.finished.to_i
       @timeslice.finished = Time.now.utc.to_s(:db)
     end
-    @timeslice.task = @task
+    if @task.present?
+      @timeslice.task = @task
+    end
     @timeslice.user = current_user
     respond_to do |format|
       if @timeslice.save
         flash[:notice] = 'Timeslice was successfully created.'
-        format.html { redirect_to(@task) }
+        format.html do
+          if @task.present?
+            redirect_to(@task)
+          else
+            redirect_to(timesheet_path)
+          end
+        end
         format.xml  { render :xml => @timeslice, :status => :created, :location => @timeslice }
         format.js
       else
         format.html { render :action => "new" }
         format.xml  { render :xml => @timeslice.errors, :status => :unprocessable_entity }
+        format.js
       end
     end
   end
@@ -296,7 +311,11 @@ class TimeslicesController < ApplicationController
     def find_task
       #@task = current_user.tasks.find(params[:task_id])
       #@task = current_user.tasks.find(params[:timeslice][:task_id]) if @task.nil?
-      @task = Task.find(params[:task_id])
+      if params[:task_id].present?
+        @task = Task.find(params[:task_id])
+      else
+        @task = nil
+      end
     end
 
     def find_tasks

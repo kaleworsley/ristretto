@@ -21,6 +21,10 @@
   <%= link_to('<span class="ui-icon ui-icon-circle-triangle-w"></span><span class="date">' + (@date.monday-7).to_s + '</span>', "/timesheet/#{(@date.monday-7)}") -%>
 <% end %>
 
+<% content_tag 'div', {:class => 'fc-button-prev ui-state-default ui-corner-left ui-no-right month-nav'} do %>
+  <%= link_to('<span class="ui-icon ui-icon-circle-triangle-w"></span><span class="date">' + (@date.monday-1.month).to_s + '</span>', "/timesheet/#{(@date.monday-7)}") -%>
+<% end %>
+
 <% content_tag 'div', {:class => 'fc-button-next ui-state-default ui-corner-right day-nav'} do %>
   <%= link_to('<span class="ui-icon ui-icon-circle-triangle-e"></span><span class="date">' + @date.tomorrow.to_s + '</span>', "/timesheet/#{@date.tomorrow}") -%>
 <% end %>
@@ -28,6 +32,11 @@
 <% content_tag 'div', {:class => 'fc-button-next ui-state-default ui-corner-right week-nav'} do %>
   <%= link_to('<span class="ui-icon ui-icon-circle-triangle-e"></span><span class="date">' + (@date.monday+7).to_s + '</span>', "/timesheet/#{(@date.monday+7)}") -%>
 <% end %>
+
+<% content_tag 'div', {:class => 'fc-button-next ui-state-default ui-corner-right month-nav'} do %>
+  <%= link_to('<span class="ui-icon ui-icon-circle-triangle-e"></span><span class="date">' + (@date.monday+1.month).to_s + '</span>', "/timesheet/#{(@date.monday+7)}") -%>
+<% end %>
+
 </div>
 <div id="timesheet"></div>
 <div id="timesheet-table">
