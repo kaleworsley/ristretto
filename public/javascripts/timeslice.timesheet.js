@@ -25,7 +25,6 @@ $(document).ready(function() {
     select: function(start, end, allDay) {
       start = Math.round(start.getTime() / 1000);
       end = Math.round(end.getTime() / 1000);
-      console.debug(start);
 
       $('<div id="popup" />').load('/timeslices/new?start=' + start + '&end=' + end + ' #content', function() {
         ajaxifyForm($('#popup form'), function() {
