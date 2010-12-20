@@ -47,7 +47,6 @@ div#attachments div.form-item span.delete {
 a.add {
   background: url("/images/add.png") no-repeat scroll 0 2px;
   display: block;
-  float: left;
   margin: 0 5px 0 10px;
   padding: 0 0 0 18px;
 }
