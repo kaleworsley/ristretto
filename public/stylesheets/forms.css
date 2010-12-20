@@ -38,6 +38,10 @@ input[type='button']:active, input[type='submit']:active {
   top: 1px;
 }
 
+input[type='text'], textarea {
+  border: 1px solid #ccc;
+}
+
 textarea {
   width: 98%;
 }

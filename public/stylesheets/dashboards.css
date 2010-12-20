@@ -55,8 +55,8 @@ body.dashboard #content .panel.searching li.match {
 }
 
 #project-list div.project:hover {
-  background-color: #d6d6d6;
-  border-color: #c3c3c3;
+  background-color: #e2e2e2;
+  border-color: #cecece;
 }
 
 #project-list div.project a:hover,
@@ -83,11 +83,7 @@ body.dashboard #content .panel.searching li.match {
 }
 
 #project-list h3 input.search {
-  -moz-border-radius: 4px 4px 4px 4px;
-  -webkit-border-radius: 4px 4px 4px 4px;
-  border-radius: 4px 4px 4px 4px;
   float: right;
-  border: 1px solid #6a6a6a;
 }
 
 #project-list.searching div.project {
@@ -102,7 +98,7 @@ body.dashboard-not_staff_dashboard #project-list div.project {
   background-color: #d6d6d6;
   border-style: solid;
   border-width: 1px 0 1px 0;
-  border-color: #c3c3c3;
+  border-color: #cecece;
   color: black;
   padding: 4px 0px 0px 0px;
   margin: 0 0 15px 0;
@@ -189,7 +185,7 @@ body.dashboard-project_tasks ul#projects li h3:hover {
   background-color: #d6d6d6;
   border-style: solid;
   border-width: 1px 0 1px 0;
-  border-color: #c3c3c3;
+  border-color: #cecece;
   color: black;
   padding: 4px 15px 4px 25px;
 }
@@ -198,7 +194,7 @@ body.dashboard-project_tasks ul#projects h3.ui-state-active {
   background-color: #d6d6d6;
   border-style: solid;
   border-width: 1px 0 1px 0;
-  border-color: #c3c3c3;
+  border-color: #cecece;
   color: black;
   padding: 4px 15px 4px 25px;
   background-image: none;
@@ -215,7 +211,7 @@ body.dashboard-project_tasks ul#projects ul.tasks {
   overflow: auto;
   border-style: solid;
   border-width: 0px 0 5px 0;
-  border-color: #c3c3c3;
+  border-color: #cecece;
 }
 
 body.dashboard-project_tasks ul#projects ul.tasks li.mine,
@@ -372,7 +368,7 @@ body.dashboard-project_tasks .panel {
   background-color: #d6d6d6;
   border-style: solid;
   border-width: 1px 0 1px 0;
-  border-color: #c3c3c3;
+  border-color: #cecece;
   color: black;
   padding: 4px 0 0 0;
 }
@@ -442,14 +438,14 @@ body.dashboard-project_tasks .panel {
   overflow: auto;
   border-style: solid;
   border-width: 1px 0 0px 0;
-  border-color: #c3c3c3;
+  border-color: #cecece;
 }
 
 #tasks-to-action div.expanded {
   background-color: #d6d6d6;
   border-style: solid;
   border-width: 1px 0 1px 0;
-  border-color: #c3c3c3;
+  border-color: #cecece;
   color: black;
   padding: 4px 0px 4px 0px;
   margin: 0 0 5px 0;

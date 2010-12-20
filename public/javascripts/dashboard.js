@@ -2,11 +2,12 @@ $(document).ready(function() {
   $('#project-list').each(function() {
     //Add search input field to the heading tag
     $(this).find('h3:first').append($('<input />', {
-      'type': 'textfield',
+      'type': 'text',
       'class': 'search'
     }));
   });
   $('input.search', this).css('opacity', '0.6');
+  $('input.search', this).focus();
 
   // Redues a list based on the value of a textfield
   $('input.search', this).keyup(function() {
