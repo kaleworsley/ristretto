@@ -500,6 +500,7 @@ img.gravatar {
 
 
 .addlink {
+  font-weight: normal;
   padding-left: 25px;
   background: transparent url("/images/add.png") 5px center no-repeat;
 }
