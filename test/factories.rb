@@ -33,6 +33,11 @@ Factory.define :task do |f|
   f.assigned_to {|t| t.association(:stakeholder, :project => t.project).user }
 end
 
+Factory.define :unassigned_task, :parent => :task do |t|
+  t.assigned_to nil
+  t.state "not_started"
+end
+
 Factory.define :stakeholder do |f|
   f.association :user, :factory => :user
   f.association :project, :factory => :project

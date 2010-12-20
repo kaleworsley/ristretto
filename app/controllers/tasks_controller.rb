@@ -131,8 +131,11 @@ class TasksController < ApplicationController
   # PUT /tasks/1
   # PUT /tasks/1.xml
   def update
+    @task.attributes = params[:task]
+    @task.assign_to_if_starting current_user
+
     respond_to do |format|
-      if @task.update_attributes(params[:task])
+      if @task.save
 
         @task.project.touch
 
