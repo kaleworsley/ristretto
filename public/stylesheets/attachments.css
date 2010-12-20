@@ -23,12 +23,9 @@ div#attachments div.form-item {
   -moz-border-radius: 4px 4px 4px 4px;
   -webkit-border-radius: 4px 4px 4px 4px;
   border-radius: 4px 4px 4px 4px;
-  -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-  -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
-  box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
   background-color: #f3f3f3;
   border-style: solid;
-  border-color: #939393;
+  border-color: #ccc;
   border-width: 1px;
 }
 
@@ -55,7 +52,6 @@ a.add {
   padding: 0 0 0 18px;
 }
 
-
 ul.attachments {
   -moz-border-radius: 10px 10px 10px 10px;
   -webkit-border-radius: 10px 10px 10px 10px;
@@ -66,7 +62,7 @@ ul.attachments {
   clear: both;
   background-color: #f3f3f3;
   border-style: solid;
-  border-color: #939393;
+  border-color: #ccc;
   border-width: 1px;
 }
 

@@ -7,25 +7,23 @@ div.customers ul {
   padding: 0;
 }
 
-div.customers li {
-  padding: 2px 15px 2px 15px;
-  margin: 0;
-  font-size: 13px;
+
+div.customers ul.customers > li {
+  background-repeat: repeat-x;
+  background-image: url("/images/gradient.png");
+  border-width: 1px 0 1px 0;
+  border-style: solid;
+  border-color: #eeeeee;
   clear: both;
   overflow: auto;
+  padding: 2px 15px 3px 15px;
+  margin: 5px 0;
+  font-size: 13px;
 }
 
-div.customers li:hover {
-  background-color: #d6d6d6;
-  border-style: solid;
-  border-width: 1px 0 1px 0;
-  border-color: #c3c3c3;
-  color: black;
-  padding: 1px 15px 2px 15px;
-}
-
-div.customers li:hover * {
-  color: black;
+div.customers ul.customers > li:hover {
+  background-color: #e2e2e2;
+  border-color: #cecece;
 }
 
 div.customers li span.name {

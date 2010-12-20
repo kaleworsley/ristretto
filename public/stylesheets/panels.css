@@ -11,21 +11,20 @@
   -moz-border-radius: 10px 10px 10px 10px;
   -webkit-border-radius: 10px 10px 10px 10px;
   border-radius: 10px 10px 10px 10px;
-  -moz-box-shadow: 0 0 3px #888888;
-  -webkit-box-shadow: 0 0 3px #888888;
-  box-shadow: 0 0 3px #888888;
   position: relative;
   float: left;
-  margin: 0 5px;
   background-color: #f3f3f3;
-  border-color: #939393;
+  border-color: #ccc;
   border-style: solid;
   border-width: 1px;
   width: 100%;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 .panel.three {
-  width: 32%;
+  width: 33%;
 }
 
 .panel.three:nth-child(3) {
@@ -42,7 +41,7 @@
 }
 
 .panel.two {
-  width: 48.3%;
+  width: 49.5%;
 }
 
 .panel.two:first-child {
@@ -60,7 +59,7 @@
   overflow: auto;
   margin: 0;
   padding: 5px 10px 5px 10px;
-  background-color: #dadada;
+  background-color: #e2e2e2;
   border-bottom: 1px #cccccc solid;
   font-size: 15px;
 }

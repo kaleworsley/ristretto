@@ -29,7 +29,7 @@
  * Nav border gray: #7D7D7D;
  * Page light grey: #fdfdfd;
  * Post info light grey: #F3F3F3;
- * Post info border grey: #939393;
+ * Post info border grey: #ccc;
  */
 
 /**
@@ -89,6 +89,7 @@ body, p, ol, ul, td {
 h1, h2, h3, h3, h4, h5, h6 {
   margin: 0 0 5px 0;
   padding: 0;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 a, a:visited {
@@ -185,6 +186,7 @@ table tfoot {
 }
 
 div.loading-overlay {
+  font-family: 'ChunkFiveRegular';
   background-image: url("/images/loading-light.gif");
   background-repeat: no-repeat;
   background-position: 50% 50%;
@@ -196,11 +198,11 @@ div.loading-overlay {
   text-align: center;
   font-size: 6em;
   line-height: 3.2em;
-  font-weight: 900;
   position: fixed;
   top: 0;
   left: 0;
   display: none;
+  z-index: 10000;
 }
 
 .shadow-ccc {
@@ -247,7 +249,6 @@ div.loading-overlay {
   color: white;
   padding: 0 10px;
   position: relative;
-  border-bottom: 1px solid #3a3a3a;
   z-index: 2;
 }
 
@@ -294,10 +295,10 @@ div.loading-overlay {
 
 #footer {
   text-align: center;
-  padding: 10px;
-  margin: 0 0 10px;
-  background: url("/images/base-tile.png") repeat-x 0 0;
+  padding: 20px;
+  margin: 0;
 }
+
 
 #footer img {
   vertical-align: middle;
@@ -308,10 +309,17 @@ div.loading-overlay {
  */
 
 #page {
+  -moz-box-shadow: 0 0 5px #000;
+  -webkit-box-shadow: 0 0 5px #000;
+  box-shadow: 0 0 5px #000;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
   background-color: #eaeaea;
   overflow: auto;
   position: relative;
   z-index: 1;
+  margin: 0 10px;
 }
 
 /**
@@ -643,4 +651,59 @@ table th.show,
 table th.edit {
   text-align: center;
   width: 16px;
+}
+
+.powered-by {
+  font-family: 'ChunkFiveRegular';
+  font-size: 1.2em;
+  text-shadow: 0px 2px 5px #333;
+  font-weight: normal;
+  display: block;
+}
+
+.powered-by a,
+.copyright a {
+  color: white;
+  text-decoration: none;
+}
+
+.copyright a {
+  font-weight: bold;
+}
+
+.copyright {
+  text-shadow: 0px 2px 2px #333;
+  display: block;
+  color: #EAEAEA;
+  margin-top: 10px;
+}
+
+.pagination {
+  text-align: center;
+}
+.pagination .prev_page,
+.pagination .next_page,
+.pagination a,
+.pagination .current {
+  text-decoration: none;
+  min-width: 17px;
+  text-align: center;
+  display: inline-block;
+  padding: 2px;
+  color: #575757;
+  background-color: #EAEAEA;
+  -moz-border-radius: 5px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  margin: 0 1px;
+}
+
+.pagination .current {
+  color: #EAEAEA;
+  background-color: #575757;
+  background-image: url(/images/grit-dark.png);
+}
+
+.pagination a:hover {
+  color: #000;
 }
