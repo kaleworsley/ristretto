@@ -21,6 +21,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.connect '/timesheet/:date.:format', :controller => 'timeslices', :action => 'timesheet'
   map.connect '/timeslices.ics', :controller => 'timeslices', :action => 'ical'
+  map.resources :timeslices, :except => [:index]
 
   map.resources :customers, :shallow => true, :member => { :delete => :get } do |customer|
     customer.resources :projects, :member => { :delete => :get, :update_task_order => :put, :update_project_order => :put, :watch => :get, :enable_mail => :put, :disable_mail => :put } do |project|

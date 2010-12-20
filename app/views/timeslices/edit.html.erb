@@ -16,5 +16,5 @@
 <%= title "Editing timeslice" -%>
 
 <% form_for @timeslice do |form| %>
-  <%= render :partial => form, :locals => {:timeslice => @timeslice} %>
+  <%= render :partial => form, :locals => {:timeslice => @timeslice, :task => @task } %>
 <% end %>
