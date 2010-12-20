@@ -119,6 +119,18 @@ class Task < ActiveRecord::Base
     project.has_stakeholder?(user)
   end
 
+  # Assign the task to user if the task state has just changed to 'started'
+  # and it is not currently assigned to a user.  Returns true if the task user
+  # was assigned, false if not.
+  def assign_to_if_starting(user)
+    if self.state == 'started' and self.state_changed? and self.assigned_to.nil?
+      self.assigned_to = user
+      true
+    else
+      false
+    end
+  end
+
   # Include customer and project names
   def full_name
     "#{project.full_name}: #{name}"

@@ -192,6 +192,18 @@ class TasksControllerTest < ActionController::TestCase
     assert_redirected_to task_url(tasks(:task1))
   end
 
+  test "should assign to current user when starting as task" do
+    user = Factory.create(:user)
+
+    task = Factory.create(:unassigned_task)
+    assert_nil task.assigned_to
+    assert_not_equal 'started', task.state
+    task.project.add_stakeholder user
+
+    put :update, :id => task.to_param, :task => { :state => 'started' }
+    assert_equal user, assigns(:task).assigned_to
+  end
+
   def test_should_redirect_delete_if_logged_out
     get :delete, :id => tasks(:task1).id
     assert_redirected_to login_path
