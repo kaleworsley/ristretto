@@ -62,6 +62,7 @@
   background-color: #e2e2e2;
   border-bottom: 1px #cccccc solid;
   font-size: 15px;
+  font-weight: normal;
 }
 
 .panel > .content {
