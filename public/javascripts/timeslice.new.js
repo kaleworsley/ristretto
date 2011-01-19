@@ -1,4 +1,6 @@
 $(document).ready(function() {
+  $('#timeslice_task_id').mcDropdown("#task_mc_dropdown");
+
   if ($("input[type=hidden][name='timeslice[task_id]']").length > 0) {
     var task_id = $("input[type=hidden][name='timeslice[task_id]']").val();
   }
@@ -28,83 +30,26 @@ $(document).ready(function() {
   });
   $('#timeslice_finished_time').timeEntry(timeentry_attrs);
   $('#timeslice_finished_time').timeEntry('change', finished_timeentry_attrs);
-  /*
-    // Seems to be crashing firefox on Mac OSX
-    // Turn it off for now
-  $('#new_timeslice .task').prepend('<input type="textfield" id="task_autocomplete" />');
-  $('#task_autocomplete').after('<div id="task_autocomplete_count" />');
-  $('#task_autocomplete').keyup(function() {
-    var search = $(this).val().toLowerCase();
-    var select = $('#timeslice_task_id');
-    if (search != '') {
-      select.addClass('searching');
-      select.find('option').each(function() {
-        if (searchAll(search, $(this).text().toLowerCase()) > -1) {
-          $(this).addClass('match');
-        }
-        else {
-          $(this).removeClass('match');
-        }
-      });
-      select.val($('option.match:first', select).val());
-      var size = select.find('option.match').length;
-      if (size < 10 && size > 0) {
-        select.attr('size', size);
-      }
-      else {
-        select.attr('size', 10);
-      }
-
-      if (size) {
-        $('#task_autocomplete_count').html(size + " matches");
-      }
-      else {
-        $('#task_autocomplete_count').html('<span style="color: red;">0 matches</span>');
-      }
-
-    }
-    else {
-      select.attr('size', 1);
-      select.removeClass('searching');
-      select.find('option').removeClass('match');
-      $('#task_autocomplete_count').text('');
-    }
-  });
-
-  $('#task_autocomplete, #timeslice_task_id').focusout(function() {
-    $('#timeslice_task_id').attr('size', 1);
-  });
-
-  $('#task_autocomplete, #timeslice_task_id').focusin(function() {
-    var size = $('#timeslice_task_id option.match').length;
-      if (size < 10 && size > 0) {
-        $('#timeslice_task_id').attr('size', size);
-      }
-      else {
-        $('#timeslice_task_id').attr('size', 10);
-      }
-  });
-  */
   $('#timeslice_description').keyup(function() {
     var val = $(this).val();
     createCookie('timesliceDescription:'+task_id, val, 365);
   });
-  
+
   $('#task_autocomplete').keyup(function() {
     var val = $(this).val();
     createCookie('timesliceTaskAutocomplete', val, 365);
   });
-  
+
   $('#timeslice_started_time').change(function() {
     var val = $(this).val();
     createCookie('timesliceStarted:'+task_id, val, 365);
   });
-  
+
   $('#timeslice_finished_time').change(function() {
     var val = $(this).val();
     createCookie('timesliceFinished:'+task_id, val, 365);
   });
-  
+
   $('#timeslice_started_4i, #timeslice_started_5i').change(function() {
     var val = $('#timeslice_started_4i').val() + ':' + $('#timeslice_started_5i').val();
     createCookie('timesliceStarted:'+task_id, val, 365);
@@ -119,7 +64,7 @@ $(document).ready(function() {
     var val = $(this).val();
     createCookie('timesliceTaskAutocomplete', val, 365);
   });
-  
+
   $('#timeslice_task_id').change(function() {
     var val = $(this).val();
     createCookie('timesliceTaskId', val, 365);
@@ -130,31 +75,31 @@ $(document).ready(function() {
     $('#task_autocomplete').keyup();
     $('#task_autocomplete').focusout();
   }
-  
+
   if (readCookie('timesliceTaskId') != null) {
     $('body.timeslices-timesheet #timeslice_task_id').val(readCookie('timesliceTaskId'));
     $('body.timeslices-timesheet #timeslice_task_id').change();
     $('body.timeslices-timesheet #timeslice_task_id').focusout();
     //$('#timeslice_task_id option[value=' + readCookie('timesliceTaskId') + ']').attr('selected', 'selected');
   }
-  
+
   if (readCookie('timesliceDescription:'+task_id) != null) {
     $('#timeslice_description').val(readCookie('timesliceDescription:'+task_id));
     $('#timeslice_description').focus();
   }
-  
+
   if (readCookie('timesliceStarted:'+task_id) != null) {
     $('#timeslice_started_time').val(readCookie('timesliceStarted:'+task_id));
     $('#timeslice_started_4i').val(readCookie('timesliceStarted:'+task_id).split(':')[0]);
     $('#timeslice_started_5i').val(readCookie('timesliceStarted:'+task_id).split(':')[1]);
   }
-  
+
   if (readCookie('timesliceFinished:'+task_id) != null) {
     $('#timeslice_finished_time').val(readCookie('timesliceFinished:'+task_id));
     $('#timeslice_finished_4i').val(readCookie('timesliceFinished:'+task_id).split(':')[0]);
     $('#timeslice_finished_5i').val(readCookie('timesliceFinished:'+task_id).split(':')[1]);
   }
-  
+
   $('body.tasks-show .time-details div.started').prepend('<span class="clock-now"><a href="#" title="Set the started time to now"><img src="/images/clock.png" alt="Clock"></a></span>');
   $('body.tasks-show .time-details div.finished').prepend('<span class="clock-now"><a href="#" title="Set the finished time to now"><img src="/images/clock.png" alt="Clock"></a></span>');
 
@@ -169,7 +114,7 @@ $(document).ready(function() {
 	var time = pad0(now.getHours()) + ':' + pad0(now.getMinutes());
 	$('#timeslice_finished_time').val(time);
   });
-  
+
 
   $('body.tasks-show .time-details').append('<span class="clock start"><a href="#"><img src="/images/clock-start.png" alt="Clock"></a></span>');
   $('body.tasks-show .time-details').find('.clock.start a').live('click', function() {
@@ -189,7 +134,7 @@ $(document).ready(function() {
     $('#timeslice_finished_time').attr('readonly', 'readonly');
     return false;
   });
-  
+
   $('body.tasks-show .time-details').find('.clock.stop a').live('click', function() {
     var title = $('#content h2.title:first').text();
     var now = new Date();
@@ -205,8 +150,8 @@ $(document).ready(function() {
     $('#timeslice_finished_time').removeAttr('readonly');
     return false;
   });
-  
-  
+
+
   if (readCookie('timesliceTimer:'+task_id)) {
     $('body.tasks-show .time-details').find('.clock a img').attr('src', '/images/clock-stop.png');
     $('body.tasks-show .time-details').find('.clock').toggleClass('start');

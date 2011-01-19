@@ -27,11 +27,13 @@ $(document).ready(function() {
       end = Math.round(end.getTime() / 1000);
 
       $('<div id="popup" />').load('/timeslices/new?start=' + start + '&end=' + end + ' #content', function() {
+        $('#timeslice_task_id').mcDropdown("#task_mc_dropdown");
         ajaxifyForm($('#popup form'), function() {
           $('#popup').dialog('close');
-	      $('#popup').remove();
+	  $('#popup').remove();
+          $('ul#task_mc_dropdown').remove();
           $('#timesheet').fullCalendar('refetchEvents');
-          //$(this).fullCalendar('unselect');
+          // $(this).fullCalendar('unselect');
         });
       }).dialog({
         'modal': true,
@@ -40,13 +42,16 @@ $(document).ready(function() {
         minWidth: $(document).width() / 2,
         width: $(document).width() / 2,
         height: $(document).height() / 2,
-        close: function() {$(this).remove()}
+        close: function() {
+          $(this).remove();
+          $('ul#task_mc_dropdown').remove();
+        }
       });
     },
     firstHour: 9,
     allDaySlot: false,
     defaultView: readCookie('timesheetCalendarView') || 'agendaDay',
-    slotMinutes: 15,
+    slotMinutes: 5,
     editable: true,
     events: '/timesheet',
     eventDrop: function(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent, ui, view) {
@@ -62,9 +67,11 @@ $(document).ready(function() {
     },
     eventClick: function( event, jsEvent, view ) {
       $('<div id="popup" />').load('/timeslices/' + event.id + '/edit #content', function() {
+        $('#timeslice_task_id').mcDropdown("#task_mc_dropdown");
         ajaxifyForm($('#popup form'), function() {
           $('#popup').dialog('close');
-	      $('#popup').remove();
+          $('#popup').remove();
+          $('ul#task_mc_dropdown').remove();
           $('#timesheet').fullCalendar('refetchEvents');
         });
       }).dialog({
@@ -74,32 +81,35 @@ $(document).ready(function() {
         minWidth: $(document).width() / 2,
         width: $(document).width() / 2,
         height: $(document).height() / 2,
-        close: function() {$(this).remove()}
+	close: function() {
+	  $(this).remove();
+          $('ul#task_mc_dropdown').remove();
+        }
       });
     },
     eventAfterRender: function( event, element, view ) {
-	  /*
-	      element.bt({
-		      fill: '#F3F3F3',
-			  cornerRadius: 4,
-			  strokeWidth: 1,
-			  strokeStyle: '#939393',
-			  shadow: true,
-			  shadowOffsetX: 0,
-			  shadowOffsetY: 0,
-			  shadowBlur: 3,
-			  contentSelector:  "$(this).find('.fc-event-time').text() + '<br />' + $(this).find('.fc-event-title').text()",
-			  shadowColor: '#888',
-			  shadowOverlap: false,
-			  noShadowOpts: {strokeStyle: '#999', strokeWidth: 2},
-			  shrinkToFit: true,
-			  cssStyles: {
-			  color: '#000'
-			      }
-
-		  });
-	  */
+      /*
+	element.bt({
+	fill: '#F3F3F3',
+	cornerRadius: 4,
+	strokeWidth: 1,
+	strokeStyle: '#939393',
+	shadow: true,
+	shadowOffsetX: 0,
+	shadowOffsetY: 0,
+	shadowBlur: 3,
+	contentSelector:  "$(this).find('.fc-event-time').text() + '<br />' + $(this).find('.fc-event-title').text()",
+	shadowColor: '#888',
+	shadowOverlap: false,
+	noShadowOpts: {strokeStyle: '#999', strokeWidth: 2},
+	shrinkToFit: true,
+	cssStyles: {
+	color: '#000'
 	}
+
+	});
+      */
+    }
   });
 
   $('#timesheet').before('<div class="toggle-calendar calendar"><a href="#">Calendar off</a></div>');
@@ -151,8 +161,8 @@ function saveTimeslice(event, dayDelta, minuteDelta, allDay, revertFunc, jsEvent
   $.post('/timeslices/' + event.id + '.js', object, null, 'script');
   $('body').ajaxError(function(e, xhr, settings, exception) {
     if (xhr.status == '422') {
-	  // TODO: Make this work
-	  //revertFunc();
+      // TODO: Make this work
+      //revertFunc();
     }
   });
 }

@@ -184,7 +184,8 @@ class TimeslicesController < ApplicationController
         'description' => timeslice.description,
         'start' => timeslice.started.xmlschema,
         'end' => timeslice.finished.xmlschema,
-        'allDay' => false
+        'allDay' => false,
+        'className' => timeslice.chargeable ? 'chargeable' : 'non-chargeable'
         }
 
       end

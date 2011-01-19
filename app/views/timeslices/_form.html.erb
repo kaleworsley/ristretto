@@ -4,7 +4,8 @@
   <% unless task.present? %>
   <div class="form-item form-item-block">
     <%= form.label :task_id %>
-    <%= form.collection_select :task_id, current_user.current_projects_tasks.find_all {|t| Task.stategroups[:current].include? t.state}.sort_by(&:full_name), :id, :full_name %>
+    <%= form.text_field :task_id %>
+    <%= mcdropdown_ul(current_user) %>
   </div>
   <% end %>
   <div class="form-item form-item-block">
