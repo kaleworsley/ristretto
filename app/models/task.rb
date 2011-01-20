@@ -38,6 +38,8 @@ class Task < ActiveRecord::Base
 
   TAGS = ["bug", "content", "database", "feature", "markup", "permissions", "scope creep", "style", "system"]
 
+  named_scope :selectable, :conditions => {:state => STATEGROUPS[:current]}, :order => 'name asc'
+
   # Return a hash of available task states suitable for the select helper
   def Task.states_for_select
     STATES.collect { |state| [state.humanize, state] }

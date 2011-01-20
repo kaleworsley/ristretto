@@ -36,6 +36,8 @@ class Project < ActiveRecord::Base
     named_scope kind, :conditions => { :kind => kind }
   end
 
+  named_scope :selectable, :conditions => {:state => ['proposed', 'current']}, :order => 'name asc'
+
   # Returns true if a given user is the project manager of this project
   def mine?(user)
     stakeholders.project_manager(user).present?
