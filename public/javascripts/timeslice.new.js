@@ -1,5 +1,5 @@
 $(document).ready(function() {
-  $('#timeslice_task_id').mcDropdown("#task_mc_dropdown");
+  $('#timeslice_task_id[type="text"]').mcDropdown("#task_mc_dropdown");
 
   if ($("input[type=hidden][name='timeslice[task_id]']").length > 0) {
     var task_id = $("input[type=hidden][name='timeslice[task_id]']").val();
