@@ -6,7 +6,7 @@ label {
   min-width: 175px;
   display: inline-block;
   vertical-align: top;
-  font-weight: bold;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, 0.3);
 }
 
 input[type='button'], input[type='submit'] {
@@ -36,6 +36,10 @@ input[type='button']:hover, input[type='submit']:hover {
 
 input[type='button']:active, input[type='submit']:active {
   top: 1px;
+}
+
+input[type='text'], textarea {
+  border: 1px solid #ccc;
 }
 
 textarea {

@@ -15,7 +15,7 @@ body.reports-project_stakeholders div.stakeholders {
   background-color: white;
   border-style: solid;
   border-width: 1px 0 0 0;
-  border-color: #c3c3c3;
+  border-color: #cecece;
 }
 
 body.dashboard-not_staff_dashboard #project-list div.project:hover .stakeholders,

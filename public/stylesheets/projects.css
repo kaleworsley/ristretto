@@ -75,7 +75,7 @@ body.projects-show div.stakeholders, body.reports-project_stakeholders div.stake
   box-shadow: 0 0 3px #888888;
   margin: 15px 5px 5px;
   background-color: #f3f3f3;
-  border-color: #939393;
+  border-color: #ccc;
   border-style: solid;
   border-width: 1px;
   padding: 0px;
@@ -96,7 +96,7 @@ body.projects-show div.stakeholders h3, body.reports-project_stakeholders div.st
   overflow: auto;
   margin: 0;
   padding: 5px 10px 5px 10px;
-  background-color: #dadada;
+  background-color: #e2e2e2;
   border-bottom: 1px #cccccc solid;
 }
 
@@ -135,26 +135,22 @@ div.projects ul {
   padding: 0;
 }
 
-div.projects li {
+div.projects ul.projects > li {
+  background-repeat: repeat-x;
+  background-image: url("/images/gradient.png");
+  border-width: 1px 0 1px 0;
+  border-style: solid;
+  border-color: #eeeeee;
   clear: both;
   overflow: auto;
   padding: 2px 15px 3px 15px;
-  margin: 0;
+  margin: 5px 0;
   font-size: 13px;
 }
 
-div.projects li:hover {
-  background-color: #d6d6d6;
-  border-style: solid;
-  border-width: 1px 0 1px 0;
-  border-color: #c3c3c3;
-  color: black;
-  padding: 1px 15px 2px 15px;
-  margin: 0;
-}
-
-div.projects li:hover a {
-  color: black;
+div.projects ul.projects > li:hover {
+  background-color: #e2e2e2;
+  border-color: #cecece;
 }
 
 div.projects li span.name {
@@ -272,7 +268,7 @@ div.project_order div.project:hover {
   background-color: #d6d6d6;
   border-style: solid;
   border-width: 1px 0 1px 0;
-  border-color: #c3c3c3;
+  border-color: #cecece;
   color: black;
   padding: 4px 0px 4px 10px;
 }
@@ -332,7 +328,7 @@ div.project_order div.expanded {
   background-color: #d6d6d6;
   border-style: solid;
   border-width: 1px 0 1px 0;
-  border-color: #c3c3c3;
+  border-color: #cecece;
   color: black;
   padding: 4px 0px 4px 0px;
   margin: 0 0 5px 0;
@@ -412,7 +408,7 @@ body.projects form#new_attachment {
   padding: 5px;
   background-color: #f3f3f3;
   border-style: solid;
-  border-color: #939393;
+  border-color: #ccc;
   border-width: 1px;
 }
 
@@ -447,20 +443,25 @@ body.projects form#new_task {
   -moz-border-radius: 10px 10px 10px 10px;
   -webkit-border-radius: 10px 10px 10px 10px;
   border-radius: 10px 10px 10px 10px;
+/*
   -moz-box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
   -webkit-box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
+*/
   clear: both;
   position: absolute;
-  left: 15px;
+  left: 10px;
   z-index: 100;
-  width: 31%;
+  width: 32.5%;
   margin: 0 0 10px 0;
   padding: 5px;
   background-color: #f3f3f3;
   border-style: solid;
-  border-color: #939393;
+  border-color: #ccc;
   border-width: 1px;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
 }
 
 body.projects form#new_task div.form-item {
