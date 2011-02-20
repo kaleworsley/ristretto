@@ -15,4 +15,11 @@ class Mailer < ActionMailer::Base
     recipients    user.email
     body          :reset_password_url => reset_password_url(user.perishable_token)
   end
+
+  def mailout(mailout, user)
+    subject       mailout.subject
+    from          SETTINGS['default_email']
+    recipients    user.email
+    body          :mailout => mailout, :user => user
+  end
 end
