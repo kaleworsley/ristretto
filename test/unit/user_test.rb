@@ -121,4 +121,10 @@ class UserTest < ActiveSupport::TestCase
     assert user.receive_mail_from(tasks(:task1))
     assert user.receive_mail_from?(tasks(:task1))
   end
+
+  test "name for sorted select box" do
+    @user = Factory.create(:user, :first_name => 'Bob', :last_name => 'Fossil',
+                           :email => 'bob@zooniverse.com')
+    assert_equal 'Fossil, Bob (bob@zooniverse.com)', @user.for_select_box
+  end
 end

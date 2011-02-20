@@ -55,6 +55,8 @@ class User < ActiveRecord::Base
   has_many :stakeholders, :dependent => :destroy
   has_many :current_projects, :through => :stakeholders, :source => :project
 
+  has_and_belongs_to_many :mailouts
+
   named_scope :staff, :conditions => {:is_staff => true}
 
   # Adds an object to a users ignore mail list
@@ -111,6 +113,10 @@ class User < ActiveRecord::Base
 
   def to_s
     full_name
+  end
+
+  def for_select_box
+    "#{last_name}, #{first_name} (#{email})"
   end
 
   # Fullname e.g. Firstname Lastname
