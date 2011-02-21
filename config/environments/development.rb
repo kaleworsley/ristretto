@@ -17,15 +17,4 @@ config.action_controller.perform_caching             = false
 config.action_mailer.raise_delivery_errors = true
 
 # set delivery method to :smtp, :sendmail or :test
-config.action_mailer.delivery_method = :smtp
-
-# these options are only needed if you choose smtp delivery
-# Use the 'mailtrap' gem as the smtp server for development
-# 
-# $ mailtrap start
-# $ tail -f /var/tmp/mailtrap.log
-#
-config.action_mailer.smtp_settings = {
-  :address        => 'localhost',
-  :port           => 2525,
-}
+config.action_mailer.delivery_method = :test

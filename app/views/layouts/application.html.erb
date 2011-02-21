@@ -82,6 +82,7 @@
         <%= nav_li('Customers', customers_path) if current_user.is_staff %>
         <%= nav_li('Users', users_path) if current_user.is_staff %>
         <%= nav_li('New user', new_user_path) if current_user.is_staff %>
+        <%= nav_li('Mailouts', mailouts_path) if current_user.is_staff %>
         <%= nav_li 'Edit Profile', profile_path, 'users' %>
         <%= nav_li 'Logout', logout_path %>
       <%- else -%>

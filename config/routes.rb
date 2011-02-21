@@ -37,6 +37,8 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :password_resets
   map.resources :attachments, :member => { :delete => :get, :download => :get }
 
+  map.resources :mailouts
+
   map.connect 'project-order', :controller => 'projects', :action => 'update_project_order', :conditions => { :method => :put }
   map.project_order 'project-order', :controller => 'projects', :action => 'project_order'
 

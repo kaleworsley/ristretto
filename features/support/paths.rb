@@ -16,6 +16,8 @@ module NavigationHelpers
       register_path
     when /the list of projects/
       projects_path
+    when /the mailouts page/
+      mailouts_path
 
     # Add more mappings here.
     # Here is an example that pulls values out of the Regexp:

@@ -7,6 +7,10 @@ Factory.define :user do |f|
   f.sequence(:email) { |n| "foo#{n}@example.com" } 
 end
 
+Factory.define :staff, :parent => :user do |s|
+  s.is_staff true
+end
+
 Factory.define :customer do |f|
   f.sequence(:name) { |n| "Customer #{n}" }
   f.association :user, :factory => :user
@@ -41,4 +45,9 @@ end
 Factory.define :stakeholder do |f|
   f.association :user, :factory => :user
   f.association :project, :factory => :project
+end
+
+Factory.define :mailout do |m|
+  m.subject 'Test mailout subject'
+  m.body 'Test mailout body'
 end
