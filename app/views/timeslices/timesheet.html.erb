@@ -9,9 +9,7 @@
 <% javascript "jquery.timeentry.min" %>
 <% javascript "timeslice.timesheet" %>
 <% javascript "timeslice.new" %>
-<div id="new_timeslice_wrapper" class="big">
-  <%= render :partial => "timeslices/smart_add_form" %>
-</div>
+
 <div id="timesheet-nav">
 <% content_tag 'div', {:class => 'fc-button-prev ui-state-default ui-corner-left ui-no-right day-nav'} do %>
   <%= link_to('<span class="ui-icon ui-icon-circle-triangle-w"></span><span class="date">' + @date.yesterday.to_s + '</span>', "/timesheet/#{@date.yesterday}") -%>
@@ -36,8 +34,8 @@
 <% content_tag 'div', {:class => 'fc-button-next ui-state-default ui-corner-right month-nav'} do %>
   <%= link_to('<span class="ui-icon ui-icon-circle-triangle-e"></span><span class="date">' + (@date.monday+1.month).to_s + '</span>', "/timesheet/#{(@date.monday+7)}") -%>
 <% end %>
-
 </div>
+
 <div id="timesheet"></div>
 <div id="timesheet-table">
 <table id="timesheet-week">

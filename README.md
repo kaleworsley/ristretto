@@ -9,7 +9,7 @@ Installation
 Requirements
 ------------
 
-    gem install rails -v 2.3.10
+    gem install rails -v 2.3.11
 
     gem install authlogic -v 2.1.6
     gem install vestal_versions -v 1.0.2

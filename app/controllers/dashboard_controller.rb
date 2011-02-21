@@ -14,6 +14,9 @@ class DashboardController < ApplicationController
     when 'projects_overview'
       @partial = 'projects_overview'
 
+    when 'support_overview'
+      @partial = 'support_overview'
+
     when 'project_tasks'
       @projects = current_user.current_projects.current
       @partial = 'project_tasks'

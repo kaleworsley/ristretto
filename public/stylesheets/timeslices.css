@@ -401,12 +401,9 @@ body.timeslices-update_ar div.sales .ui-widget-header .ui-state-default {
   padding: 5px 7px;
 }
 
-
 #timeslices {
   margin-bottom: 10px;
 }
-
-
 
 table.timeslices {
   width: 100%;
@@ -415,3 +412,19 @@ table.timeslices {
 #timeslice_task_id {
   width: 100%;
 }
+
+div#timesheet .non-chargeable,
+div#timesheet .fc-agenda .non-chargeable .fc-event-time,
+div#timesheet .non-chargeable a {
+  background-color: #767676;
+  border-color: #767676;
+}
+
+
+div#timesheet .chargeable,
+div#timesheet .fc-agenda .chargeable .fc-event-time,
+div#timesheet .chargeable a {
+  background-color: #0472CC;
+  border-color: #0472CC;
+}
+
