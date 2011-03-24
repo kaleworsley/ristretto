@@ -36,10 +36,10 @@ Rails::Initializer.run do |config|
 
   config.gem "authlogic", :version => '2.1.6'
   config.gem "vestal_versions", :version => '1.0.2'
-  config.gem "bluecloth", :version => '2.0.9'
+  config.gem "bluecloth", :version => '2.1.0'
   config.gem "will_paginate", :version =>  '2.3.15'
   config.gem "cancan", :version => '1.3.4'
-  config.gem "paperclip", :version => '2.3.3'
+  config.gem "paperclip", :version => '2.3.8'
   config.gem "exception_notification", :version => '2.3.3.0'
   config.gem "icalendar", :version => '1.1.5'
 
