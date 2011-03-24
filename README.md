@@ -16,7 +16,7 @@ Requirements
     gem install bluecloth -v 2.1.0
     gem install will_paginate -v 2.3.15
     gem install cancan -v 1.3.4
-    gem install paperclip -v 2.3.8
+    gem install paperclip -v 2.3.3
     gem install exception_notification -v 2.3.3.0
     gem install icalendar -v 1.1.5
 
