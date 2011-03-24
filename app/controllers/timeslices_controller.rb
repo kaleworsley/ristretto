@@ -49,7 +49,8 @@ class TimeslicesController < ApplicationController
 
 
   def update_ar
-    @timeslices = Timeslice.uninvoiced
+    # FIXME: This should be a scope
+    @timeslices = Timeslice.uninvoiced.reject {|t| t.task.project.fixed_price == true}
     @tasks = @timeslices.collect {|timeslice| timeslice.task}.uniq
     @projects = @tasks.collect {|task| task.project}.uniq
     @customers = @projects.collect {|project| project.customer}.uniq
