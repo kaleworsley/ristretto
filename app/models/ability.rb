@@ -94,7 +94,7 @@ class Ability
       end
 
       # Non-staff can access the sales order tracker
-      can :sales_order_tracker, Timeslice do |timeslice|
+      can :invoice_tracker, Timeslice do |timeslice|
         true
       end
 
