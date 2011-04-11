@@ -55,7 +55,7 @@
 <% end %>
 </div>
 </div>
-
+<% if (!@task.project.fixed_price && !current_user.is_staff?) || current_user.is_staff? %>
 <div id="timeslices">
   <h3 class="title dark">Timeslices</h3>
   <div class="timeslices">
@@ -66,6 +66,7 @@
     <% end %>
   </div>
 </div>
+<% end %>
 
 <div id="task-details" class="panel small-panel">
 <h3 class="title">Task details</h3>
@@ -76,10 +77,10 @@
 </p>
 
 <p>
-  <strong>Estimate:</strong>
+  <strong><% if @task.project.fixed_price %>Quote:<% else %>Estimate:<% end %></strong>
   <%= pluralize(@task.estimate.to_f.round(2), @task.estimate_unit.humanize.singularize) %>
 </p>
-
+<% if (!@task.project.fixed_price && !current_user.is_staff?) || current_user.is_staff? %>
 <p>
   <strong>Chargeable:</strong>
   <%= pluralize((Timeslice.total_chargeable_duration(@task.timeslices)/60/60).to_f.round(2), 'Hour') %>
@@ -89,6 +90,7 @@
   <strong>Non-chargeable:</strong>
   <%= pluralize((Timeslice.total_nonchargeable_duration(@task.timeslices)/60/60).to_f.round(2), 'Hour') %>
 </p>
+<% end %>
 <p>
   <strong>Assigned to:</strong>
   <% unless @task.assigned_to.blank? %>
