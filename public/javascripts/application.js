@@ -130,7 +130,17 @@ function searchAll(needle, haystack) {
     return 1;
   }
   else {
-    return -1;
+    var s = '';
+    $.each(haystack.split(' '), function(i, v) {
+      s += v.substring(0, 1);
+    });
+
+    if (s.search(needle) != -1) {
+      return 1;
+    }
+    else {
+      return -1;
+    }
   }
 }
 
@@ -208,7 +218,7 @@ $(document).ready(function() {
   //magicScroll('body.projects.projects-index div.projects > ul', 'li.project');
   //magicScroll('body.tasks.tasks-index div.tasks > ul', 'li.task');
   //magicScroll('', '');
-  
+
 });
 
 function magicScroll(contentSelector, itemSelector) {
@@ -223,3 +233,4 @@ function magicScroll(contentSelector, itemSelector) {
     });
   }
 }
+
