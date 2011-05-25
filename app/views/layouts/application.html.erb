@@ -93,6 +93,10 @@
         <%= nav_li 'Login', login_path, 'user_sessions' %>
       <%- end -%>
     <% end %>
+    <%- if current_user -%>
+    <%= nav_li('Search', 'javascript: showSearchPopup();', nil, {:class => 'search'}) if current_user.is_staff %>
+    <%- end -%>
+
   </ul>
 </div>
 <div id="page">

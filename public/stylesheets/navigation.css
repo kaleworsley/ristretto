@@ -142,11 +142,22 @@ div#header ul.primary-nav li:hover ul {
   display: block;
 }
 
+ul.primary-nav li.search {
+  background-image: url("/images/nav-magnify.png");
+  background-repeat: no-repeat;
+  width: 44px;
+}
+
+ul.primary-nav li.search:hover {
+  background-image: url("/images/nav-magnify-mo.png");
+}
+
 ul.primary-nav li.projects span,
 ul.primary-nav li.time span,
 ul.primary-nav li.people span,
 ul.primary-nav li.sales span,
-ul.primary-nav li.reports span {
+ul.primary-nav li.reports span,
+ul.primary-nav li.search span {
   display: block;
   overflow: hidden;
   height: 75px;
@@ -156,7 +167,8 @@ ul.primary-nav li.projects a,
 ul.primary-nav li.time a,
 ul.primary-nav li.people a,
 ul.primary-nav li.sales a,
-ul.primary-nav li.reports a {
+ul.primary-nav li.reports a,
+ul.primary-nav li.search a {
   display: block;
   padding: 200px 0 0 0;
 }

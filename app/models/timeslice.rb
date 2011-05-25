@@ -51,6 +51,10 @@ class Timeslice < ActiveRecord::Base
     end
   }
 
+  def to_s
+    description
+  end
+
   # Paginate
   def self.page(page)
     paginate :per_page => 50, :page => page
@@ -226,3 +230,4 @@ class Timeslice < ActiveRecord::Base
       end
     end
 end
+
