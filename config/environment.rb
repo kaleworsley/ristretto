@@ -34,15 +34,6 @@ Rails::Initializer.run do |config|
   # config.gem "sqlite3-ruby", :lib => "sqlite3"
   # config.gem "aws-s3", :lib => "aws/s3"
 
-  config.gem "authlogic", :version => '2.1.6'
-  config.gem "vestal_versions", :version => '1.0.2'
-  config.gem "bluecloth", :version => '2.1.0'
-  config.gem "will_paginate", :version =>  '2.3.15'
-  config.gem "cancan", :version => '1.3.4'
-  config.gem "paperclip", :version => '2.3.3'
-  config.gem "exception_notification", :version => '2.3.3.0'
-  config.gem "icalendar", :version => '1.1.5'
-
   # Only load the plugins named here, in the order given. By default, all plugins 
   # in vendor/plugins are loaded in alphabetical order.
   # :all can be used as a placeholder for all plugins not explicitly named

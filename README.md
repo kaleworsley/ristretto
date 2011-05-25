@@ -9,32 +9,14 @@ Installation
 Requirements
 ------------
 
-    gem install rails -v 2.3.11
-
-    gem install authlogic -v 2.1.6
-    gem install vestal_versions -v 1.0.2
-    gem install bluecloth -v 2.1.0
-    gem install will_paginate -v 2.3.15
-    gem install cancan -v 1.3.4
-    gem install paperclip -v 2.3.3
-    gem install exception_notification -v 2.3.3.0
-    gem install icalendar -v 1.1.5
-
-For testing
-
-    gem install cucumber-rails -v 0.3.2
-    gem install cucumber -v 0.9.4
-    gem install factory_girl -v 1.3.2
-
-or
-
-    rake gems:install
+    gem install bundler
 
 Setup
 -----
 
     git clone git://github.com/egressive/ristretto.git
     cd ristretto
+    bundle install
     rake ristretto:setup
     rake db:create
     rake db:schema:load
