@@ -1,4 +1,7 @@
 class Timeslice < ActiveRecord::Base
+  searchable do
+    text :description
+  end
   # Create revisions
   versioned
 

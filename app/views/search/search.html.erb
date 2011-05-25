@@ -1,0 +1,9 @@
+<% unless @q.blank? %>
+<%= title "Search results for \"#{ @q }\"" %>
+<ul class="results">
+<% @search.results.each do |result| %>
+  <li><strong><%= link_to result.to_s, result %></strong> - <%= h result.class.to_s %></li>
+<% end %>
+</ul>
+<%= will_paginate(@search.results) %>
+<% end %>

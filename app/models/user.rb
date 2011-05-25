@@ -1,6 +1,9 @@
 include ActionView::Helpers::DateHelper
   # TODO: Rename poorly-named methods.
 class User < ActiveRecord::Base
+  searchable do
+    text :name, :first_name, :last_name, :email
+  end
   # Create revisions
   versioned :except => [:perishable_token, :last_request_at]
 

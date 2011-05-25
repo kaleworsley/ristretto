@@ -1,4 +1,8 @@
 class Project < ActiveRecord::Base
+  searchable do
+    text :name
+  end
+
   # Create revisions
   versioned
 

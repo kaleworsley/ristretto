@@ -1,4 +1,7 @@
 class Task < ActiveRecord::Base
+  searchable do
+    text :name, :description
+  end
   # Create revisions
   versioned
 

@@ -708,3 +708,10 @@ table th.edit {
 .pagination a:hover {
   color: #000;
 }
+
+#search_popup input {
+	display: block;
+	width: 100%;
+	height: 100%;
+	font-size: 2em;
+}

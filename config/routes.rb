@@ -59,6 +59,8 @@ ActionController::Routing::Routes.draw do |map|
   map.connect '/dashboard/widget', :controller => 'dashboard', :action => 'widget'
   map.root :controller => "dashboard"
 
+  map.connect '/search', :controller => 'search', :action => 'search'
+
   map.connect ':controller/:action/:id'
   map.connect ':controller/:action/:id.:format'
   map.connect ':controller/:action'

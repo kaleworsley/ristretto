@@ -1,6 +1,6 @@
 source :gemcutter
 gem "rails", "2.3.11"
-gem "rake", "0.8.7"
+gem "rake", "0.8.7", :require => false
 gem "sqlite3-ruby", :require => "sqlite3"
 
 gem "authlogic", "2.1.6"
@@ -11,6 +11,8 @@ gem "cancan", "1.3.4"
 gem "paperclip", "2.3.3"
 gem "exception_notification", "2.3.3.0"
 gem "icalendar", "1.1.5"
+gem "sunspot", "1.2.1"#, :require => "sunspot"
+gem "sunspot_rails", "1.2.1"#, :require => "sunspot/rails"
 
 group :development, :test do
   gem "cucumber", "0.9.4", :require => false

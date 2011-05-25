@@ -69,6 +69,11 @@ class ApplicationController < ActionController::Base
     render_404
   end
 
+  # 403 Page
+  def show_403
+    render_403
+  end
+
   def store_location
     session[:return_to] = request.request_uri
   end

@@ -1,4 +1,7 @@
 class Comment < ActiveRecord::Base
+  searchable do
+    text :body
+  end
   # Create revisions
   versioned
 
