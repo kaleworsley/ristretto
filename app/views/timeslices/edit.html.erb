@@ -14,7 +14,7 @@
 <%- end -%>
 
 <%= title "Editing timeslice" -%>
-
+<% javascript 'timeslice.edit' %>
 <% form_for @timeslice do |form| %>
   <%= render :partial => form, :locals => {:timeslice => @timeslice, :task => @task } %>
 <% end %>
