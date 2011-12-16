@@ -69,10 +69,6 @@ class ProjectTest < ActiveSupport::TestCase
   end
 
   test "should return percentage of budget used" do
-    @project.estimate_unit = "points"
-    assert_nil @project.percentage_of_budget_used
-
-    @project.estimate_unit = "hours"
     assert_equal 0, @project.percentage_of_budget_used
 
     @project.estimate = nil

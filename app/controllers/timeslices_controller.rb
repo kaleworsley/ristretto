@@ -125,37 +125,6 @@ class TimeslicesController < ApplicationController
     end
   end
 
-  def smart_create
-    timeslice = Timeslice.new(params[:timeslice])
-    timeslice.user = current_user
-
-    respond_to do |format|
-      if timeslice.save
-
-        cookies.delete("timesliceDescription:#{timeslice.task.id.to_s}")
-        cookies.delete("timesliceStarted:#{timeslice.task.id.to_s}")
-        cookies.delete("timesliceFinished:#{timeslice.task.id.to_s}")
-        cookies.delete("timesliceTimer:#{timeslice.task.id.to_s}")
-
-        flash[:notice] = "Saved timeslice"
-        format.html do
-          if params[:return_to_task] == 'true'
-            redirect_to timeslice.task
-          else
-            redirect_to timesheet_path(timeslice.started.strftime('%Y-%m-%d'))
-          end
-
-        end
-        format.js { render :template => 'timeslices/smart_create'}
-      else
-        flash[:warning] = "Could not save timeslice: " + timeslice.errors.full_messages.to_s
-        format.html {redirect_to timeslice.task}
-        format.js
-      end
-
-    end
-  end
-
   def timesheet
     unless params[:start].blank? && params[:end].blank?
       @timeslices = current_user.timeslices.by_date(Time.at(params[:start].to_i), Time.at(params[:end].to_i))

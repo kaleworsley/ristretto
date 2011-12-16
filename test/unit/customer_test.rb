@@ -2,8 +2,7 @@ require 'test_helper'
 
 class CustomerTest < ActiveSupport::TestCase
   def setup
-    @customer = Customer.new :name => 'Test customer',
-                             :user_id => users(:user1).id
+    @customer = Customer.new :name => 'Test customer'
   end
 
   def test_should_save_customer
@@ -13,11 +12,6 @@ class CustomerTest < ActiveSupport::TestCase
   def test_should_not_save_customer_without_name
     @customer.name = nil
     assert !@customer.save, 'saved a customer without a name'
-  end
-
-  def test_should_not_save_customer_without_user
-    @customer.user = nil
-    assert !@customer.save, 'saved a customer without a user'
   end
 
   def test_customer_name_should_be_unique

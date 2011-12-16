@@ -2,18 +2,16 @@ include ActionView::Helpers::DateHelper
   # TODO: Rename poorly-named methods.
 class User < ActiveRecord::Base
   searchable do
-    text :name, :first_name, :last_name, :email
+    text :full_name, :email
   end
   # Create revisions
   versioned :except => [:perishable_token, :last_request_at]
 
   attr_protected :is_staff
 
-  validates_presence_of :name
-  validates_presence_of :first_name
-  validates_presence_of :last_name
+  validates_presence_of :full_name
   validates_presence_of :email
-  validates_uniqueness_of :name
+  validates_uniqueness_of :full_name
   validates_uniqueness_of :email
 
   serialize :ignore_mail, Hash
@@ -25,8 +23,6 @@ class User < ActiveRecord::Base
     config.transition_from_crypto_providers = [Authlogic::CryptoProviders::MD5]
   end
 
-  has_many :customers
-  has_many :projects
   has_many :tasks
   has_many :assigned_tasks, :class_name => 'Task', :foreign_key => 'assigned_to_id'
 
@@ -56,7 +52,10 @@ class User < ActiveRecord::Base
 
   has_many :comments
   has_many :stakeholders, :dependent => :destroy
-  has_many :current_projects, :through => :stakeholders, :source => :project
+  #has_many :current_projects, :through => :stakeholders, :source => :project
+
+  has_and_belongs_to_many :projects, :uniq => true
+
 
   has_and_belongs_to_many :mailouts
 
@@ -94,6 +93,19 @@ class User < ActiveRecord::Base
     end
   end
 
+  def current_projects
+    projects.current
+  end  
+
+  def dashboard_panels
+    panels = ['project_list', 'timesheet']
+    slices = []
+    
+    panels.each_slice(2) {|slice| slices.push(slice) }
+    
+    slices
+  end
+
   def receive_mail_from?(instance)
     !ignore_mail_from?(instance)
   end
@@ -118,19 +130,17 @@ class User < ActiveRecord::Base
     full_name
   end
 
+  def name
+    full_name
+  end
+
   def for_select_box
     "#{last_name}, #{first_name} (#{email})"
   end
 
-  # Fullname e.g. Firstname Lastname
-  def full_name
-    [first_name, last_name].join(' ')
-  end
-
-
   # Initials e.g. FL
   def initials
-    first_name.first + last_name.first
+    'TODO'
   end
 
   # Is a user a staff member?
@@ -147,7 +157,7 @@ class User < ActiveRecord::Base
   # Returns all projects that are either owned by this user or that this
   # user is a stakeholder for
   def all_projects
-    (projects + current_projects).uniq
+    current_projects.uniq
   end
 
   # Returns an array of project ids to which this user is associated

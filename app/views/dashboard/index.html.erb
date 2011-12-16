@@ -1,24 +1,12 @@
 <% @body_classes = ['dashboard-' + @partial] %>
-<%= title "Dashboard" %>
-<% if current_user.is_staff? %>
-<script type="text/javascript">
-$(document).ready(function() {
-  $('#dashboard-select').val(readCookie('dashboardView') || 'project_activity');
-  $('#dashboard-select').change(function() {
-    createCookie('dashboardView', $(this).val());
-    window.location.reload();
-  });
-});
-</script>
-<select id="dashboard-select">
-  <option value="project_activity">Projects + Recent activity</option>
-  <option value="projects_overview">Projects Overview</option>
-  <option value="support_overview">Support Overview</option>
-  <option value="assigned_tasks">My Tasks</option>
-  <option value="project_tasks">My projects and tasks</option>
-  <option value="not_staff_dashboard">Tasks for acceptance</option>
-</select>
+<% title "Dashboard" %>
+
+<% current_user.dashboard_panels.each do |slice| %>
+  <div class="row">
+    <% slice.each do |panel| %>
+      <div id="<%= panel %>" class="span8">
+        <%= render :partial => panel %>
+      </div>
+    <% end %>
+  </div>
 <% end %>
-<div id="dashboard">
-  <%= render :partial => @partial %>
-</div>

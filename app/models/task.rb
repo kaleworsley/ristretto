@@ -53,15 +53,6 @@ class Task < ActiveRecord::Base
     STATES
   end
 
-  # Estimage unit for the project
-  def estimate_unit
-    unless project.blank? || project.estimate_unit.blank?
-      project.estimate_unit
-    else
-      'hours'
-    end
-  end
-
   # Task state groups
   def Task.stategroups
     STATEGROUPS

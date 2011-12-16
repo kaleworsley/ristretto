@@ -1,15 +1,15 @@
-<% form_tag update_task_order_project_path(project), { :method => :put, :id => 'task_order_form'} do %>
-
-<% ['todo', 'done', 'doing'].each do |stategroup| %>
-  <div id="task_order_<%= stategroup %>" class="panel three task_order">
+<% ['todo', 'doing', 'done'].each do |stategroup| %>
+  <div id="task_order_<%= stategroup %>" class="panel span8">
     <h3><%= stategroup.to_s.capitalize %></h3>
     <div class="tasks content">
-      <%= render :partial => 'tasks/ordered_task',
-                 :collection => project.tasks.send(stategroup) %>
+      <table>
+      <thead><tr><th>Name</th><th>State</th><th>Estimate</th><th>Comments</th><th>Details</th></tr></thead>
+      <tbody>
+        <%= render :partial => 'tasks/task', :collection => project.tasks.send(stategroup) %>
+      </tbody>
+      </table>
     </div>
     <div class="panel-footer"></div>
   </div>
 <% end %>
 
-<%= submit_tag "Update order" %>
-<% end %>

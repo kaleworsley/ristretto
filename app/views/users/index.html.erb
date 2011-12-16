@@ -15,13 +15,11 @@
         <tr>
           <th>Gravatar</th>
           <th>Name</th>
-          <th>First name</th>
-          <th>Last name</th>
           <% if current_user.is_staff? %>
           <th>Email</th>
-          <th class="show"><%= image_tag 'show.png' %></th>
-          <th class="edit"><%= image_tag 'edit.png' %></th>
-          <th class="delete"><%= image_tag 'delete.png' %></th>
+          <th class="show">Show</th>
+          <th class="edit">Edit</th>
+          <th class="delete">Delete</th>
           <% end %>
         </tr>
       </thead>
@@ -29,14 +27,12 @@
         <% for user in @users %>
         <tr>
           <td><%= gravatar(user,40) %></td>
-          <td><%=h user.name %></td>
-          <td><%=h user.first_name %></td>
-          <td><%=h user.last_name %></td>
+          <td><%=h user.full_name %></td>
           <% if current_user.is_staff? %>
           <td><%=h user.email %></td>
-          <td class="show"><%= show_link user %></td>
-          <td class="edit"><%= edit_link user %></td>
-          <td class="delete"><%= delete_link user %></td>
+          <td class="show"><%= show_link user, 'Show' %></td>
+          <td class="edit"><%= edit_link user, 'Edit' %></td>
+          <td class="delete"><%= delete_link user, 'Delete' %></td>
           <% end %>
         </tr>
         <% end %>

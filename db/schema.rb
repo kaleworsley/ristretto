@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110213225827) do
+ActiveRecord::Schema.define(:version => 20111216035319) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "attachable_id"
@@ -35,10 +35,7 @@ ActiveRecord::Schema.define(:version => 20110213225827) do
   add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
 
   create_table "customers", :force => true do |t|
-    t.text     "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id"
+    t.text "name"
   end
 
   create_table "mailouts", :force => true do |t|
@@ -57,23 +54,23 @@ ActiveRecord::Schema.define(:version => 20110213225827) do
   add_index "mailouts_users", ["mailout_id", "user_id"], :name => "index_mailouts_users_on_mailout_id_and_user_id"
 
   create_table "projects", :force => true do |t|
-    t.text     "name"
-    t.integer  "customer_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id"
-    t.decimal  "estimate",      :precision => 10, :scale => 2
-    t.string   "state"
-    t.integer  "weight",                                       :default => 0
-    t.string   "estimate_unit"
-    t.float    "rate"
-    t.boolean  "fixed_price"
-    t.date     "deadline"
-    t.string   "kind",                                         :default => "development"
+    t.text    "name"
+    t.integer "customer_id"
+    t.decimal "estimate",    :precision => 10, :scale => 2
+    t.string  "state"
+    t.float   "rate"
+    t.boolean "fixed_price"
+    t.string  "kind",                                       :default => "development"
   end
 
   add_index "projects", ["customer_id"], :name => "index_projects_on_customer_id"
-  add_index "projects", ["user_id"], :name => "index_projects_on_user_id"
+
+  create_table "projects_users", :id => false, :force => true do |t|
+    t.integer "project_id"
+    t.integer "user_id"
+  end
+
+  add_index "projects_users", ["project_id", "user_id"], :name => "index_projects_users_on_project_id_and_user_id"
 
   create_table "stakeholders", :force => true do |t|
     t.integer  "user_id"
@@ -117,9 +114,6 @@ ActiveRecord::Schema.define(:version => 20110213225827) do
   add_index "timeslices", ["user_id"], :name => "index_timeslices_on_user_id"
 
   create_table "users", :force => true do |t|
-    t.string   "name"
-    t.string   "first_name"
-    t.string   "last_name"
     t.string   "email"
     t.string   "crypted_password"
     t.string   "password_salt"
@@ -130,7 +124,6 @@ ActiveRecord::Schema.define(:version => 20110213225827) do
     t.integer  "minute_step",         :default => 15
     t.integer  "login_count",         :default => 0,     :null => false
     t.integer  "failed_login_count",  :default => 0,     :null => false
-    t.datetime "last_request_at"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
     t.string   "current_login_ip"
@@ -138,6 +131,7 @@ ActiveRecord::Schema.define(:version => 20110213225827) do
     t.string   "single_access_token", :default => "0",   :null => false
     t.string   "perishable_token",    :default => "0",   :null => false
     t.text     "ignore_mail"
+    t.string   "full_name"
   end
 
   create_table "versions", :force => true do |t|

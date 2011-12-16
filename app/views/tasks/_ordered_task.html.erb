@@ -22,10 +22,10 @@
 
   <ul class="edit-links">
     <li class="task_id"><%= ordered_task.id%></li>
-    <li class="comment"><%= link_to image_tag('comment.png', :alt => 'Comment') + ' Add Comment', task_path(ordered_task) + '#comment-form' %></li>
-    <li class="view"><%= show_link ordered_task, true %></li>
-    <li class="edit"><%= edit_link ordered_task, true %></li>
-    <li class="delete"><%= delete_link ordered_task, true %></li>
+    <li class="comment"><%= link_to 'Comment', task_path(ordered_task) + '#comment-form', :class => 'btn icon chat' %></li>
+    <li class="view"><%= show_link ordered_task, 'Show' %></li>
+    <li class="edit"><%= edit_link ordered_task, 'Edit' %></li>
+    <li class="delete"><%= delete_link ordered_task, 'Delete' %></li>
   </ul>
   <div class="order"><%= hidden_field_tag 'task_orders[]', ordered_task.weight, {:id => "task_orders_#{ordered_task.id}"} %></div>
   <div class="state"><%= hidden_field_tag 'task_states[]', ordered_task.state, {:id => "task_states_#{ordered_task.id}"} %></div>

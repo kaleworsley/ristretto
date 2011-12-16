@@ -11,10 +11,10 @@ class Project < ActiveRecord::Base
   validates_numericality_of :estimate, :greater_than => 0, :allow_nil => true
 
   belongs_to :customer
-  belongs_to :user
   has_many :tasks, :dependent => :destroy
   has_many :stakeholders, :dependent => :destroy
-  has_many :users, :through => :stakeholders
+  has_and_belongs_to_many :users, :uniq => true
+
   #NOTE: ":class_name => '::Attachment''" is required. There is a bug in paperclip
   #see: http://thewebfellas.com/blog/2008/11/2/goodbye-attachment_fu-hello-paperclip#comment-2415
   has_many :attachments, :as => :attachable, :dependent => :destroy, :class_name => '::Attachment'
@@ -22,14 +22,11 @@ class Project < ActiveRecord::Base
   # Project states
   STATES = ['proposed', 'current', 'postponed', 'complete']
 
-  # Project estimate units
-  ESTIMATE_UNITS = ['hours', 'points']
-
   # Project kinds
   KINDS = ['development', 'support']
 
   STATES.each do |state|
-    named_scope state, :conditions => { :state => state }, :include => [{:tasks => :timeslices}, :customer, :stakeholders], :order => 'weight asc'
+    named_scope state, :conditions => { :state => state }, :include => [{:tasks => :timeslices}, :customer, :stakeholders], :order => 'name asc'
   end
 
   # The overrunning? method will only test the project status if the percentage
@@ -65,16 +62,6 @@ class Project < ActiveRecord::Base
   # Return a hash of available project kinds suitable for the select helper
   def Project.kinds_for_select
     KINDS.collect { |kind| [kind.humanize, kind] }
-  end
-
-  # Project estimate units
-  def Project.estimate_units
-    ESTIMATE_UNITS
-  end
-
-  # Return a hash of available project estimate units suitable for the select helper
-  def Project.estimate_units_for_select
-    ESTIMATE_UNITS.collect { |unit| [unit.humanize, unit]}
   end
 
   def self.find(*args)
@@ -139,7 +126,7 @@ class Project < ActiveRecord::Base
   def self.find(*args)
     options = args.last.is_a?(Hash) ? args.pop : {}
     if not options.include? :order
-      options[:order] = 'weight asc'
+      options[:order] = 'name asc'
     end
     args.push(options)
     super
@@ -183,7 +170,7 @@ class Project < ActiveRecord::Base
 
   # Returns the percentage of budget used.
   def percentage_of_budget_used
-    if estimate_unit == 'hours' and estimate.present?
+    if estimate.present?
       total_chargeable_hours / (estimate / 100)
     end
   end

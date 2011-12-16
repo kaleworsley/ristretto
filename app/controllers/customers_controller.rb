@@ -39,7 +39,6 @@ class CustomersController < ApplicationController
   # POST /customers.xml
   def create
     @customer = Customer.new(params[:customer])
-    @customer.user = current_user
     respond_to do |format|
       if @customer.save
         flash[:notice] = 'Customer was successfully created.'

@@ -1,9 +1,16 @@
 <%- content_for :tabs do -%>
-  <%= tab 'Edit', edit_customer_path(@customer)                  if can? :edit, @customer %>
-  <%= tab 'New project', new_customer_project_path(@customer.id) if can? :create, Project %>
+  <%= tab 'Show', customer_path(@customer), true %>
+  <%= tab 'Edit', edit_customer_path(@customer) %>
+  <%= tab 'Delete', delete_customer_path(@customer) %>
+  <% tab 'Projects', customer_projects_path(@customer) do %>
+    <%= tab 'Projects', customer_projects_path(@customer) %>
+    <li class="divider"></li>
+    <%= tab 'New Project', new_customer_project_path(@customer) %>
+  <%- end -%>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
+  <%= crumb 'Customers', customers_path %>
   <%= crumb @customer.name, @customer %>
 <%- end -%>
 
@@ -13,13 +20,18 @@
   <div class="projects panel small-panel no-padding">
     <h3 class="title">Projects</h3>
     <div class="content">
-      <ul class="projects">
+      <table class="projects">
+        <thead>
+          <tr><th>Name</th><th>State</th><th>Estimate/Quote</th><th>Details</th></tr>
+        </thead>
+        <tbody>
         <% if current_user.is_staff? %>
         <%= render :partial => 'projects/project', :collection => @customer.projects.sort_by(&:name) %>
         <% else %>
         <%= render :partial => 'projects/project', :collection => @customer.projects.find(:all, :conditions => {:id => current_user.current_projects_ids}).sort_by(&:name) %>
         <% end %>
-      </ul>
+        </tbody>
+      </table>
       <%- else -%>
       <h3>No Projects!</h3>
       <%- end -%>

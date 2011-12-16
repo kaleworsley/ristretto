@@ -13,19 +13,16 @@ end
 
 Factory.define :customer do |f|
   f.sequence(:name) { |n| "Customer #{n}" }
-  f.association :user, :factory => :user
 end
 
 Factory.define :project do |f|
   f.sequence(:name) { |n| "foo#{n}" }
-  f.association :user, :factory => :user
   f.association :customer, :factory => :customer
   f.state "current"
   f.kind "development"
   f.fixed_price false
   f.rate 130
   f.estimate 100
-  f.estimate_unit "hours"
 end
 
 Factory.define :task do |f|

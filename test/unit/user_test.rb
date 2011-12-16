@@ -51,7 +51,7 @@ class UserTest < ActiveSupport::TestCase
 
   test "all projects" do
     assert_instance_of Array, users(:user1).all_projects
-    assert_equal 3, users(:user1).all_projects.count
+    assert_equal 1, users(:user1).all_projects.count
   end
 
   test "is staff should be protected" do

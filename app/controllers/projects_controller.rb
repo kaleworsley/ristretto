@@ -174,7 +174,6 @@ class ProjectsController < ApplicationController
   # POST /projects.xml
   def create
     @project = @customer.projects.build(params[:project])
-    @project.user = current_user
 
     respond_to do |format|
       if @project.save

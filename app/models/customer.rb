@@ -6,9 +6,8 @@ class Customer < ActiveRecord::Base
   # Create revisions
   versioned
 
-  validates_presence_of :name, :user_id
+  validates_presence_of :name
   validates_uniqueness_of :name
-  belongs_to :user
   has_many :projects, :dependent => :destroy
 
   # Collection of all the stakeholders (User) of all the projects that belong to
@@ -16,6 +15,13 @@ class Customer < ActiveRecord::Base
   def users(reset = false)
     projects.each.collect { |project| project.users(reset) }.flatten.uniq
   end
+
+  def projects_tasks
+    project_task = Struct.new(:name, :id)
+    
+    projects.map {|p| p.tasks.map {|t| project_task.new("#{p.name}: #{t.name}", t.id) }}.flatten
+  end
+  
 
   # Check for a stakeholder
   def has_stakeholder?(user)

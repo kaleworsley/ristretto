@@ -1,45 +1,51 @@
   <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
-  <div class="form-item form-item-block">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+  <div class="form-item form-item-block clearfix">
+    <%= form.label :full_name %>
+    <div class="input">
+      <%= form.text_field :full_name %>
+    </div>
   </div>
-  <div class="form-item form-item-block">
-    <%= form.label :first_name %>
-    <%= form.text_field :first_name %>
-  </div>
-  <div class="form-item form-item-block">
-    <%= form.label :last_name %>
-    <%= form.text_field :last_name %>
-  </div>
-  <div class="form-item form-item-block">
+  <div class="form-item form-item-block clearfix">
     <%= form.label :email %>
-    <%= form.text_field :email %>
+    <div class="input">
+      <%= form.text_field :email %>
+    </div>
   </div>
-  <div class="form-item form-item-block">
+  <div class="form-item form-item-block clearfix">
     <%= form.label :password %>
-    <%= form.password_field :password %>
+    <div class="input">
+      <%= form.password_field :password %>
+    </div>
   </div>
-  <div class="form-item form-item-block">
+  <div class="form-item form-item-block clearfix">
     <%= form.label :password_confirmation %>
-    <%= form.password_field :password_confirmation %>
+    <div class="input">
+      <%= form.password_field :password_confirmation %>
+    </div>
   </div>
   <% if !current_user.nil? && current_user.is_staff %>
-  <div class="form-item form-item-block">
+  <div class="form-item form-item-block clearfix">
     <%= form.label :is_staff %>
-    <%= form.check_box :is_staff %>
+    <div class="input">
+      <%= form.check_box :is_staff %>
+    </div>
   </div>
 
-  <div class="form-item form-item-block">
+  <div class="form-item form-item-block clearfix">
     <%= form.label :minute_step %>
-    <%= form.select :minute_step, User.minute_steps_for_select %> <div class="field-description">Default minute increments for timeslices.</div>
+    <div class="input"> 
+      <%= form.select :minute_step, User.minute_steps_for_select %> <div class="field-description">Default minute increments for timeslices.</div>
+    </div>
   </div>
   <% end %>
   <% unless @user.new_record? %>
-  <div class="form-item form-item-block">
-    <%= label_tag :reset_api_key, "Reset API key?" %>
-    <%= check_box_tag :reset_api_key %>
+  <div class="form-item form-item-block clearfix">
+    <%= label_tag :reset_api_key, "Reset API key?" %>    
+    <div class="input">
+      <%= check_box_tag :reset_api_key %>
+    </div>
   </div>
   <% end %>
-  <div class="form-item form-item-block">
-    <%= form.submit 'Save' %>
+  <div class="actions">
+    <%= form.submit 'Save', :class => 'btn primary' %>
   </div>

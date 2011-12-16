@@ -1,15 +1,9 @@
 ActionController::Routing::Routes.draw do |map|
 
-  map.timeslice_smart_create 'timeslice-smart-create', :controller => 'timeslices', :action => 'smart_create'
-
   map.connect 'timesheet', :controller => 'timeslices', :action => 'timesheet'
 
   map.update_ar 'update-ar', :controller => 'timeslices', :action => 'update_ar'
   map.update_ar_save 'update-ar-save', :controller => 'timeslices', :action => 'update_ar_save', :method => :put
-
-  map.connect 'sales-order-tracker', :controller => 'timeslices', :action => 'sales_order_tracker'
-  map.sales_order_tracker '/sales-order-tracker/:ar', :controller => 'timeslices', :action => 'sales_order_tracker',
-  :defaults => { :ar => nil }
 
   map.connect 'invoice-tracker', :controller => 'timeslices', :action => 'invoice_tracker'
   map.invoice_tracker '/invoice-tracker/:invoice', :controller => 'timeslices', :action => 'invoice_tracker',
@@ -53,7 +47,7 @@ ActionController::Routing::Routes.draw do |map|
   map.login 'login', :controller => 'user_sessions', :action => 'new'
   map.logout 'logout', :controller => 'user_sessions', :action => 'destroy'
   map.profile 'profile', :controller => 'users', :action => 'edit'
-  map.register 'register', :controller => 'users', :action => 'new'
+  #map.register 'register', :controller => 'users', :action => 'new'
   map.resources :user_sessions
 
   map.connect '/dashboard/widget', :controller => 'dashboard', :action => 'widget'

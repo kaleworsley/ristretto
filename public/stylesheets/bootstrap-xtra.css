@@ -1,0 +1,181 @@
+@font-face {
+  font-family: "IconicStrokeRegular";
+  font-style: normal;
+  font-weight: normal;
+  src: url('/fonts/iconic_stroke.eot');
+  src: local('@fontFamily'), url('/fonts/iconic_stroke.eot?#iefix') format('embedded-opentype'), url('/fonts/iconic_stroke.woff') format('woff'), url('fonts/iconic_stroke.ttf') format('truetype'), url('/fonts/iconic_stroke.svg#IconicStrokeRegular') format('svg'), url("/fonts/iconic_stroke.otf") format('opentype');
+}
+
+.btn.icon:before {
+  font-family: "IconicStrokeRegular";
+  font-size: 14px;
+  line-height: 13px;
+  color: #000000;
+  content: "";
+  position: relative;
+  float: left;
+  top: 1px;
+  margin: 0 0.55em 0 -0.25em;
+}
+.btn.icon.alternative:before {
+  color: #ffffff;
+}
+.btn.icon.right:before {
+  float: right;
+  margin: 0 -0.25em 0 0.5em;
+}
+.btn.icon.large:before {
+  font-size: 16px;
+}
+.btn.icon.small:before {
+  font-size: 13px;
+}
+.btn.icon.arrowup:before {
+  content: "0";
+}
+.btn.icon.arrowdown:before {
+  content: "1";
+}
+.btn.icon.arrowleft:before {
+  content: "2";
+}
+.btn.icon.arrowright:before {
+  content: "3";
+}
+.btn.icon.approve:before {
+  content: "4";
+}
+.btn.icon.remove:before,
+.btn.icon.delete:before {
+  content: "5";
+}
+.btn.icon.log:before {
+  content: "6";
+}
+.btn.icon.calendar:before {
+  content: "7";
+}
+.btn.icon.chat:before {
+  content: "8";
+}
+.btn.icon.clock:before {
+  content: "9";
+}
+.btn.icon.settings:before {
+  content: "a";
+}
+.btn.icon.comment:before {
+  content: "b";
+}
+.btn.icon.fork:before {
+  content: "c";
+}
+.btn.icon.like:before {
+  content: "d";
+}
+.btn.icon.home:before {
+  content: "e";
+}
+.btn.icon.key:before {
+  content: "f";
+}
+.btn.icon.lock:before {
+  content: "g";
+}
+.btn.icon.unlock:before {
+  content: "h";
+}
+.btn.icon.loop:before {
+  content: "i";
+}
+.btn.icon.search:before {
+  content: "j";
+}
+.btn.icon.mail:before {
+  content: "k";
+}
+.btn.icon.move:before {
+  content: "l";
+}
+.btn.icon.edit:before {
+  content: "m";
+}
+.btn.icon.pin:before {
+  content: "n";
+}
+.btn.icon.add:before {
+  content: "o";
+}
+.btn.icon.reload:before {
+  content: "p";
+}
+.btn.icon.rss:before {
+  content: "q";
+}
+.btn.icon.tag:before {
+  content: "r";
+}
+.btn.icon.trash:before {
+  content: "s";
+}
+.btn.icon.favorite:before {
+  content: "t";
+}
+.btn.icon.user:before {
+  content: "u";
+}
+.btn.icon.minus:before {
+  content: "v";
+}
+.btn.icon.upload:before {
+  content: "w";
+}
+.btn.icon.transfer:before {
+  content: "x";
+}
+.btn.icon.stop:before {
+  content: "y";
+}
+.btn.icon.movie:before {
+  content: "z";
+}
+.btn.icon.pause:before {
+  content: "A";
+}
+.btn.icon.play:before {
+  content: "B";
+}
+.btn.icon.new-window:before {
+  content: "C";
+}
+.btn.icon.link:before {
+  content: "D";
+}
+.btn.icon.iinfo:before,
+.btn.icon.show:before {
+  content: "E";
+}
+.btn.icon.image:before {
+  content: "F";
+}
+.btn.icon.folder:before {
+  content: "G";
+}
+.btn.icon.fullscreen:before {
+  content: "H";
+}
+.btn.icon.fullexit:before {
+  content: "I";
+}
+.btn.icon.share:before {
+  content: "J";
+}
+.btn.icon.undo:before {
+  content: "K";
+}
+.btn.icon.quote:before {
+  content: "L";
+}
+.btn.icon.printer:before {
+  content: "M";
+}

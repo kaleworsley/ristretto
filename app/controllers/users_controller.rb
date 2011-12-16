@@ -1,5 +1,4 @@
 class UsersController < ApplicationController
-  skip_before_filter :require_login, :only => [:new, :create]
   before_filter :find_user, :only => [:show, :delete, :edit, :update]
   load_and_authorize_resource
 

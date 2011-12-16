@@ -14,7 +14,7 @@ $(document).ready(function() {
 //Ajaxifies a form
 function ajaxifyForm(form, successCallback, errorCallback, type, method, action) {
   //Set the throbber image
-  $('input[type=submit]', form).throbber({image: '/images/throbber.gif'});
+  //$('input[type=submit]', form).throbber({image: '/images/throbber.gif'});
   //Submit handler
   form.submit(function (){
     $.ajax({
@@ -23,16 +23,16 @@ function ajaxifyForm(form, successCallback, errorCallback, type, method, action)
       data: form.serialize(),
       success: function (data, textStatus, XMLHttpRequest) {
         form[0].reset();
-        flashMessage();
-        $.throbberHide();
+        //flashMessage();
+        //$.throbberHide();
         //Execute callback, if it exists
         if (typeof successCallback == 'function') {
 	      successCallback(data, textStatus, XMLHttpRequest);
         }
       },
       error: function(XMLHttpRequest, textStatus, errorThrown) {
-	    flashMessage();
-        $.throbberHide();
+	    //flashMessage();
+        //$.throbberHide();
 	    if (typeof errorCallback == 'function') {
 	      errorCallback(data, textStatus, XMLHttpRequest);
         }

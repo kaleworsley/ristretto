@@ -1,17 +1,18 @@
 # Methods added to this helper will be available to all templates in the application.
 module ApplicationHelper
   def display_flashes
+    close = '<a class="close" href="#">&times;</a>'
     output = '';
     if flash[:notice].present?
-      output += content_tag 'div', flash[:notice], :class => "flash round-5 message notice"
+      output += content_tag 'div', close+flash[:notice], :class => "alert-message success"
     end
 
     if flash[:warning].present?
-      output += content_tag 'div', flash[:warning], :class => "flash round-5 message warning"
+      output += content_tag 'div', close+flash[:warning], :class => "alert-message warning"
     end
 
     if flash[:error].present?
-      output += content_tag 'div', flash[:error], :class => "flash round-5 message error"
+      output += content_tag 'div', close+flash[:error], :class => "alert-message error"
     end
 
     unless output.blank?
@@ -27,6 +28,12 @@ module ApplicationHelper
       h page_title
     end
   end
+
+    def body_classes
+      classes = "#{controller.controller_name} #{controller.controller_name}-#{controller.action_name}"
+      classes += " " + @body_classes.join(' ') unless @body_classes.nil?
+      return classes
+    end
 
   def page_help(help_text)
     content_for(:page_help) { help_text }
@@ -57,36 +64,85 @@ module ApplicationHelper
   end
 
   def crumb(text, target)
-    content_tag(:li, link_to(truncate(h(text), { :length => 30 }), target, {:title => text}))
+    content_tag(:li, '<span class="divider">/</span>' + link_to(truncate(h(text), { :length => 30 }), target, {:title => text}))
   end
 
-  def tab(text, target)
-    content_tag(:li, link_to(h(text), target, {:title => text}))
-  end
+  def tab(text, target, active = false, opts = {}, &block)
+    li_opts = {:class => ''}
+    ul_opts = {:class => 'dropdown-menu'}
+    a_opts = {:class => '', :title => text}
 
-  # Creates an <li> tag with class="active" if the current controller name is
-  # controller_name
-  def nav_li(text, target, controller_name = nil, tag_opts = {}, &block)
-
-    controller_name ||= text.downcase
-
-    if controller.controller_name == controller_name
-      if tag_opts[:class].blank?
-        tag_opts[:class] = 'active'
-      else
-        tag_opts[:class] += ' active'
-      end
+    if block_given?    
+      a_opts = {:class => 'dropdown-toggle', :title => text}
     end
+    a_opts.merge!(opts[:a]) if opts[:a].present?
+    
+    ul_opts.merge!(opts[:ul]) if opts[:ul].present?    
 
-    content = '<span>' + link_to(text, target) + '</span>'
+    if block_given? 
+      li_opts = {:class => 'menu'}
+    end
+    
+ 	  if active 
+	    li_opts[:class] += ' active'
+	  end
+
+    li_opts.merge!(opts[:li]) if opts[:li].present?    
+
+    content = link_to(h(text), target, a_opts)
 
     if block_given?
       subcontent = capture(&block)
       if subcontent.present?
-        content += "<ul>#{subcontent}</ul>"
+        content += content_tag(:ul, subcontent, ul_opts)
       end
     end
-    out = content_tag(:li, content, tag_opts)
+    out = content_tag(:li, content, li_opts)
+    if block_called_from_erb?(block)
+      concat(out)
+    else
+      out
+    end
+  end
+
+  # Creates an <li> tag with class="active" if the current controller name is
+  # controller_name
+  def nav_li(text, target, controller_name = nil, opts = {}, &block)
+
+    controller_name ||= text.downcase
+
+    if block_given?    
+      a_opts = {:class => 'dropdown-toggle'}
+    else
+      a_opts = {}
+    end
+    a_opts.merge!(opts[:a]) if opts[:a].present?
+    
+    ul_opts = {:class => 'menu-dropdown'}
+    ul_opts.merge!(opts[:ul]) if opts[:ul].present?    
+
+    if block_given? 
+      li_opts = {:class => 'menu'}
+      if controller.controller_name == controller_name
+        li_opts[:class] += ' active'
+      end
+    else
+      li_opts = {}
+    end
+    li_opts.merge!(opts[:li]) if opts[:li].present?    
+
+     
+    content = link_to(text, target, a_opts)
+
+    if block_given?
+    
+    
+      subcontent = capture(&block)
+      if subcontent.present?
+        content += content_tag(:ul, subcontent, ul_opts)
+      end
+    end
+    out = content_tag(:li, content, li_opts)
     if block_called_from_erb?(block)
       concat(out)
     else
@@ -97,23 +153,28 @@ module ApplicationHelper
   def notification_button_toggle(object)
     content_tag :div, :class => 'notifications-toggle' do
       if current_user.ignore_mail_from?(object)
-        button_to("Enable notifications", { :action => 'enable_mail', :id => object.id }, { :method => :put, :class => 'notifications-toggle', :title => "Enable notification for this #{object.class.to_s}" })
+        button_to("Enable notifications", { :action => 'enable_mail', :id => object.id }, { :method => :put, :class => 'notifications-toggle btn icon mail', :title => "Enable notification for this #{object.class.to_s}" })
       else
-        button_to("Disable notification", { :action => 'disable_mail', :id => object.id }, { :method => :put, :class => 'notifications-toggle', :title => "Disable notification for this #{object.class.to_s}" })
+        button_to("Disable notification", { :action => 'disable_mail', :id => object.id }, { :method => :put, :class => 'notifications-toggle btn icon mail', :title => "Disable notification for this #{object.class.to_s}" })
       end
     end
   end
 
   def action_link(object, action, text = nil, label = false)
     text ||= "#{action} #{object.class}".titlecase
-    link = image_tag("#{action}.png", :alt => "#{action} #{object.class}".titlecase, :title => text, :class => action)
-    link += ' ' + text if label
+    #link = image_tag("#{action}.png", :alt => "#{action} #{object.class}".titlecase, :title => text, :class => action)
+    #link += ' ' + text if label
+    if label
+      link = label
+    else
+      link = action
+    end
     link_to link, {
     :controller => object.class.to_s.tableize,
     :action => action,
     :id => object,
     },
-    :class => action
+    :class => action + ' btn icon'
   end
 
   def show_link(object, label = false)

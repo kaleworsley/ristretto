@@ -24,9 +24,6 @@
 <% end %>
 
 <%= title @task.name %>
-<%= notification_button_toggle(@task) %>
-<div class="clear-both"></div>
-<%= post_info(@task, 'Requested by') %>
 
 <div class="content description">
   <%= markdown @task.description %>
@@ -78,7 +75,7 @@
 
 <p>
   <strong><% if @task.project.fixed_price %>Quote:<% else %>Estimate:<% end %></strong>
-  <%= pluralize(@task.estimate.to_f.round(2), @task.estimate_unit.humanize.singularize) %>
+  <%= pluralize(@task.estimate.to_f.round(2), 'hour') %>
 </p>
 <% if (!@task.project.fixed_price && !current_user.is_staff?) || current_user.is_staff? %>
 <p>
