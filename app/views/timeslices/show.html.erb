@@ -10,8 +10,8 @@
 <%- end -%>
 
 <%- content_for :tabs do -%>
-  <%= tab 'Edit', edit_timeslice_path(@timeslice) if can? :edit, @timeslice %>
-  <%= tab 'New timeslice', new_task_timeslice_path(@timeslice.task) if can? :create, Timeslice %>
+  <%= tab 'Edit', edit_timeslice_path(@timeslice) %>
+  <%= tab 'New timeslice', new_task_timeslice_path(@timeslice.task) %>
 <%- end -%>
 
 <%= post_info(@timeslice) %>

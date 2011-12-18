@@ -18,7 +18,7 @@ $('#start_date, #end_date').datepicker({
 });
 <% end %>
 <% form_tag '/reports/timesheets', :method => :get do %>
-<%= select_tag :user, options_from_collection_for_select(User.find(:all, :conditions => :is_staff).unshift(User.new), :id, :full_name, (@user.present? ? @user.id : '')) %>
+<%= select_tag :user, options_from_collection_for_select(User.all.unshift(User.new), :id, :full_name, (@user.present? ? @user.id : '')) %>
 <%= text_field_tag 'start_date', @start_date.strftime('%Y-%m-%d') %> - <%= text_field_tag 'end_date', @end_date.strftime('%Y-%m-%d') %>
 <%= submit_tag 'Go' %>
 <% end %>

@@ -1,7 +1,4 @@
 class AttachmentsController < ApplicationController
-  # FIXME: Download and show are quite similar, we should decide on one.
-  load_and_authorize_resource
-
   before_filter :find_attachment, :only => [:edit, :delete, :show, :update, :destroy, :download]
 
   def download

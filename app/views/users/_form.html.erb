@@ -23,13 +23,6 @@
       <%= form.password_field :password_confirmation %>
     </div>
   </div>
-  <% if !current_user.nil? && current_user.is_staff %>
-  <div class="form-item form-item-block clearfix">
-    <%= form.label :is_staff %>
-    <div class="input">
-      <%= form.check_box :is_staff %>
-    </div>
-  </div>
 
   <div class="form-item form-item-block clearfix">
     <%= form.label :minute_step %>
@@ -37,7 +30,7 @@
       <%= form.select :minute_step, User.minute_steps_for_select %> <div class="field-description">Default minute increments for timeslices.</div>
     </div>
   </div>
-  <% end %>
+
   <% unless @user.new_record? %>
   <div class="form-item form-item-block clearfix">
     <%= label_tag :reset_api_key, "Reset API key?" %>    
@@ -46,6 +39,7 @@
     </div>
   </div>
   <% end %>
+
   <div class="actions">
     <%= form.submit 'Save', :class => 'btn primary' %>
   </div>

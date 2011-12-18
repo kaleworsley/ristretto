@@ -1,4 +1,5 @@
-<% content_tag 'tr', { :class =>  "project-#{project.id} project" } do %>
+<% content_tag 'tr', :class =>  "project-#{project.id} project" do %>
+  <% if @customer.blank? %><td class="name"><%= link_to project.customer.name, project.customer %></td><% end %>
   <td class="name"><%= link_to project.name, project %></td>
   <td class="state <%= project.state %>"><%= project.state.humanize %></td>
   <td class="estimate"><%= pluralize(project.estimate, 'hour') %></td>

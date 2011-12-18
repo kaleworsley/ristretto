@@ -1,52 +1,10 @@
 class TimeslicesController < ApplicationController
-
-  load_and_authorize_resource
-
-  # TODO Make start time configurable per user
-  DAYSTART = '08:00:00'
+  DAYSTART = '09:00:00'
 
   before_filter :find_task, :only => [:new, :edit, :create, :index]
   before_filter :find_timeslice, :only => [:show, :edit, :update, :destroy, :delete]
   before_filter :set_dates, :only => [:index, :create, :timesheet]
   after_filter :copy_errors, :only => [:create, :update]
-
-  skip_before_filter :require_login, :only => [:ical]
-
-  # Ical feed for timeslices
-  # TODO: this needs refactoring
-  def ical
-    user = User.find_by_single_access_token(params[:user_credentials])
-
-    if params[:user]
-      timeslices = User.find_by_name(params[:user]).timeslices.find(:all, :include => {:task => {:project => :customer}})
-    else
-      timeslices = Timeslice.find(:all, :include => {:task => {:project => :customer}})
-    end
-
-    if user && user.is_staff?
-      cal = Icalendar::Calendar.new
-      timeslices.each do |timeslice|
-        event = Icalendar::Event.new
-        event.start = timeslice.started.strftime("%Y%m%dT%H%M%S")
-        event.end = timeslice.finished.strftime("%Y%m%dT%H%M%S")
-        event.summary = timeslice.description
-        event.organizer = "#{timeslice.user.full_name} <#{timeslice.user.email}>"
-        event.description = "Timeslice for #{timeslice.task.project.customer}: #{timeslice.task.project}: #{timeslice.task}"
-        cal.add_event(event)
-      end
-    end
-
-    respond_to do |format|
-      if user && user.valid?
-        headers['Content-Type'] = "text/calendar; charset=UTF-8"
-        cal.publish
-        format.ics { render :text => cal.to_ical }
-      else
-        format.ics { render :nothing => true, :status => :forbidden }
-      end
-    end
-  end
-
 
   def update_ar
     # FIXME: This should be a scope
@@ -100,20 +58,12 @@ class TimeslicesController < ApplicationController
   def invoice_tracker
     @recent = Timeslice.recent_invoices(current_user)
     @recent = @recent.select {|s| s.ar && s.ar != '' && s.ar != 0}
-    if current_user.is_staff?
-      if params[:invoice_val].blank? == false
-        redirect_to invoice_tracker_path(:invoice => params[:invoice_val])
-      end
-      @invoice = params[:invoice]
-      @timeslices = Timeslice.find(:all, :conditions => {:ar => @invoice}) || nil
-    else
-      if params[:invoice_val].blank? == false
-        redirect_to invoice_tracker_path(:invoice => params[:invoice_val])
-      end
-      @invoice = params[:invoice]
-      @timeslices = Timeslice.find(:all, :conditions => {:ar => @invoice, :task_id => current_user.current_projects_tasks_ids}) || nil
+    if params[:invoice_val].blank? == false
+      redirect_to invoice_tracker_path(:invoice => params[:invoice_val])
     end
-  end
+    @invoice = params[:invoice]
+    @timeslices = Timeslice.find(:all, :conditions => {:ar => @invoice}) || nil
+   end
 
   def smart_add
 
@@ -195,8 +145,8 @@ class TimeslicesController < ApplicationController
     if params[:task_id]
       @timeslice = @task.timeslices.build
     else
-      if params[:start].present? && params[:end].present?
-        @timeslice = Timeslice.new(:started => Time.at(params[:start].to_i), :finished => Time.at(params[:end].to_i))
+      if params[:started].present? && params[:finished].present?
+        @timeslice = Timeslice.new(:started => Time.at(params[:started].to_i), :finished => Time.at(params[:finished].to_i))
       else
         @timeslice = Timeslice.new
       end

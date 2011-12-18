@@ -17,15 +17,13 @@
   <% end %>
 <%- end -%>
 
-<% title "Projects" -%>
-<div id="projects">
-  <h3 class="title">Projects</h3>
-  <div class="content">
-    <ul class="projects">
-      <%= render @projects %>
-    </ul>
-  </div>
-  <div class="panel-footer">
-    <%= will_paginate @projects %>
-  </div>
-</div>
+<%= title "Projects" -%>
+<table class="projects bordered-table zebra-striped">
+  <thead>
+    <tr><% if @customer.blank? %><th>Customer</th><% end %><th>Name</th><th>State</th><th>Estimate/Quote</th><th>Details</th></tr>
+  </thead>
+  <tbody>
+    <%= render @projects %>
+  </tbody>
+</table>
+<%= will_paginate @projects %>

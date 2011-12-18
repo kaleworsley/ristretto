@@ -9,9 +9,6 @@
         <div class="state-button state <%= state %>" title="<%= state.humanize.gsub(/ed$/,'') %>"><%= link_to state.humanize.gsub(/ed$/,''), '#', :rel => state %></div>
         <% end %>
       </div>
-      <% if ordered_task.comments.count > 0 %>
-      <span class="comment-count"><%= ordered_task.comments.count %></span>
-      <% end %>
       <% if ordered_task.assigned_to %>
       <span class="cypher" title="<%= ordered_task.assigned_to %>">(<%= ordered_task.assigned_to.try(:initials) %>)</span>
       <% else %>
@@ -22,7 +19,6 @@
 
   <ul class="edit-links">
     <li class="task_id"><%= ordered_task.id%></li>
-    <li class="comment"><%= link_to 'Comment', task_path(ordered_task) + '#comment-form', :class => 'btn icon chat' %></li>
     <li class="view"><%= show_link ordered_task, 'Show' %></li>
     <li class="edit"><%= edit_link ordered_task, 'Edit' %></li>
     <li class="delete"><%= delete_link ordered_task, 'Delete' %></li>

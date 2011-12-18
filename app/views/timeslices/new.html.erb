@@ -7,7 +7,7 @@
 <%- end -%>
 
 <%- content_for :tabs do -%>
-  <%= tab 'Timeslices', task_timeslices_path(@task) if can? :index, Timeslice %>
+  <%= tab 'Timeslices', task_timeslices_path(@task) %>
 <%- end -%>
 
 <% else %>

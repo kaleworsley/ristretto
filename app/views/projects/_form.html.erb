@@ -1,5 +1,6 @@
-  <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
-  <% unless project.new_record? || !project.try(:has_stakeholder?, current_user) %>
+  <% javascript 'project' %>
+  <%= form.error_messages :message => nil, :header_message => nil %>
+  <% unless project.new_record? %>
   <div class="form-item form-item-block clearfix">
     <%= form.label :customer_id %>
     <div class="input">
@@ -51,32 +52,27 @@
       <span class="help-block">Leave blank for no estimate</span>
     </div>
   </div>
-<!--
-  <% unless project.attachments.blank? %>
-    <ul class="attachments">
-      <%= render project.attachments %>
-    </ul>
-  <% end %>
-
-  <div id="attachments">
-    <div class="form-item form-item-block">
-      <% fields_for "new_attachments[]", attachment do |f| %>
-        <%= f.label :file %>
-        <%= f.file_field :file %>
-      <% end %>
-    </div>
-  </div>
--->
-
 
   <div class="form-item form-item-block clearfix">
     <%= form.label :users %>
     <div class="input">
-      <%= form.collection_select :user_ids, User.staff, :id, :name, {}, {:multiple => true} %>
+      <%= form.collection_select :user_ids, User.all, :id, :name, {}, {:multiple => true} %>
       <span class="help-block">Leave blank for no estimate</span>
     </div>
   </div>
+  
+  <div class="tasks">
+    <table class="project-tasks">
+    <thead><tr><th>Name</th><th>Estimate</th><th>Delete</th></tr></thead>
+    <tbody>
+    <% form.fields_for :tasks do |t| %>
+      <%= render 'task_fields', :f => t %>
+    <% end %>
+    <tr><td colspan="4"><%= link_to_add_fields "Add Task", form, :tasks %></td></tr>
+    </tbody>
+    </table>
+  </div>
 
-  <div class="form-item form-item-block">
-    <%= form.submit "Save" %>
+  <div class="actions">
+    <%= form.submit "Save", :class => 'btn primary' %>
   </div>

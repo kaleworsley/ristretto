@@ -2,13 +2,6 @@ class Mailer < ActionMailer::Base
 
   default_url_options[:host] = SETTINGS['host']
 
-  def task_comment(comment, recipient)
-    recipients  recipient.email
-    from        SETTINGS['default_email']
-    subject     "[#{SETTINGS['name']}] Task comment: " + comment.task.name
-    body        :comment => comment, :user => recipient
-  end
-
   def password_reset_instructions(user)
     subject       "[#{SETTINGS['name']}] Password reset instructions"
     from          SETTINGS['default_email']

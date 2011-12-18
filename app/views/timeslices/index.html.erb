@@ -1,5 +1,5 @@
 <%- content_for :tabs do -%>
-  <%= tab 'New timeslice', new_task_timeslice_path(@task) if can? :create, Timeslice %>
+  <%= tab 'New timeslice', new_task_timeslice_path(@task) %>
 <%- end -%>
 
 <%= title "Timeslices" -%>

@@ -1,7 +1,4 @@
 class MailoutsController < ApplicationController
-
-  load_and_authorize_resource
-
   def index
     @mailout = Mailout.new
     @mailouts = Mailout.all

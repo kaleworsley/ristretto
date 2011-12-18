@@ -8,11 +8,9 @@
     <th>End</th>
     <th>Duration</th>
     <th>Chargeable</th>
-    <% if current_user.is_staff? %>
     <th class="show"><%= image_tag 'show.png' %></th>
     <th class="edit"><%= image_tag 'edit.png' %></th>
     <th class="delete"><%= image_tag 'delete.png' %></th>
-    <% end %>
   </tr>
   </thead>
   <tbody>
@@ -25,11 +23,9 @@
     <td><%=h timeslice.finished_time %></td>
     <td><%=h timeslice.duration_in_hours %> hours</td>
     <td><%=h timeslice.chargeable %></td>
-    <% if current_user.is_staff? %>
     <td class="show"><%= show_link timeslice %></td>
     <td class="edit"><%= edit_link timeslice %></td>
     <td class="delete"><%= delete_link timeslice %></td>
-    <% end %>
   </tr>
 <% end %>
   </tbody>
@@ -38,9 +34,7 @@
     <td colspan="5"></td>
     <td><%= (Timeslice.total_duration(timeslices)/60/60).to_f.round(2) %> hours</td>
     <td><%= (Timeslice.total_chargeable_duration(timeslices)/60/60).to_f.round(2) %> hours</td>
-    <% if current_user.is_staff? %>
     <td colspan="3"></td>
-    <% end %>
   </tr>
 </tfoot>
 </table>

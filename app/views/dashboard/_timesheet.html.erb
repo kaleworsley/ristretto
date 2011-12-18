@@ -1,5 +1,5 @@
 <%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
-<% javascript ['fullcalendar.min', 'bootstrap-modal.js', 'jquery.mcdropdown/lib/jquery.mcdropdown.min', 'ajax', 'timesheet'] %>
+<% javascript ['fullcalendar.min', 'timesheet'] %>
 <% stylesheet 'fullcalendar' %>
 <h3 class="title">Timesheet</h3>
 <div id="timesheet-calendar" class="content well panel">

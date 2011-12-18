@@ -12,27 +12,26 @@ $(function() {
     selectable: true,
     selectHelper: true,
     select: function(start, end, allDay) {
-      start = Math.round(start.getTime() / 1000);
-      end = Math.round(end.getTime() / 1000);
+      started = Math.round(start.getTime() / 1000);
+      finished = Math.round(end.getTime() / 1000);
 
-      $('<div id="popup" />').load('/timeslices/new?start=' + start + '&end=' + end + ' #content', function() {
-        //$('#timeslice_task_id').mcDropdown("#task_mc_dropdown");
-        ajaxifyForm($('#popup form'), function() {
-          $('#popup').dialog('close');
-	        $('#popup').remove();
-          $('ul#task_mc_dropdown').remove();
-          $('#timesheet-calendar').fullCalendar('refetchEvents');
-          // $(this).fullCalendar('unselect');
-        });
-      }).dialog({
-        'modal': true,
+      $('<div id="popup" />').load('/timeslices/new?started=' + started + '&finished=' + finished + ' #content', function() {
+      $('#popup form').ajaxForm(function() {
+        $('#popup').dialog('close');
+       $('#popup').remove();
+        $('#timesheet-calendar').fullCalendar('refetchEvents');
+        $(this).fullCalendar('unselect');
+      });
+      
+    }).dialog({
+        modal: true,
+        title: 'New Timeslice <em>' + start.toTimeString().slice(0, 5) + ' - ' + end.toTimeString().slice(0, 5) + '</em>',
         width: 980,
         height: 370,
-	draggable: false,
+	      draggable: false,
         resizable: false,
         close: function() {
           $(this).remove();
-          //$('ul#task_mc_dropdown').remove();
         }
       });
     },
@@ -48,28 +47,23 @@ $(function() {
       element.find('.fc-event-title').append(' - ' + event.description);
     },
     eventClick: function( event, jsEvent, view) {
-     // $('<div id="popup" />').load('/timeslices/' + event.id + '/edit #content')
-    	
       $('<div id="popup" />').load('/timeslices/' + event.id + '/edit #content', function() {
-        //$('#timeslice_task_id').mcDropdown("#task_mc_dropdown");
         ajaxifyForm($('#popup form'), function() {
           $('#popup').dialog('close');
           $('#popup').remove();
-          //$('ul#task_mc_dropdown').remove();
           $('#timesheet-calendar').fullCalendar('refetchEvents');
         });
       }).dialog({
-        'modal': true,
+        modal: true,
+        title: "Editing <em>" + event.description + "</em>",
         width: 980,
         height: 370,
-	draggable: false,
+        draggable: false,
         resizable: false,
         close: function() {
-	  $(this).remove();
-          $('ul#task_mc_dropdown').remove();
+	        $(this).remove();
         }
-      });
-      
+      });      
     },
   });	
 });

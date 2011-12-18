@@ -85,7 +85,7 @@ Time::DATE_FORMATS[:date_only] = '%Y-%m-%d'
 Date::DATE_FORMATS[:human] = '%a %d %b %Y'
 
 ActionView::Base.field_error_proc = Proc.new { |html_tag, instance|
-  "<span class=\"fieldWithErrors\">#{html_tag}</span>" }
+  "<span class=\"clearfix error\">#{html_tag}</span>" }
 
 if SETTINGS['exception_notifications']
   ExceptionNotification::Notifier.exception_recipients = SETTINGS['exception_recipients']

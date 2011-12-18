@@ -1,5 +1,5 @@
 <%- content_for :breadcrumbs do -%>
-  <%= crumb 'Users', users_path if can? :index, User%>
+  <%= crumb 'Users', users_path %>
   <%= crumb @user.full_name, @user %>
 <% end %>
 

@@ -57,3 +57,9 @@ body {
   border: 1px #BFBFBF solid;
   margin: -6px 0 -12px 0;
 }
+/*
+ul.breadcrumb,
+div.alert-message {
+	display: none;
+}
+*/

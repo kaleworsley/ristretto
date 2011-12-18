@@ -9,7 +9,7 @@ class MigrateStakeholdersToProjectsUsers < ActiveRecord::Migration
   def self.down
     Project.all.each do |p|
       p.user_ids.each do |user_id|
-	Stakeholder.create(:project_id => p.id, :user_id => user_id, :role => 'developer')
+        Stakeholder.create(:project_id => p.id, :user_id => user_id, :role => 'developer')
       end
     end
   end

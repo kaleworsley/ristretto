@@ -4,15 +4,15 @@ module ApplicationHelper
     close = '<a class="close" href="#">&times;</a>'
     output = '';
     if flash[:notice].present?
-      output += content_tag 'div', close+flash[:notice], :class => "alert-message success"
+      output += content_tag 'div', close+flash[:notice], :class => "alert-message fade in success"
     end
 
     if flash[:warning].present?
-      output += content_tag 'div', close+flash[:warning], :class => "alert-message warning"
+      output += content_tag 'div', close+flash[:warning], :class => "alert-message fade in warning"
     end
 
     if flash[:error].present?
-      output += content_tag 'div', close+flash[:error], :class => "alert-message error"
+      output += content_tag 'div', close+flash[:error], :class => "alert-message fade in error"
     end
 
     unless output.blank?
@@ -178,19 +178,27 @@ module ApplicationHelper
   end
 
   def show_link(object, label = false)
-    action_link(object, 'show', nil, label) if can?(:read, object)
+    action_link(object, 'show', nil, label)
   end
 
   def edit_link(object, label = false)
-    action_link(object, 'edit', nil, label) if can?(:update, object)
+    action_link(object, 'edit', nil, label)
   end
 
   def delete_link(object, label = false)
-    action_link(object, 'delete', nil, label) if can?(:destroy, object)
+    action_link(object, 'delete', nil, label)
   end
 
   def markdown(text)
     Markdown.new(text, {:escape_html => true}).to_html
+  end
+  
+  def link_to_add_fields(name, f, association)
+    new_object = f.object.class.reflect_on_association(association).klass.new
+    fields = f.fields_for(association, new_object, :child_index => "new_#{association}") do |builder|
+      render(association.to_s.singularize + "_fields", :f => builder)
+    end
+    link_to_function(name, h("add_fields(this, '#{association}', '#{escape_javascript(fields)}')"), :class => 'btn add icon')
   end
 
 end

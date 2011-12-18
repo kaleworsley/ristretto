@@ -1,5 +1,6 @@
 class UserSessionsController < ApplicationController
   skip_before_filter :require_login, :only => [:new, :create]
+  before_filter :require_no_login, :only => [:new, :create]
 
   def new
     @user_session = UserSession.new

@@ -1,7 +1,4 @@
 class CustomersController < ApplicationController
-
-  load_and_authorize_resource
-
   before_filter :find_customer, :only => [:edit, :delete, :show, :update, :destroy]
 
   def delete
@@ -13,6 +10,7 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       format.html
+      format.js
       format.xml  { render :xml => @customers }
     end
   end
@@ -55,7 +53,7 @@ class CustomersController < ApplicationController
   # PUT /customers/1.xml
   def update
     respond_to do |format|
-      if @customer.update_attributes(params[:customer])
+      if @customer.update_attributes(params[:customer].merge(:updated_by => current_user))
         flash[:notice] = 'Customer was successfully updated.'
         format.html { redirect_to(@customer) }
         format.xml  { head :ok }

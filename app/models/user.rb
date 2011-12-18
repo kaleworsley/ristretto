@@ -7,8 +7,6 @@ class User < ActiveRecord::Base
   # Create revisions
   versioned :except => [:perishable_token, :last_request_at]
 
-  attr_protected :is_staff
-
   validates_presence_of :full_name
   validates_presence_of :email
   validates_uniqueness_of :full_name
@@ -50,16 +48,14 @@ class User < ActiveRecord::Base
     end
   end
 
-  has_many :comments
-  has_many :stakeholders, :dependent => :destroy
-  #has_many :current_projects, :through => :stakeholders, :source => :project
 
   has_and_belongs_to_many :projects, :uniq => true
-
-
   has_and_belongs_to_many :mailouts
 
-  named_scope :staff, :conditions => {:is_staff => true}
+  def staff
+    User.all
+  end
+
 
   # Adds an object to a users ignore mail list
   def ignore_mail_from(instance)
@@ -143,21 +139,19 @@ class User < ActiveRecord::Base
     'TODO'
   end
 
+  def is_staff
+    true
+  end
+
+
   # Is a user a staff member?
   def is_staff?
-    is_staff
+    true
   end
 
-  # Return a collection of users who are stakeholder in projects that the current
-  # user is also a stakeholder in
-  def users(reset = false)
-    current_projects.each.collect { |project| project.users(reset) }.flatten.uniq
-  end
-
-  # Returns all projects that are either owned by this user or that this
-  # user is a stakeholder for
+  # Returns all projects that the user is a member of
   def all_projects
-    current_projects.uniq
+    current_projects
   end
 
   # Returns an array of project ids to which this user is associated
@@ -173,16 +167,8 @@ class User < ActiveRecord::Base
     current_projects_tasks.map(&:id)
   end
 
-  def current_projects_comments_ids
-    current_projects_comments.map(&:id)
-  end
-
-  def current_projects_stakeholders_ids
-    current_projects_stakeholders.map(&:id)
-  end
-
   # Returns an array of all timeslices assigned to any project on which this
-  # user is a stakeholder
+  # user is a member
   def current_projects_timeslices(params = nil)
     options = {
       :joins => { :task => :project },
@@ -194,7 +180,7 @@ class User < ActiveRecord::Base
   end
 
   # Return the most recent timeslices assigned to any project on which this
-  # user is a stakeholder, in reverse date order.  An options limit can be
+  # user is a member, in reverse date order.  An options limit can be
   # supplied, the default is 10
   def current_projects_recent_timeslices(limit = 10)
     current_projects_timeslices(:order => 'started DESC', :limit => limit)
@@ -202,10 +188,6 @@ class User < ActiveRecord::Base
 
   def current_projects_recent_tasks(limit = 10)
     current_projects_tasks(:order => 'created_at DESC', :limit => limit)
-  end
-
-  def current_projects_recent_comments(limit = 10)
-    current_projects_comments(:order => 'created_at DESC', :limit => limit)
   end
 
   def current_projects_recent_projects(limit = 10)
@@ -216,17 +198,12 @@ class User < ActiveRecord::Base
     current_projects_attachments(:order => 'created_at DESC', :limit => limit)
   end
 
-  def current_projects_recent_stakeholders(limit = 10)
-    current_projects_stakeholders(:order => 'created_at DESC', :limit => limit)
-  end
-
-
   def current_customers_recent_customers(limit = 10)
     current_customers_customers(:order => 'created_at DESC', :limit => limit)
   end
 
   # Returns an array of all tasks of any project on which this
-  # user is a stakeholder
+  # user is a member
   def current_projects_tasks(params = nil)
     options = {
       :conditions => {:project_id => current_projects_ids},
@@ -235,26 +212,6 @@ class User < ActiveRecord::Base
     options.merge!(params) unless params.nil?
 
     Task.all options
-  end
-
-  # Returns an array of all comment of any project on which this
-  # user is a stakeholder
-  def current_projects_comments(params = nil)
-    options = {
-      :conditions => {:task_id => current_projects_tasks_ids},
-    }
-    options.merge!(params) unless params.nil?
-
-    Comment.all options
-  end
-
-  def current_projects_stakeholders(params = nil)
-    options = {
-      :conditions => {:project_id => current_projects_ids},
-    }
-    options.merge!(params) unless params.nil?
-
-    Stakeholder.all options
   end
 
 
@@ -269,7 +226,7 @@ class User < ActiveRecord::Base
 
   def current_projects_attachments(params = nil)
     options = {
-      :conditions => ["(attachable_type = 'Task' AND attachable_id IN (?)) OR (attachable_type = 'Project' AND attachable_id IN (?)) OR (attachable_type = 'Comment' AND attachable_id IN (?))", current_projects_tasks_ids, current_projects_ids, current_projects_comments_ids],
+      :conditions => ["(attachable_type = 'Task' AND attachable_id IN (?)) OR (attachable_type = 'Project' AND attachable_id IN (?)))", current_projects_tasks_ids, current_projects_ids],
     }
     options.merge!(params) unless params.nil?
 
@@ -288,10 +245,6 @@ class User < ActiveRecord::Base
     current_projects_recent_tasks(limit).collect(&:activity_item)
   end
 
-  def comment_activity_items(limit = 10)
-    current_projects_recent_comments(limit).collect(&:activity_item)
-  end
-
   def project_activity_items(limit = 10)
     current_projects_recent_projects(limit).collect(&:activity_item)
   end
@@ -300,21 +253,15 @@ class User < ActiveRecord::Base
     current_projects_recent_attachments(limit).collect(&:activity_item)
   end
 
-  def stakeholder_activity_items(limit = 10)
-    current_projects_recent_stakeholders(limit).collect(&:activity_item)
-  end
-
   def customer_activity_items(limit = 10)
     current_customers_recent_customers(limit).collect(&:activity_item)
   end
 
   def activity_items(limit = 10)
-    comment_activity_items(limit) +
-      task_activity_items(limit) +
-      timeslice_activity_items(limit) +
-      project_activity_items(limit) +
-      attachment_activity_items(limit) +
-      stakeholder_activity_items(limit) +
-      customer_activity_items(limit)
+    task_activity_items(limit) +
+    timeslice_activity_items(limit) +
+    project_activity_items(limit) +
+    attachment_activity_items(limit) +
+    customer_activity_items(limit)
   end
 end

@@ -1,9 +1,9 @@
 <%- content_for :tabs do -%>
-  <%= tab 'Edit', edit_user_path(@user) if can? :update, @user %>
+  <%= tab 'Edit', edit_user_path(@user) %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
-  <%= crumb 'Users', users_path if can? :index, User %>
+  <%= crumb 'Users', users_path %>
   <%= crumb @user.full_name, @user %>
 <% end %>
 
@@ -31,30 +31,11 @@
   <strong>Email:</strong>
   <%=h @user.email %>
 </p>
-<% if @user == current_user || current_user.is_staff? %>
+
 <p>
   <strong>API Token:</strong>
   <%=h @user.single_access_token %>
 </p>
-<% end %>
+
 </div>
 </div>
-
-<% if @user == current_user && current_user.is_staff? %>
- <%= render :partial => 'disabled_notifications', :object => @user %>
-<% end %>
-
-<% if @user.assigned_tasks != 0 && current_user.is_staff? %>
-
-<div class="panel three">
-<h3 class="title">Active tasks</h3>
-<div class="content">
-  <ul class="tasks">
-  <% @user.assigned_tasks.doing.each do |task| %>
-    <li><%= link_to task.name, task %></li>
-  <% end %>
-  </ul>
-</div>
-</div>
-
-<% end %>

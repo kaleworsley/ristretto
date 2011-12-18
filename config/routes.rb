@@ -14,16 +14,13 @@ ActionController::Routing::Routes.draw do |map|
   :requirements => { :date => /\d{4}-\d{2}-\d{2}/ }, :defaults => { :date => DateTime.now.strftime('%Y-%m-%d') }
 
   map.connect '/timesheet/:date.:format', :controller => 'timeslices', :action => 'timesheet'
-  map.connect '/timeslices.ics', :controller => 'timeslices', :action => 'ical'
   map.resources :timeslices, :except => [:index]
 
   map.resources :customers, :shallow => true, :member => { :delete => :get } do |customer|
-    customer.resources :projects, :member => { :delete => :get, :update_task_order => :put, :update_project_order => :put, :watch => :get, :enable_mail => :put, :disable_mail => :put } do |project|
-      project.resources :tasks, :member => { :delete => :get, :enable_mail => :put, :disable_mail => :put }, :collection => {:import => :get, :import_save => :post} do |task|
-        task.resources :comments, :member => { :delete => :get }
+    customer.resources :projects, :member => { :delete => :get } do |project|
+      project.resources :tasks, :member => { :delete => :get }, :collection => {:import => :get, :import_save => :post} do |task|
         task.resources :timeslices, :member => { :delete => :get }
       end
-      project.resources :stakeholders, :member => { :delete => :get }
     end
   end
 
@@ -33,12 +30,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :mailouts
 
-  map.connect 'project-order', :controller => 'projects', :action => 'update_project_order', :conditions => { :method => :put }
-  map.project_order 'project-order', :controller => 'projects', :action => 'project_order'
-
   map.projects 'projects', :controller => 'projects', :action => 'index'
-  map.project_deadlines 'deadlines.ics', :controller => 'projects', :action => 'ical'
-  map.tasks 'tasks', :controller => 'tasks', :action => 'index'
 
   map.reports 'reports/:action', :controller => 'reports'
 
@@ -47,7 +39,6 @@ ActionController::Routing::Routes.draw do |map|
   map.login 'login', :controller => 'user_sessions', :action => 'new'
   map.logout 'logout', :controller => 'user_sessions', :action => 'destroy'
   map.profile 'profile', :controller => 'users', :action => 'edit'
-  #map.register 'register', :controller => 'users', :action => 'new'
   map.resources :user_sessions
 
   map.connect '/dashboard/widget', :controller => 'dashboard', :action => 'widget'

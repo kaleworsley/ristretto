@@ -36,20 +36,6 @@ class TasksControllerTest < ActionController::TestCase
 
   # Show tasks
 
-  def test_should_show_create_comment_link_on_show_if_staff
-    UserSession.create(users(:user1))
-    get :show, :id => tasks(:task1).id
-    assert_response :success
-    assert_select 'div#nav ul#context-links a', 'New comment'
-  end
-
-  def test_should_show_create_comment_link_on_show_if_not_staff
-    UserSession.create(users(:user2))
-    get :show, :id => tasks(:task2).id
-    assert_response :success
-    assert_select 'div#nav ul#context-links a', { :text => 'New comment', :count => 0 }
-  end
-
   def test_should_show_create_timeslice_link_on_show_if_staff
     UserSession.create(users(:user1))
     get :show, :id => tasks(:task1).id
@@ -80,13 +66,6 @@ class TasksControllerTest < ActionController::TestCase
   end
 
   # Edit tasks
-  def test_should_show_create_comment_link_on_edit_if_staff
-    UserSession.create(users(:user1))
-    get :edit, :id => tasks(:task1).id
-    assert_response :success
-    assert_select 'div#nav ul#context-links a', 'New comment'
-  end
-
   def test_should_show_view_task_link_on_edit_if_staff
     UserSession.create(users(:user1))
     get :edit, :id => tasks(:task1).id
@@ -95,13 +74,6 @@ class TasksControllerTest < ActionController::TestCase
   end
 
   # Delete tasks
-  def test_should_show_create_comment_link_on_delete_if_staff
-    UserSession.create(users(:user1))
-    get :delete, :id => tasks(:task1).id
-    assert_response :success
-    assert_select 'div#nav ul#context-links a', 'New comment'
-  end
-
   def test_should_show_edit_task_link_on_delete_if_staff
     UserSession.create(users(:user1))
     get :delete, :id => tasks(:task1).id

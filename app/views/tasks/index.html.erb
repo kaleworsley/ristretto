@@ -1,11 +1,7 @@
 <%- content_for :breadcrumbs do -%>
-  <% unless @project.nil? %>
-    <%= crumb @customer.name, @customer %>
-    <%= crumb @project.name, @project %>
-    <%= crumb 'Tasks', project_tasks_path(@project) %>
-    <% else %>
-      <%= crumb 'Tasks', tasks_path %>
-  <% end %>
+  <%= crumb @customer.name, @customer %>
+  <%= crumb @project.name, @project %>
+  <%= crumb 'Tasks', project_tasks_path(@project) %>
 <%- end -%>
 
 <% title "Tasks" -%>

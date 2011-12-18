@@ -12,9 +12,15 @@ class Project < ActiveRecord::Base
 
   belongs_to :customer
   has_many :tasks, :dependent => :destroy
-  has_many :stakeholders, :dependent => :destroy
   has_and_belongs_to_many :users, :uniq => true
+  
+  delegate :todo, :to => :tasks
+  delegate :doing, :to => :tasks
+  delegate :done, :to => :tasks
+      
 
+  accepts_nested_attributes_for :tasks, :reject_if => Proc.new {|t| t['name'].blank?}, :allow_destroy => true
+ 
   #NOTE: ":class_name => '::Attachment''" is required. There is a bug in paperclip
   #see: http://thewebfellas.com/blog/2008/11/2/goodbye-attachment_fu-hello-paperclip#comment-2415
   has_many :attachments, :as => :attachable, :dependent => :destroy, :class_name => '::Attachment'
@@ -26,7 +32,7 @@ class Project < ActiveRecord::Base
   KINDS = ['development', 'support']
 
   STATES.each do |state|
-    named_scope state, :conditions => { :state => state }, :include => [{:tasks => :timeslices}, :customer, :stakeholders], :order => 'name asc'
+    named_scope state, :conditions => { :state => state }, :include => [{:tasks => :timeslices}, :customer], :order => 'name asc'
   end
 
   # The overrunning? method will only test the project status if the percentage
@@ -39,24 +45,9 @@ class Project < ActiveRecord::Base
 
   named_scope :selectable, :conditions => {:state => ['proposed', 'current']}, :order => 'name asc'
 
-  # Returns true if a given user is the project manager of this project
-  def mine?(user)
-    stakeholders.project_manager(user).present?
-  end
-
   # Return a hash of available project states suitable for the select helper
   def Project.states_for_select
     STATES.collect { |state| [state.humanize, state] }
-  end
-
-  # Project states
-  def Project.states
-    STATES
-  end
-
-  # Project kinds
-  def Project.kinds
-    KINDS
   end
 
   # Return a hash of available project kinds suitable for the select helper
@@ -89,13 +80,6 @@ class Project < ActiveRecord::Base
     t
   end
 
-  # Collection of stakeholders for select elements
-  def stakeholders_for_select
-      stakeholders.collect do |stakeholder|
-      [stakeholder.user.full_name + " - " + stakeholder.role.humanize, stakeholder.user.id]
-    end
-  end
-
   # Total chargeable duration of timeslices for all tasks of a project in seconds
   def total_chargeable_duration
     tasks.collect(&:total_chargeable_duration).inject(0.0) { |sum, el| sum + el }
@@ -105,21 +89,6 @@ class Project < ActiveRecord::Base
   # places
   def total_chargeable_hours
     (total_chargeable_duration / 1.hour).round(2)
-  end
-
-  # Collection of stakeholders users who have emails enabled
-  def recipients
-    stakeholders.find_all {|s| s.user.receive_mail_from(self) }.collect {|s| s.user}
-  end
-
-  # Returns true if user is a stakeholder in the project
-  def has_stakeholder?(user)
-    users.include?(user)
-  end
-
-  # adds user as a stakeholder on the project with role
-  def add_stakeholder(user, role = 'project_manager')
-    stakeholders.create(:user => user, :role => role)
   end
 
   # By default, sort all finders by name
@@ -137,35 +106,9 @@ class Project < ActiveRecord::Base
     paginate :per_page => 50, :page => page, :order => 'name'
   end
 
-  # Todo tasks
-  def todo
-    tasks.done
-  end
-
-  # Doing tasks
-  def doing
-    tasks.doing
-  end
-
-  # Done tasks
-  def done
-    tasks.done
-  end
-
   # Include customer name
   def full_name
     "#{customer.name}: #{name}"
-  end
-
-  def activity_item
-    {
-      :user => self.user,
-      :parent => self.customer,
-      :subject => self,
-      :action => ' created project ',
-      :date => self.created_at,
-      :object => self
-    }
   end
 
   # Returns the percentage of budget used.
@@ -190,10 +133,5 @@ class Project < ActiveRecord::Base
   def overrunning?
     return false if percentage_of_budget_used.nil? || percentage_of_budget_used < OVERRUN_THRESHOLD
     percentage_of_budget_used > percentage_complete
-  end
-
-  # Returns an array of all child attachments (from tasks and their comments)
-  def more_attachments
-    tasks.collect(&:attachments).flatten + tasks.collect(&:comments).flatten.collect(&:attachments).flatten
   end
 end

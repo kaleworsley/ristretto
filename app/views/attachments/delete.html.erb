@@ -1,9 +1,9 @@
 <%- content_for :tabs do -%>
-  <%= tab 'Edit', edit_attachment_path(@attachment) if can? :update, @attachment %>
+  <%= tab 'Edit', edit_attachment_path(@attachment) %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
-  <%= crumb 'Attachments', users_path if can? :index, Attachment %>
+  <%= crumb 'Attachments', users_path %>
   <%= crumb @attachment.file_file_name, @attachment %>
 <% end %>
 

@@ -30,42 +30,29 @@
   <strong>Complete:</strong>
   <span><%= number_to_percentage(@project.percentage_complete, :precision => 0) %></span>
   <strong><%= "Estimate:" unless @project.fixed_price %><%= "Quote:" if @project.fixed_price %></strong>
-  <span><%= pluralize(@project.estimate, 'hour').downcase %> <% if @project.estimate && current_user.is_staff? && @project.rate.present? %>(<%= number_to_currency(@project.estimate * @project.rate) %>)<% end %></span>
-  <% if (@project.fixed_price && current_user.is_staff?) || !@project.fixed_price %>
+  <span><%= pluralize(@project.estimate, 'hour').downcase %> <% if @project.estimate && @project.rate.present? %>(<%= number_to_currency(@project.estimate * @project.rate) %>)<% end %></span>
   /
   <strong>Chargeable:</strong>
-  <span><%= pluralize(@project.total_chargeable_hours, 'hour') %> <% if @project.total_chargeable_duration && current_user.is_staff? && @project.rate.present? %>(<%= number_to_currency(@project.total_chargeable_hours * @project.rate) %>)<% end %></span>
-  <% end %>
+  <span><%= pluralize(@project.total_chargeable_hours, 'hour') %> <% if @project.total_chargeable_duration && @project.rate.present? %>(<%= number_to_currency(@project.total_chargeable_hours * @project.rate) %>)<% end %></span>
 </div>
 
 </div>
-<div id="tasks" class="row">
-<!--
-<div class="span8 quick-add">
-  <h4 class="hideform addlink">Add a task</h4>
-  <div class="well">
-  <% form_for [@project, @task] do |f| %>
-    <div class="form-item form-item-block clearfix">
-      <%= f.label :name %>
-      <div class="input">
-        <%= f.text_field :name %>
-      </div>
-    </div>
-    <div class="actions">
-      <%= f.submit 'Add', :class => 'btn' %>
-    </div>
-  <% end %>
-  </div>
-</div>
--->
-<div class="span16">
-<table>
-<thead><tr><th>Name</th><th>State</th><th>Estimate</th><th>Comments</th><th></th></tr></thead>
-<tbody>
-<%= render @project.tasks %>
-</tbody>
-</table>
-</div>
-</div>
-
+	<div id="tasks" class="row">
+  	<div class="span16">
+    	<table class="tasks bordered-table zebra-striped">
+      	<thead><tr><th>Name</th><th>State</th><th>Estimate</th><th>Time</th></tr></thead>
+      	<tbody>
+					<% @project.tasks.group_by(&:stage).each do |stage, tasks| %>
+					  <tr>
+					    <th><%= (stage.present? ? stage.humanize : 'Other') %></th>
+					    <th></th>
+					    <th><%= pluralize(tasks.map(&:estimate).sum, 'hour') %></th>
+					    <th><%= pluralize(tasks.map(&:total_chargeable_duration_hours).sum, 'hour') %></th>
+					  </tr>				
+		        <%= render tasks %>
+					<% end %>        
+      	</tbody>
+    	</table>
+  	</div>
+	</div>
 

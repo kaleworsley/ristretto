@@ -29,26 +29,12 @@ class Timeslice < ActiveRecord::Base
 
   named_scope :uninvoiced, :conditions => ['(timeslices.ar IS NULL) OR (timeslices.ar = 0)'], :include => [:task => { :project => :customer }]
   named_scope :recent_invoices, lambda { |user|
-    if user.is_staff
-      {
-        :include => { :task => :project },
-        :group => :ar,
-        :limit => 10,
-        :order => 'timeslices.ar DESC'
-      }
-    else
-      {
-        :conditions => {
-          :task_id => user.current_projects_tasks_ids
-        },
-        :include => {
-          :task => :project
-        },
-        :group => :ar,
-        :limit => 10,
-        :order => 'timeslices.ar DESC'
-      }
-    end
+    {
+      :include => { :task => :project },
+      :group => :ar,
+      :limit => 10,
+      :order => 'timeslices.ar DESC'
+    }
   }
 
   def to_s
@@ -158,11 +144,6 @@ class Timeslice < ActiveRecord::Base
   def date=(date)
     self.started = Time.parse("#{date} #{self.started.strftime('%H:%M:%S')}")
     self.finished = Time.parse("#{date} #{self.finished.strftime('%H:%M:%S')}")
-  end
-
-  # Check for a stakeholder
-  def has_stakeholder?(user)
-    task.has_stakeholder?(user)
   end
 
   # Returns the previous timeslice (for the same user)

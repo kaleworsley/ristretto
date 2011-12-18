@@ -1,6 +1,6 @@
 class ReportsController < ApplicationController
   def timestats
-    @staff = User.staff
+    @staff = User.all
     respond_to do |format|
       format.html
     end
@@ -64,13 +64,5 @@ class ReportsController < ApplicationController
     respond_to do |format|
       format.html
     end
-  end
-
-  def user_projects
-    @staff = User.find(:all, :conditions => {:is_staff => 1})
-  end
-
-  def project_stakeholders
-    @projects = Project.current
   end
 end

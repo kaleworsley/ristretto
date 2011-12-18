@@ -1,5 +1,5 @@
 <%- content_for :tabs do -%>
-    <%= tab 'Edit', edit_timeslice_path(@timeslice) if can? :edit, @timeslice %>
+    <%= tab 'Edit', edit_timeslice_path(@timeslice) %>
 <%- end -%>
 
 <%= title "Are you sure you want to continue?" -%>

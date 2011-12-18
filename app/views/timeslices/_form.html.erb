@@ -15,28 +15,22 @@
       <%= form.text_area :description, {:rows => 5, :class => 'xxlarge'} %>
     </div>
   </div>
-<!--
-  <div class="form-item form-item-block clearfix">
-    <%= form.label :started %>
-    <div class="input">
-      <%= form.text_field :started %>
-    </div>
-  </div>
-  <div class="form-item form-item-block clearfix">
-    <%= form.label :finished %>
-    <div class="input">
-      <%= form.text_field :finished %>
-    </div>
-  </div>
--->
-   <%= form.hidden_field :started %>
-   <%= form.hidden_field :finished %>
+
+  <%= form.hidden_field :started %>
+  <%= form.hidden_field :finished %>
+
+  <% if @timeslice.new_record? %>
+    <%= form.hidden_field :chargeable %>
+  <% else %>
   <div class="form-item form-item-block clearfix">
     <%= form.label :chargeable %>
     <div class="input">
       <%= form.check_box :chargeable %>
     </div>
   </div>
+  <% end %>
+
+
   <div class="actions">
     <%= form.submit "Save", :class => 'btn primary' %>
   </div>

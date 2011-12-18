@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111216035319) do
+ActiveRecord::Schema.define(:version => 20111218001122) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "attachable_id"
@@ -22,17 +22,6 @@ ActiveRecord::Schema.define(:version => 20111216035319) do
     t.datetime "file_updated_at"
     t.integer  "user_id"
   end
-
-  create_table "comments", :force => true do |t|
-    t.text     "body"
-    t.integer  "task_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "user_id"
-  end
-
-  add_index "comments", ["task_id"], :name => "index_comments_on_task_id"
-  add_index "comments", ["user_id"], :name => "index_comments_on_user_id"
 
   create_table "customers", :force => true do |t|
     t.text "name"
@@ -56,11 +45,11 @@ ActiveRecord::Schema.define(:version => 20111216035319) do
   create_table "projects", :force => true do |t|
     t.text    "name"
     t.integer "customer_id"
-    t.decimal "estimate",    :precision => 10, :scale => 2
+    t.decimal "estimate"
     t.string  "state"
     t.float   "rate"
     t.boolean "fixed_price"
-    t.string  "kind",                                       :default => "development"
+    t.string  "kind",        :default => "development"
   end
 
   add_index "projects", ["customer_id"], :name => "index_projects_on_customer_id"
@@ -85,17 +74,13 @@ ActiveRecord::Schema.define(:version => 20111216035319) do
     t.integer  "project_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "state",                                         :default => "not_started"
-    t.text     "description"
-    t.integer  "user_id"
-    t.integer  "assigned_to_id"
-    t.integer  "weight",                                        :default => 0
-    t.decimal  "estimate",       :precision => 10, :scale => 2
+    t.string   "state",      :default => "not_started"
+    t.integer  "weight",     :default => 0
+    t.decimal  "estimate"
+    t.string   "stage"
   end
 
-  add_index "tasks", ["assigned_to_id"], :name => "index_tasks_on_assigned_to_id"
   add_index "tasks", ["project_id"], :name => "index_tasks_on_project_id"
-  add_index "tasks", ["user_id"], :name => "index_tasks_on_user_id"
 
   create_table "timeslices", :force => true do |t|
     t.text     "description"
@@ -120,17 +105,16 @@ ActiveRecord::Schema.define(:version => 20111216035319) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "persistence_token"
-    t.boolean  "is_staff",            :default => false
     t.integer  "minute_step",         :default => 15
-    t.integer  "login_count",         :default => 0,     :null => false
-    t.integer  "failed_login_count",  :default => 0,     :null => false
+    t.integer  "login_count",         :default => 0,   :null => false
+    t.integer  "failed_login_count",  :default => 0,   :null => false
+    t.datetime "last_request_at"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
     t.string   "current_login_ip"
     t.string   "last_login_ip"
-    t.string   "single_access_token", :default => "0",   :null => false
-    t.string   "perishable_token",    :default => "0",   :null => false
-    t.text     "ignore_mail"
+    t.string   "single_access_token", :default => "0", :null => false
+    t.string   "perishable_token",    :default => "0", :null => false
     t.string   "full_name"
   end
 

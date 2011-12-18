@@ -1,14 +1,7 @@
-<% content_tag 'tr', { :class =>  "task-#{task.id} task" } do %>
+<% content_tag 'tr', :class =>  "task-#{task.id} task" do %>
   <td class="name"><%= link_to task.name, task %></td>
   <td class="state <%= task.state %>"><%= task.state.humanize %></td>
   <td class="estimate"><%= pluralize(task.estimate, 'hour') %></td>
-
-  <td class="comment-count"><%= task.comments.count %></td>
-  
-  <td>
-  <ul class="edit-links">
-    <li class="edit"><%= edit_link task %></li>
-    <li class="delete"><%= delete_link task %></li>
-  </ul>
-  </td>
+  <td class="time"><%= pluralize(task.total_chargeable_duration_hours, 'hour') %></td>
+  <!--<td><% task.next_states.each do |next_state| %><%= render 'tasks/state_button', :task => task, :next_state => next_state, :destination => request.path %><% end %></td>-->
 <% end %>

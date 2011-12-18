@@ -1,15 +1,15 @@
 class SearchController < ApplicationController
 
   def search
-    # 403 if the user isn't logged in, or isn't a staff member
-    if current_user.blank? || !current_user.is_staff?
+    # 403 if the user isn't logged in
+    if current_user.blank?
       render_403
     end
 
     @q = query = params[:q] || params[:term]
     @page = page = (params[:page] ? params[:page].to_i : 1)
 
-    @search = Sunspot.search Customer, Project, Task, Comment, Timeslice, User do
+    @search = Sunspot.search Customer, Project, Task, Timeslice, User do
       keywords query
     	paginate :page => page
      end
