@@ -1,0 +1,40 @@
+<% javascript ['add-timeslice', '/libraries/bootstrap/bootstrap-tabs.js'] %>
+<% form_tag add_save_timeslice_path do %>
+
+  <ul class="tabs" data-tabs="tabs">
+    <li class="active"><a href="#task">Task</a></li>
+    <li><a href="#ticket">Ticket</a></li>
+  </ul>
+  <div class="tab-content">
+  
+  <div class="clearfix tab-pane active" id="task">
+    <%= label_tag 'Task' %>
+    <div class="input">
+      <%= select :task_timeslice, :timetrackable_object, grouped_options_for_select(current_user.tasks_for_select), {:include_blank => true }, :class => 'input-xxlarge', 'data-placeholder' => 'Choose a task...' %>
+    </div>
+  </div>
+
+  <div class="clearfix tab-pane" id="ticket">
+    <%= label_tag :Ticket %>
+    <div class="input">
+      <%= select :ticket_timeslice, :timetrackable_object, grouped_options_for_select(Ticket.all_ticketable_for_select), {:include_blank => true }, :class => 'input-xxlarge', 'data-placeholder' => 'Choose a ticket...' %>
+    </div>
+  </div>
+  
+  <%= hidden_field :timeslice, :started, {:value => @started } %>
+  <%= hidden_field :timeslice,:finished, {:value => @finished } %>
+
+
+  <div class="clearfix">
+    <%= label_tag :description %>
+     <div class="input">
+       <%= text_area :timeslice, :description, :class => 'input-xxlarge' %>
+     </div>
+  </div>
+
+  <div class="actions">
+    <%= submit_tag 'Create', :class => 'btn primary' %>
+  </div>
+
+
+<% end %>

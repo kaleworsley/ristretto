@@ -4,7 +4,7 @@
       <%= render attachment.attachable.attachments %>
     <% end %>
   </ul>
-  <div class="form-item form-item-block">
+  <div class="clearfix">
   <% form_for attachment, :html => { :multipart => true } do |form| %>
     <%= render :partial => 'attachments/form', :object => form %>
   <% end %>

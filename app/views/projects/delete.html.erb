@@ -15,12 +15,15 @@
     <%= tab 'Import tasks', import_project_tasks_path(@project) %>
     <%= tab 'New task', new_project_task_path(@project) %>
   <% end %>
+  <% tab 'Time', time_project_path(@project) do %>
+    <%= tab 'Uninvoiced', uninvoiced_project_path(@project) %>
+  <% end %>
 <%- end -%>
 
 <%= title "Are you sure you want to continue?" -%>
 
 This will delete <%= link_to @project.name, @project %>, and all of the associated tasks, etc.
 <% form_for @project, :html => {:method => 'delete'} do |f| %>
-  <%= submit_tag 'Delete' %> or <%= link_to 'Cancel', customer_projects_path(@project.customer) %>
+  <%= f.submit 'Delete', :class => 'btn primary' %> or <%= link_to 'Cancel', @project, :class => 'btn danger' %>
 <% end %>
 

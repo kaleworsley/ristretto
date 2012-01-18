@@ -2,7 +2,7 @@ require 'test_helper'
 
 class CustomerTest < ActiveSupport::TestCase
   def setup
-    @customer = Customer.new :name => 'Test customer'
+    @customer = Factory.create(:customer)
   end
 
   def test_should_save_customer
@@ -23,18 +23,5 @@ class CustomerTest < ActiveSupport::TestCase
     assert_difference 'Project.all.length',-1 do
       customers(:customer1).destroy
     end
-  end
-
-  def test_returns_users
-    assert_kind_of Array, customers(:customer1).users
-    assert_equal 1, customers(:customer1).users.count
-    Stakeholder.create :user => users(:user2),
-      :project => projects(:project1), :role => 'developer'
-    assert_equal 2, customers(:customer1).users(true).count
-  end
-
-  def test_has_stakeholder
-    assert customers(:customer1).has_stakeholder?(users(:user1))
-    assert !customers(:customer1).has_stakeholder?(users(:user2))
   end
 end

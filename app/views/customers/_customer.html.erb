@@ -1,4 +1,4 @@
-<% content_tag 'tr', :class =>  "customer-#{customer.id} customer" do %>
+<tr class="<%= "customer-#{customer.id} customer" %>">
   <td class="name"><%= link_to customer.name, customer %></td>
   <td class="projects"><%= pluralize(customer.projects.length, 'project') %></td>
-<% end %>
+</tr>

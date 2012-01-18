@@ -3,21 +3,19 @@ class Project < ActiveRecord::Base
     text :name
   end
 
-  # Create revisions
-  versioned
-
   validates_presence_of :name
   validates_presence_of :customer_id
   validates_numericality_of :estimate, :greater_than => 0, :allow_nil => true
 
   belongs_to :customer
   has_many :tasks, :dependent => :destroy
+  has_many :tickets, :as => :ticketable
   has_and_belongs_to_many :users, :uniq => true
   
   delegate :todo, :to => :tasks
   delegate :doing, :to => :tasks
   delegate :done, :to => :tasks
-      
+
 
   accepts_nested_attributes_for :tasks, :reject_if => Proc.new {|t| t['name'].blank?}, :allow_destroy => true
  
@@ -53,6 +51,14 @@ class Project < ActiveRecord::Base
   # Return a hash of available project kinds suitable for the select helper
   def Project.kinds_for_select
     KINDS.collect { |kind| [kind.humanize, kind] }
+  end
+
+  def ticketable_object
+    "Project|#{id}"
+  end
+
+  def to_option
+    ["#{customer.name} - #{name}", ticketable_object]
   end
 
   def self.find(*args)

@@ -4,15 +4,15 @@ module ApplicationHelper
     close = '<a class="close" href="#">&times;</a>'
     output = '';
     if flash[:notice].present?
-      output += content_tag 'div', close+flash[:notice], :class => "alert-message fade in success"
+      output += content_tag 'div', close+flash[:notice], :class => "alert-message fade in success", 'data-alert' => 'alert'
     end
 
     if flash[:warning].present?
-      output += content_tag 'div', close+flash[:warning], :class => "alert-message fade in warning"
+      output += content_tag 'div', close+flash[:warning], :class => "alert-message fade in warning", 'data-alert' => 'alert'
     end
 
     if flash[:error].present?
-      output += content_tag 'div', close+flash[:error], :class => "alert-message fade in error"
+      output += content_tag 'div', close+flash[:error], :class => "alert-message fade in error", 'data-alert' => 'alert'
     end
 
     unless output.blank?
@@ -29,14 +29,10 @@ module ApplicationHelper
     end
   end
 
-    def body_classes
-      classes = "#{controller.controller_name} #{controller.controller_name}-#{controller.action_name}"
-      classes += " " + @body_classes.join(' ') unless @body_classes.nil?
-      return classes
-    end
-
-  def page_help(help_text)
-    content_for(:page_help) { help_text }
+  def body_classes
+    classes = "#{controller.controller_name} #{controller.controller_name}-#{controller.action_name}"
+    classes += " " + @body_classes.join(' ') unless @body_classes.nil?
+    return classes
   end
 
   def javascript(*files)
@@ -45,22 +41,6 @@ module ApplicationHelper
 
   def stylesheet(*files)
     content_for(:head) { stylesheet_link_tag files }
-  end
-
-  def post_info(object, prefix = 'Created by', gravatar = true, tag = 'div')
-    output = '<' + tag + ' class="post-info">'
-    if (gravatar)
-      output += link_to(gravatar(object.user, 24), object.user, :class => 'gravatar')
-    end
-    output +=  prefix + ' '
-    output += link_to(object.user.full_name, object.user)
-    output += ' on '
-    output += object.created_at.strftime("%d/%m/%Y")
-    output += ' at '
-    output += object.created_at.strftime("%I:%M %p")
-    output += '</' + tag + '>'
-
-    return output
   end
 
   def crumb(text, target)
@@ -73,14 +53,14 @@ module ApplicationHelper
     a_opts = {:class => '', :title => text}
 
     if block_given?    
-      a_opts = {:class => 'dropdown-toggle', :title => text}
+      a_opts = {:class => 'dropdown-toggle', 'data-toggle' => 'dropdown', :title => text}
     end
     a_opts.merge!(opts[:a]) if opts[:a].present?
     
     ul_opts.merge!(opts[:ul]) if opts[:ul].present?    
 
     if block_given? 
-      li_opts = {:class => 'menu'}
+      li_opts = {:class => 'dropdown'}
     end
     
  	  if active 
@@ -118,17 +98,24 @@ module ApplicationHelper
     end
     a_opts.merge!(opts[:a]) if opts[:a].present?
     
-    ul_opts = {:class => 'menu-dropdown'}
+    ul_opts = {:class => 'dropdown-menu'}
     ul_opts.merge!(opts[:ul]) if opts[:ul].present?    
 
     if block_given? 
-      li_opts = {:class => 'menu'}
-      if controller.controller_name == controller_name
-        li_opts[:class] += ' active'
-      end
+      li_opts = {:class => 'dropdown', 'data-dropdown' => 'dropdown'}
     else
       li_opts = {}
     end
+
+    if controller.controller_name == controller_name
+      if li_opts[:class].present?
+        li_opts[:class] += ' active'
+      else
+        li_opts[:class] = 'active'
+      end
+    end
+
+
     li_opts.merge!(opts[:li]) if opts[:li].present?    
 
      
@@ -199,6 +186,13 @@ module ApplicationHelper
       render(association.to_s.singularize + "_fields", :f => builder)
     end
     link_to_function(name, h("add_fields(this, '#{association}', '#{escape_javascript(fields)}')"), :class => 'btn add icon')
+  end
+
+  def present(object, klass = nil)
+    klass ||= "#{object.class}Presenter".constantize
+    presenter = klass.new(object, self)
+    yield presenter if block_given?
+    presenter
   end
 
 end

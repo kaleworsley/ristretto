@@ -5,8 +5,11 @@
 <% end %>
 
 <%- content_for :breadcrumbs do -%>
-  <%= crumb @customer.name, @customer %>
+  <%= crumb 'Customers', customers_path %>
+  <%= crumb @project.customer.name, @project.customer %>
+  <%= crumb 'Projects', customer_projects_path(@project.customer) %>
   <%= crumb @project.name, @project %>
+  <%= crumb 'Tasks', project_tasks_path(@project) %>
   <%= crumb @task.name, @task %>
 <%- end -%>
 

@@ -1,11 +1,13 @@
 <%- content_for :breadcrumbs do -%>
-  <%= crumb @timeslice.task.project.customer.name, @timeslice.task.project.customer %>
-  <%= crumb @timeslice.task.project.name, @timeslice.task.project %>
-  <%= crumb @timeslice.task.name, @timeslice.task %>
+<% if @timeslice.timetrackable_type == 'Task' %>
+  <%= crumb @timeslice.timetrackable.project.customer.name, @timeslice.timetrackable.project.customer %>
+  <%= crumb @timeslice.timetrackable.project.name, @timeslice.timetrackable.project %>
+  <%= crumb @timeslice.timetrackable.name, @timeslice.timetrackable %>
   <% unless @timeslice.description.blank? %>
     <%= crumb @timeslice.description, @timeslice %>
   <% else %>
     <%= crumb '(blank)', @timeslice %>
+  <% end %>
   <% end %>
 <%- end -%>
 
@@ -14,7 +16,7 @@
 <%- end -%>
 
 <%= title "Editing timeslice" -%>
-<% javascript 'timeslice.edit' %>
+
 <% form_for @timeslice do |form| %>
   <%= render :partial => form, :locals => {:timeslice => @timeslice, :task => @task } %>
 <% end %>

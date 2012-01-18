@@ -1,5 +1,6 @@
 <%- content_for :tabs do -%>
-  <%= tab 'New user', new_user_path(@user) %>
+  <%= tab 'Users', users_path, true %>
+  <%= tab 'New user', new_user_path %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
@@ -7,7 +8,7 @@
 <% end %>
 
 <% title "Users" -%>
-<div id="users" class="users panel">
+<div id="users" class="users">
   <h3 class="title">Users</h3>
   <div class="content">
     <table class="users bordered-table zebra-striped">

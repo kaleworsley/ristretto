@@ -1,11 +1,28 @@
 <% title "Dashboard" %>
 
-<% current_user.dashboard_panels.each do |slice| %>
-  <div class="row">
-    <% slice.each do |panel| %>
-      <div id="<%= panel %>" class="span8">
-        <%= render :partial => panel %>
-      </div>
-    <% end %>
+<% javascript 'dashboard' %>
+
+<% if current_user.dashboard_panels.present? %>
+<% current_user.dashboard_panels.each do |panel| %>
+  <div class="dashboard-panel resizeable draggable" id="<%= panel %>">
+    <%= render :partial => panel %>
   </div>
+<% end %>
+
+<% else %>
+
+<div class="alert-message block-message info">
+  <a class="close" data-dismiss="alert" href="#">×</a>
+  <p>You currently do not have any dashboard panels selected. The following panels are available:</p>
+  <ul>
+  <% User::DASHBOARD_PANELS.each do |panel| %>
+    <li><%= panel.humanize %></li>
+  <% end %>
+  </ul>
+  
+  <div class="alert-actions">
+    <%= link_to "Select Panels", edit_user_path(current_user), :class => "btn small" %>
+  </div>
+</div>
+
 <% end %>

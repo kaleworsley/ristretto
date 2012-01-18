@@ -1,5 +1,7 @@
 <%- content_for :tabs do -%>
+  <%= tab 'Show', user_path(@user), true %>
   <%= tab 'Edit', edit_user_path(@user) %>
+  <%= tab 'Delete', delete_user_path(@user) %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
@@ -9,33 +11,15 @@
 
 <%= title @user.full_name %>
 <div class="panel three">
-<h3 class="title"><%= @user.full_name %></h3>
-<div class="content">
-<%= gravatar(@user) %>
-<p>
-  <strong>Username:</strong>
-  <%=h @user.name %>
-</p>
+  <h3 class="title"><%= @user.full_name %></h3>
+  <div class="content">
 
-<p>
-  <strong>First name:</strong>
-  <%=h @user.first_name %>
-</p>
+  <% present @user do |u| %>
 
-<p>
-  <strong>Last name:</strong>
-  <%=h @user.last_name %>
-</p>
+    <%= u.gravatar %>
+    <%= u.item :email, :email %>
+    <%= u.item 'API Token', :single_access_token %>
 
-<p>
-  <strong>Email:</strong>
-  <%=h @user.email %>
-</p>
-
-<p>
-  <strong>API Token:</strong>
-  <%=h @user.single_access_token %>
-</p>
-
-</div>
+  <% end %>
+  </div>
 </div>

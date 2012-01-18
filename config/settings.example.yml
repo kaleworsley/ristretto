@@ -8,21 +8,29 @@ development:
   <<: *default_settings
   host: localhost
   name: Ristretto Dev
+  xero_consumer_key: DUMMY
+  xero_consumer_secret: DUMMY
 
 test:
   <<: *default_settings
   host: test.host
   name: Ristretto Test
+  xero_consumer_key: DUMMY
+  xero_consumer_secret: DUMMY
 
 cucumber:
   <<: *default_settings
   host: cucumber.host
   name: Ristretto Cucumber
+  xero_consumer_key: DUMMY
+  xero_consumer_secret: DUMMY
 
 production:
   <<: *default_settings
   host: ristretto.example.com
   name: Ristretto
+  xero_consumer_key: DUMMY
+  xero_consumer_secret: DUMMY
   exception_notifications: true
   exception_recipients:
     - dev1@example.com

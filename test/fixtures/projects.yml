@@ -5,15 +5,21 @@ project1:
   customer: customer1
   state: current
   estimate: 20
+  users:
+    - user1
 
 project2:
   name: Project2
   customer: customer2
   state: current
   estimate: 20
+  users:
+    - user2
+    - user3
 
 project3:
   name: Project3
   customer: customer3
   state: current
   estimate: 20
+

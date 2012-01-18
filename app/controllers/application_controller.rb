@@ -108,11 +108,10 @@ class ApplicationController < ActionController::Base
   end
 
   def current_user
-    @current_user = current_user_session && current_user_session.record
+    if params[:api].present?
+      @current_user = User.find_by_single_access_token(params[:api])
+    else
+      @current_user = current_user_session && current_user_session.record
+    end
   end
-
-  def current_ability
-    @current_ability ||= Ability.new(current_user, request)
-  end
-
 end

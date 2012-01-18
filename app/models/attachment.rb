@@ -18,15 +18,4 @@ class Attachment < ActiveRecord::Base
   def self.page(page)
     paginate :per_page => 50, :page => page
   end
-
-  def activity_item
-    {
-      :user => self.user,
-      :parent => self.attachable,
-      :subject => self,
-      :action => ' uploaded ',
-      :date => self.created_at,
-      :object => self
-    }
-  end
 end

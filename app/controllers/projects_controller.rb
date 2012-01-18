@@ -1,13 +1,70 @@
 class ProjectsController < ApplicationController
-  before_filter :find_project, :only => [:edit, :delete, :show, :update, :destroy]
+  before_filter :find_project, :only => [:edit, :delete, :show, :update, :destroy, :uninvoiced, :invoice, :time]
   before_filter :find_customer, :only => [:index, :new, :create]
   before_filter :find_projects, :only => [:index]
-  after_filter :new_attachments, :only => [:create, :update]
 
   skip_before_filter :require_login, :only => [:ical]
 
   def delete
 
+  end
+  
+  def time
+  end
+
+  def uninvoiced
+    @invoices = Xero.Invoice.all(:where => {:type => 'ACCREC', :status => 'DRAFT'}).reject {|i| i.contact.contact_id != @project.customer.xero_contact_id}
+    #@timeslices = Timeslice.uninvoiced.all(:conditions => ['projects.id = ?', @project.id])
+  end
+  
+  def invoice
+    if params[:issue_date].blank?
+      @date = Date.today
+    else
+      @date = Date.parse(params[:issue_date])
+    end
+
+    if params[:due_date].blank?
+      @due_date = @date + 30.days
+    else
+      @due_date = Date.parse(params[:due_date])
+    end
+
+		if params[:invoice][:invoice_id].blank?
+		  @new_invoice = true
+      @invoice = Xero.Invoice.build(:type => 'ACCREC', :contact => @project.customer.xero_customer)
+    else 
+ 		  @new_invoice = false
+      @invoice = Xero.Invoice.find(params[:invoice][:invoice_id])
+    end
+
+    params[:items].each do |id, val|
+      @invoice.add_line_item(:description => val[:description], :quantity => val[:hours].to_f, :unit_amount => @project.rate.to_f) if val[:include]
+    end
+
+		@invoice.date = @date,
+    @invoice.due_date = @due_date
+    @invoice.save
+    @invoice_id = @invoice.invoice_id
+    @invoice_number = @invoice.invoice_number
+
+    params[:items].each do |id, val|
+      if val[:include]
+        timeslice_ids = val[:timeslice_ids].split(',')
+        timeslice_ids.each do |timeslice_id|
+          Timeslice.find(timeslice_id).update_attributes(:invoice => @invoice_number)
+        end
+      end
+    end
+    
+    respond_to do |format|
+      if @new_invoice
+        flash[:notice] = '<a href="https://go.xero.com/AccountsReceivable/View.aspx?InvoiceId=' + @invoice_id + '">Your invoice</a> was successfully created.'
+      else
+        flash[:notice] = '<a href="https://go.xero.com/AccountsReceivable/View.aspx?InvoiceId=' + @invoice_id + '">Your invoice</a> was successfully updated.'
+      end
+      format.html { redirect_to(@project) }
+    end  
   end
 
   # GET /projects
@@ -22,37 +79,18 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.xml
   def show
-    @task = @project.tasks.new
-    @attachment = Attachment.new
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @project }
-      format.js do
-        project = {
-          :project => {
-            :name => @project.name,
-            :id => @project.id,
-            :todo => @project.todo.length,
-            :doing => @project.doing.length,
-            :done => @project.done.length
-            }
-          }
-        render :json => project
-      end
     end
   end
 
   # GET /projects/new
   # GET /projects/new.xml
   def new
-    @project = Project.new
-    @attachment = Attachment.new
+    @project = @customer.projects.new
 
 		3.times { @project.tasks.build }
-    if params[:customer]
-      @project.customer_id = params[:customer]
-    end
 
     respond_to do |format|
       format.html # new.html.erb
@@ -62,7 +100,6 @@ class ProjectsController < ApplicationController
 
   # GET /projects/1/edit
   def edit
-    @attachment = Attachment.new
 		@project.tasks.build
   end
 
@@ -77,7 +114,6 @@ class ProjectsController < ApplicationController
         format.html { redirect_to(@project) }
         format.xml  { render :xml => @project, :status => :created, :location => @project }
       else
-        @attachment = Attachment.new
         format.html { render :action => "new" }
         format.xml  { render :xml => @project.errors, :status => :unprocessable_entity }
       end
@@ -93,7 +129,6 @@ class ProjectsController < ApplicationController
         format.html { redirect_to(@project) }
         format.xml  { head :ok }
       else
-        @attachment = Attachment.new
         format.html { render :action => "edit" }
         format.xml  { render :xml => @project.errors, :status => :unprocessable_entity }
       end
@@ -112,19 +147,6 @@ class ProjectsController < ApplicationController
   end
 
   private
-    def new_attachments
-      new_attachments = params[:new_attachments]
-      unless new_attachments.nil?
-        new_attachments.each do |attachment|
-          attachment['attachable_id'] = @project.id
-          attachment['user_id'] = current_user.id
-          attachment['attachable_type'] = @project.class.to_s
-          attachment['attachable'] = @project
-          Attachment.create(attachment)
-        end
-      end
-    end
-
     def find_project
       @project = Project.find(params[:id])
     end

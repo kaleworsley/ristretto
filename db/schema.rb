@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111218001122) do
+ActiveRecord::Schema.define(:version => 20111222092226) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "attachable_id"
@@ -24,7 +24,8 @@ ActiveRecord::Schema.define(:version => 20111218001122) do
   end
 
   create_table "customers", :force => true do |t|
-    t.text "name"
+    t.text   "name"
+    t.string "xero_contact_id"
   end
 
   create_table "mailouts", :force => true do |t|
@@ -45,11 +46,11 @@ ActiveRecord::Schema.define(:version => 20111218001122) do
   create_table "projects", :force => true do |t|
     t.text    "name"
     t.integer "customer_id"
-    t.decimal "estimate"
+    t.decimal "estimate",    :precision => 10, :scale => 2
     t.string  "state"
     t.float   "rate"
     t.boolean "fixed_price"
-    t.string  "kind",        :default => "development"
+    t.string  "kind",                                       :default => "development"
   end
 
   add_index "projects", ["customer_id"], :name => "index_projects_on_customer_id"
@@ -61,41 +62,40 @@ ActiveRecord::Schema.define(:version => 20111218001122) do
 
   add_index "projects_users", ["project_id", "user_id"], :name => "index_projects_users_on_project_id_and_user_id"
 
-  create_table "stakeholders", :force => true do |t|
-    t.integer  "user_id"
-    t.integer  "project_id"
-    t.text     "role"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
   create_table "tasks", :force => true do |t|
     t.text     "name"
     t.integer  "project_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "state",      :default => "not_started"
-    t.integer  "weight",     :default => 0
-    t.decimal  "estimate"
+    t.string   "state",                                     :default => "not_started"
+    t.integer  "weight",                                    :default => 0
+    t.decimal  "estimate",   :precision => 10, :scale => 2
     t.string   "stage"
   end
 
   add_index "tasks", ["project_id"], :name => "index_tasks_on_project_id"
 
+  create_table "tickets", :force => true do |t|
+    t.text     "description"
+    t.string   "ticketable_type"
+    t.integer  "ticketable_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
   create_table "timeslices", :force => true do |t|
     t.text     "description"
-    t.integer  "task_id"
     t.datetime "started"
     t.datetime "finished"
     t.boolean  "chargeable"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "user_id"
-    t.integer  "ar"
-    t.integer  "ap"
+    t.string   "invoice"
+    t.string   "timetrackable_type"
+    t.integer  "timetrackable_id"
   end
 
-  add_index "timeslices", ["task_id"], :name => "index_timeslices_on_task_id"
   add_index "timeslices", ["user_id"], :name => "index_timeslices_on_user_id"
 
   create_table "users", :force => true do |t|
@@ -108,7 +108,6 @@ ActiveRecord::Schema.define(:version => 20111218001122) do
     t.integer  "minute_step",         :default => 15
     t.integer  "login_count",         :default => 0,   :null => false
     t.integer  "failed_login_count",  :default => 0,   :null => false
-    t.datetime "last_request_at"
     t.datetime "current_login_at"
     t.datetime "last_login_at"
     t.string   "current_login_ip"
@@ -116,6 +115,7 @@ ActiveRecord::Schema.define(:version => 20111218001122) do
     t.string   "single_access_token", :default => "0", :null => false
     t.string   "perishable_token",    :default => "0", :null => false
     t.string   "full_name"
+    t.text     "panels"
   end
 
   create_table "versions", :force => true do |t|

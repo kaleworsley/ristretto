@@ -40,7 +40,7 @@ Rails::Initializer.run do |config|
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
   # Add additional load paths for your own custom dirs
-  # config.load_paths += %W( #{RAILS_ROOT}/extras )
+  config.load_paths += %W( #{RAILS_ROOT}/app/presenters )
 
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
@@ -64,7 +64,7 @@ Rails::Initializer.run do |config|
     :key => '_ristretto_session',
     :secret      => SETTINGS['secret']
   }
-
+ 
   # Use the database for sessions instead of the cookie-based default,
   # which shouldn't be used to store highly confidential information
   # (create the session table with "rake db:sessions:create")

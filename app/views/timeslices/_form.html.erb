@@ -1,18 +1,18 @@
-
+<% javascript 'add-timeslice' %>
   <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
 
   <% unless task.present? %>
-  <div class="form-item form-item-block clearfix">
-    <%= form.label :task_id %>
+  <div class="clearfix">
+    <%= form.label 'Task' %>
     <div class="input">
-      <%= form.select :task_id, option_groups_from_collection_for_select(Customer.all, :projects_tasks, :name, :id, :name) %>
+      <%= form.select :timetrackable_object, grouped_options_for_select(current_user.timetrackable_for_select, @timeslice.timetrackable_object || nil), {}, :class => 'input-xxlarge' %>
     </div>
   </div>
   <% end %>
-  <div class="form-item form-item-block clearfix">
+  <div class="clearfix">
     <%= form.label :description %>
     <div class="input">
-      <%= form.text_area :description, {:rows => 5, :class => 'xxlarge'} %>
+      <%= form.text_area :description, {:rows => 5, :class => 'input-xxlarge'} %>
     </div>
   </div>
 
@@ -22,7 +22,7 @@
   <% if @timeslice.new_record? %>
     <%= form.hidden_field :chargeable %>
   <% else %>
-  <div class="form-item form-item-block clearfix">
+  <div class="clearfix">
     <%= form.label :chargeable %>
     <div class="input">
       <%= form.check_box :chargeable %>

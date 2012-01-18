@@ -1,18 +1,18 @@
 <% form_for @user_session do |form| %>
 <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
-<div class="form-item form-item-block clearfix">
+<div class="clearfix">
   <%= form.label :email %>
   <div class="input">
     <%= form.text_field :email %>
   </div>
 </div>
-<div class="form-item form-item-block clearfix">
+<div class="clearfix">
   <%= form.label :password %>
   <div class="input">
     <%= form.password_field :password %>
   </div>
 </div>
-<div class="form-item form-item-block clearfix">
+<div class="clearfix">
   <%= form.label :remember_me %>
   <div class="input">
     <%= form.check_box :remember_me %>

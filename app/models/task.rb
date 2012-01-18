@@ -2,19 +2,18 @@ class Task < ActiveRecord::Base
   searchable do
     text :name
   end
-  
-  # Create revisions
-  versioned
 
   validates_presence_of :name
   validates_numericality_of :estimate, :greater_than => 0, :allow_nil => true
 
   belongs_to :project
-  has_many :timeslices, :dependent => :destroy
+  has_many :timeslices, :as => :timetrackable, :dependent => :destroy
 
   #NOTE: ":class_name => '::Attachment''" is required. There is a bug in paperclip
   #see: http://thewebfellas.com/blog/2008/11/2/goodbye-attachment_fu-hello-paperclip#comment-2415
   has_many :attachments, :as => :attachable, :dependent => :destroy, :class_name => '::Attachment'
+
+  delegate :customer, :to => :project
 
   # Task states
   STATES = ['not_started','started','delivered','accepted','rejected',
@@ -41,6 +40,10 @@ class Task < ActiveRecord::Base
   TAGS = ["bug", "content", "database", "feature", "markup", "permissions", "scope creep", "style", "system"]
 
   named_scope :selectable, :conditions => {:state => STATEGROUPS[:current]}, :order => 'name asc'
+
+  def timetrackable_object
+    "Task|#{id}"
+  end
 
   # Return a hash of available task states suitable for the select helper
   def Task.states_for_select
@@ -111,6 +114,29 @@ class Task < ActiveRecord::Base
   # Total nonchargeable duration of timeslices for a task
   def total_nonchargeable_duration
     duration - total_chargeable_duration
+  end
+
+
+  def uninvoiced
+    timeslices.select do |timeslice|
+      !timeslice.chargeable || timeslice.invoice.blank?
+    end
+  end
+
+  def total_chargeable_uninvoiced_duration
+    duration = 0
+    uninvoiced.each do |timeslice|
+      duration += timeslice.duration
+    end
+    duration
+  end
+  
+  def total_chargeable_uninvoiced_duration_hours
+    total_chargeable_uninvoiced_duration/60/60
+  end
+
+  def to_option
+    ["#{project.customer.name} - #{project.name} : #{name}", timetrackable_object]
   end
 
   # Include customer and project names

@@ -2,9 +2,7 @@ require 'test_helper'
 
 class ProjectTest < ActiveSupport::TestCase
   def setup
-    @project = Project.new :name => 'Test project',
-                           :customer_id => customers(:customer1).id,
-                           :estimate => 100
+    @project = Factory.create(:project)
   end
 
   test "should save project" do
@@ -24,26 +22,6 @@ class ProjectTest < ActiveSupport::TestCase
   test "should delete dependent tasks" do
     assert_difference 'Task.count', -1 do
       projects(:project1).destroy
-    end
-  end
-
-  test "should delete dependent stakeholders" do
-    assert_difference 'Stakeholder.count', -1 do
-      projects(:project1).destroy
-    end
-  end
-
-  test "should return if user is stakeholder" do
-    assert projects(:project1).has_stakeholder?(users(:user1)),
-      "project has stakeholder"
-    assert !projects(:project1).has_stakeholder?(users(:user2)),
-      "project doesn't have stakeholder"
-  end
-
-  test "should add stakeholder" do
-    assert_difference 'Stakeholder.count' do
-      assert_instance_of Stakeholder,
-        projects(:project2).add_stakeholder(users(:user1))
     end
   end
 

@@ -15,6 +15,7 @@ function new_task_row() {
 
 $(function() {
   $('.tasks .project-tasks tbody').sortable({
+    items: 'tr:not(.add)',
     forceHelperSize: true,
     forcePlaceholderSize: true,	
   	axis: 'y',

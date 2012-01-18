@@ -4,27 +4,15 @@ class User < ActiveRecord::Base
   searchable do
     text :full_name, :email
   end
-  # Create revisions
-  versioned :except => [:perishable_token, :last_request_at]
 
   validates_presence_of :full_name
   validates_presence_of :email
   validates_uniqueness_of :full_name
   validates_uniqueness_of :email
 
-  serialize :ignore_mail, Hash
+  acts_as_authentic
 
-  acts_as_authentic do |config|
-    # If passwords are found in plain MD5 crypt (e.g. from a Drupal import)
-    # they will be updated to the default encryption scheme on successful
-    # login
-    config.transition_from_crypto_providers = [Authlogic::CryptoProviders::MD5]
-  end
-
-  has_many :tasks
-  has_many :assigned_tasks, :class_name => 'Task', :foreign_key => 'assigned_to_id'
-
-  has_many :timeslices do
+  has_many :timeslices, :dependent => :destroy do
     # Get all chargeable timeslices or all chargeable timeslices on a date
     # or all chargeable timeslices between a range, for a user
     def chargeable(start = nil, finish = nil)
@@ -47,63 +35,36 @@ class User < ActiveRecord::Base
       by_date(start, finish).find_all {|t| !t.chargeable}
     end
   end
-
-
+  
   has_and_belongs_to_many :projects, :uniq => true
   has_and_belongs_to_many :mailouts
+
+  DASHBOARD_PANELS = ['project_list', 'timesheet', 'customer_list', 'new_customer']
+
+  serialize :panels
 
   def staff
     User.all
   end
 
 
-  # Adds an object to a users ignore mail list
-  def ignore_mail_from(instance)
-    return true if ignore_mail_from?(instance)
-    self.ignore_mail = {} if self.ignore_mail.nil?
-    unless self.ignore_mail.include? instance.class.to_s
-      self.ignore_mail[instance.class.to_s] = []
-    end
-    self.ignore_mail[instance.class.to_s].push(instance.to_param)
-    self.save
-  end
-
-  # Removes an object from a users ignore mail list
-  def receive_mail_from(instance)
-    return true if receive_mail_from?(instance)
-    self.ignore_mail[instance.class.to_s].delete(instance.to_param) != nil
-    self.save
-  end
-
-  # Checks for an object in a users ignore mail list
-  def ignore_mail_from?(instance)
-    self.ignore_mail = {} if self.ignore_mail.nil?
-    if self.ignore_mail.include? instance.class.to_s
-      if self.ignore_mail[instance.class.to_s].include? instance.to_param
-        true
-      else
-        false
-      end
-    else
-      false
-    end
+  def customers
+    projects.map(&:customer).uniq
   end
 
   def current_projects
     projects.current
   end  
-
   def dashboard_panels
-    panels = ['project_list', 'timesheet']
-    slices = []
-    
-    panels.each_slice(2) {|slice| slices.push(slice) }
-    
-    slices
+    if panels.present?
+      [] + panels.sort_by {|v,k| k}.map{|v| v[0] }.to_a
+    else
+      []
+    end
   end
 
-  def receive_mail_from?(instance)
-    !ignore_mail_from?(instance)
+  def now
+    Time.at((DateTime.now.to_i.to_f/(60*minute_step)).round*(60*minute_step)).to_datetime
   end
 
   # Send password reset instructions
@@ -131,7 +92,7 @@ class User < ActiveRecord::Base
   end
 
   def for_select_box
-    "#{last_name}, #{first_name} (#{email})"
+    "#{full_name} (#{email})"
   end
 
   # Initials e.g. FL
@@ -149,9 +110,32 @@ class User < ActiveRecord::Base
     true
   end
 
+
+  def tasks_for_select
+    current_projects_tasks.group_by(&:customer).map {|customer, tasks| [customer.name, tasks.map {|t|["#{t.project.name} : #{t.name}", t.timetrackable_object]}] }
+  end
+  
+  def timetrackable_for_select
+  @timetrackable = []
+    @customers = Customer.all.each do |c|
+     @items = [] + (c.tickets.map {|t| t.to_option })
+     c.support_projects.each do |p|
+       @items += [p.to_option] + (p.tickets.map {|t| t.to_option })
+     end
+     
+     c.development_projects.each do |p|
+       @items += [] + (p.tasks.map {|t| t.to_option })
+     end
+     
+       
+     @timetrackable.push([c.name, @items.reject(&:blank?)])
+    end
+    @timetrackable.sort_by {|o| o[0] }
+  end
+
   # Returns all projects that the user is a member of
   def all_projects
-    current_projects
+    projects
   end
 
   # Returns an array of project ids to which this user is associated

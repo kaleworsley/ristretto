@@ -10,6 +10,6 @@
 <%- end -%>
 
 <%= title "New project" -%>
-<% form_for [@customer, @project], :html => { :multipart => true } do |form| %>
+<% form_for [@customer, @project] do |form| %>
 <%= render :partial => form, :locals => {:form => form, :project => @project, :attachment => @attachment} %>
 <% end %>

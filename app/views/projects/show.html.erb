@@ -15,14 +15,15 @@
     <%= tab 'Import tasks', import_project_tasks_path(@project) %>
     <%= tab 'New task', new_project_task_path(@project) %>
   <% end %>
+  <% tab 'Time', time_project_path(@project) do %>
+    <%= tab 'Uninvoiced', uninvoiced_project_path(@project) %>
+  <% end %>
 <%- end -%>
-
-<%- #javascript "project.watch" -%>
 
 <%= title @project.name %>
 
-<div class="row">
-<div class="span8 offset8 project-info<%= ' overrunning' if @project.overrunning? %>">
+
+<div class="project-info<%= ' overrunning' if @project.overrunning? %>">
   <% if @project.percentage_of_budget_used %>
   <strong>Budget:</strong>
   <span><%= number_to_percentage(@project.percentage_of_budget_used, :precision => 0) %></span>
@@ -36,23 +37,18 @@
   <span><%= pluralize(@project.total_chargeable_hours, 'hour') %> <% if @project.total_chargeable_duration && @project.rate.present? %>(<%= number_to_currency(@project.total_chargeable_hours * @project.rate) %>)<% end %></span>
 </div>
 
-</div>
-	<div id="tasks" class="row">
-  	<div class="span16">
-    	<table class="tasks bordered-table zebra-striped">
-      	<thead><tr><th>Name</th><th>State</th><th>Estimate</th><th>Time</th></tr></thead>
-      	<tbody>
-					<% @project.tasks.group_by(&:stage).each do |stage, tasks| %>
-					  <tr>
-					    <th><%= (stage.present? ? stage.humanize : 'Other') %></th>
-					    <th></th>
-					    <th><%= pluralize(tasks.map(&:estimate).sum, 'hour') %></th>
-					    <th><%= pluralize(tasks.map(&:total_chargeable_duration_hours).sum, 'hour') %></th>
-					  </tr>				
-		        <%= render tasks %>
-					<% end %>        
-      	</tbody>
-    	</table>
-  	</div>
-	</div>
+<table class="tasks bordered-table zebra-striped">
+  <thead><tr><th>Name</th><th>State</th><th>Estimate</th><th>Time</th></tr></thead>
+  <tbody>
+    <% @project.tasks.current.group_by(&:stage).each do |stage, tasks| %>
+      <tr>
+        <th><%= (stage.present? ? stage.humanize : 'Other') %></th>
+        <th></th>
+        <th><%= pluralize(tasks.map {|t |t.estimate.to_f}.sum.to_f.round(2), 'hour') %></th>
+        <th><%= pluralize(tasks.map(&:total_chargeable_duration_hours).sum.to_f.round(2), 'hour') %></th>
+      </tr>				
+      <%= render tasks %>
+    <% end %>        
+  </tbody>
+</table>
 

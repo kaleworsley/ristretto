@@ -4,13 +4,9 @@
     <th>User</th>
     <th>Description</th>
     <th>Date</th>
-    <th>Start</th>
-    <th>End</th>
+    <th>Time</th>
     <th>Duration</th>
-    <th>Chargeable</th>
-    <th class="show"><%= image_tag 'show.png' %></th>
-    <th class="edit"><%= image_tag 'edit.png' %></th>
-    <th class="delete"><%= image_tag 'delete.png' %></th>
+    <th colspan="3"></th>
   </tr>
   </thead>
   <tbody>
@@ -19,10 +15,8 @@
     <td><%= link_to timeslice.user.full_name, user_path(timeslice.user) %></td>
     <td><%=h timeslice.description %></td>
     <td><%=h timeslice.date %></td>
-    <td><%=h timeslice.started_time %></td>
-    <td><%=h timeslice.finished_time %></td>
+    <td><%=h timeslice.started_time %> - <%=h timeslice.finished_time %></td>
     <td><%=h timeslice.duration_in_hours %> hours</td>
-    <td><%=h timeslice.chargeable %></td>
     <td class="show"><%= show_link timeslice %></td>
     <td class="edit"><%= edit_link timeslice %></td>
     <td class="delete"><%= delete_link timeslice %></td>
@@ -33,7 +27,6 @@
   <tr>
     <td colspan="5"></td>
     <td><%= (Timeslice.total_duration(timeslices)/60/60).to_f.round(2) %> hours</td>
-    <td><%= (Timeslice.total_chargeable_duration(timeslices)/60/60).to_f.round(2) %> hours</td>
     <td colspan="3"></td>
   </tr>
 </tfoot>

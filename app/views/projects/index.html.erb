@@ -18,9 +18,12 @@
 <%- end -%>
 
 <%= title "Projects" -%>
-<table class="projects bordered-table zebra-striped">
+
+<% javascript 'projects' %>
+
+<table id="projects" class="projects bordered-table zebra-striped">
   <thead>
-    <tr><% if @customer.blank? %><th>Customer</th><% end %><th>Name</th><th>State</th><th>Estimate/Quote</th><th>Details</th></tr>
+    <tr><th>Name</th><% if @customer.blank? %><th>Customer</th><% end %><th>State</th><th>Estimate/Quote</th><th>Details</th></tr>
   </thead>
   <tbody>
     <%= render @projects %>

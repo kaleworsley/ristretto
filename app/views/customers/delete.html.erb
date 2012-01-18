@@ -18,6 +18,6 @@
 
 This will delete <%= link_to @customer.name, @customer %>, and all of the associated projects, tasks, etc.
 <% form_for @customer, :html => {:method => 'delete'} do |f| %>
-  <%= submit_tag 'Delete' %> or <%= link_to 'Cancel', customers_path %>
+  <%= f.submit 'Delete', :class => 'btn primary' %> or <%= link_to 'Cancel', @customer, :class => 'btn danger' %>
 <% end %>
 

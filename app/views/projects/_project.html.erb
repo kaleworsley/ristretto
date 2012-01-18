@@ -1,6 +1,6 @@
-<% content_tag 'tr', :class =>  "project-#{project.id} project" do %>
-  <% if @customer.blank? %><td class="name"><%= link_to project.customer.name, project.customer %></td><% end %>
+<tr class="<%= "project-#{project.id} project" %>">
   <td class="name"><%= link_to project.name, project %></td>
+  <% if @customer.blank? %><td class="name"><%= link_to project.customer.name, project.customer %></td><% end %>
   <td class="state <%= project.state %>"><%= project.state.humanize %></td>
   <td class="estimate"><%= pluralize(project.estimate, 'hour') %></td>
   <td>
@@ -10,4 +10,4 @@
     <li class="done"><%= project.tasks.done.length %> done</li>
   </ul>
   </td>
-<% end %>
+</tr>

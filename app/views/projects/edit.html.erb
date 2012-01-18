@@ -15,9 +15,12 @@
     <%= tab 'Import tasks', import_project_tasks_path(@project) %>
     <%= tab 'New task', new_project_task_path(@project) %>
   <% end %>
+  <% tab 'Time', time_project_path(@project) do %>
+    <%= tab 'Uninvoiced', uninvoiced_project_path(@project) %>
+  <% end %>
 <%- end -%>
 
 <%= title "Editing project" -%>
-<% form_for @project, :html => { :multipart => true } do |form| %>
+<% form_for @project do |form| %>
 <%= render :partial => form, :locals => {:form => form, :project => @project, :attachment => @attachment} %>
 <% end %>

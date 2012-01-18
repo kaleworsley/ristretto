@@ -1,6 +1,8 @@
 $(function() {
 //$('.alert-message').alert();
-
+  $('#q').autocomplete({
+    source: '/search'
+  });
 });
 
 function add_fields(link, association, content) {

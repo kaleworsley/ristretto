@@ -1,7 +1,11 @@
+class Stakeholder < ActiveRecord::Base
+  
+end
+
 class MigrateStakeholdersToProjectsUsers < ActiveRecord::Migration
   def self.up
     Project.all.each do |p|
-      p.user_ids= p.stakeholders.map(&:user_id)
+      p.user_ids= Stakeholder.find(:all, :conditions => {:project_id => p.id}).map(&:user_id)
       p.save
     end
   end

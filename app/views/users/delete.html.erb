@@ -1,5 +1,7 @@
 <%- content_for :tabs do -%>
+  <%= tab 'Show', user_path(@user) %>
   <%= tab 'Edit', edit_user_path(@user) %>
+  <%= tab 'Delete', delete_user_path(@user), true %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>

@@ -1,6 +1,7 @@
 <%- content_for :tabs do -%>
   <%= tab 'Customers', customers_path, true %>
   <%= tab 'New Customer', new_customer_path %>
+  <%= tab 'Missing Customers', missing_customers_path %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
@@ -10,6 +11,7 @@
 <%= title "Customers" -%>
 
 <% javascript 'customers' %>
+
 <table id="customers" class="customers bordered-table zebra-striped">
   <thead>
     <tr><th>Customer</th><th>Details</th></tr>

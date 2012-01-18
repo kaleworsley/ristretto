@@ -3,9 +3,6 @@
 task1:
   name: Task1
   project: project1
-  assigned_to: user1
-  user: user1
-  description: Blah
   weight: 0
   state: started
   estimate: 3
@@ -13,9 +10,6 @@ task1:
 task2:
   name: Task2
   project: project2
-  assigned_to: user2
-  user: user2
-  description: Blah
   weight: 0
   state: started
   estimate: 3
@@ -23,9 +17,6 @@ task2:
 task3:
   name: Task3
   project: project3
-  assigned_to: user3
-  user: user3
-  description: Blah
   weight: 0
   state: started
   estimate: 3
