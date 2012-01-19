@@ -2,6 +2,7 @@
 $(function() {
   $('.dashboard-panels').sortable({
     forceHelperSize: true,
+    handle: 'a',
     forcePlaceholderSize: true,	
   	axis: 'y',
   	stop: function(event, ui) {	
