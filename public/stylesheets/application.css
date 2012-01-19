@@ -124,3 +124,28 @@ div.alert-message {
   color: white;
 }
 
+.handle {
+  background-image: url("/images/draggable.png");
+  background-position: 0 0;
+  cursor: move;
+  display: block;
+  height: 15px;
+  width: 15px;
+  margin: 3px;
+  float:left;
+}
+
+form.edit_user div.input-list-item {
+  clear: left;
+}
+  
+form.edit_user .inputs-list input[type="checkbox"] {
+  margin-left: 0px;
+}
+form.edit_user .inputs-list span {
+  margin: 5px;
+}
+div.input.listinput {
+  float:left;
+  margin-left: 0px;
+}
