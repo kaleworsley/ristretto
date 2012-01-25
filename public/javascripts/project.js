@@ -17,6 +17,7 @@ $(function() {
   $('.tasks .project-tasks tbody').sortable({
     items: 'tr:not(.add)',
     forceHelperSize: true,
+    handle: 'a',
     forcePlaceholderSize: true,	
   	axis: 'y',
 	  stop: function(event, ui) {	
