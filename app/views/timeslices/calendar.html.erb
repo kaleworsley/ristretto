@@ -2,6 +2,7 @@
   <%= crumb 'Timesheet', timesheet_path %>
 <% end %>
 
+<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
 <% javascript ['/libraries/fullcalendar/fullcalendar.min.js', 'timesheet'] %>
 <% stylesheet '/libraries/fullcalendar/fullcalendar.css' %>
 
