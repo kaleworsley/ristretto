@@ -21,9 +21,16 @@ $(function() {
     forcePlaceholderSize: true,	
   	axis: 'y',
 	  stop: function(event, ui) {	
-	  	$('.tasks .project-tasks tbody tr').each(function(i) {
-	  		$('input.weight', this).val(i);
-	    });
+	  	updateOrder();
 	  }
   });
+  $(".btn.add.icon").click(function(){
+		updateOrder();
+  });
 });
+
+function updateOrder() {
+  $('.tasks .project-tasks tbody tr').each(function(i) {
+    $('input.weight', this).val(i);
+  });
+}
