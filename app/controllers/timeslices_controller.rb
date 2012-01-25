@@ -195,10 +195,11 @@ class TimeslicesController < ApplicationController
   # PUT /timeslices/1
   # PUT /timeslices/1.xml
   def update
-    split = params[:timeslice][:timetrackable_object].split('|')
-    params[:timeslice][:timetrackable_type] = split[0]
-    params[:timeslice][:timetrackable_id] = split[1]
-    
+    if params[:timeslice][:timetrackable_object].present?
+      split = params[:timeslice][:timetrackable_object].split('|')
+      params[:timeslice][:timetrackable_type] = split[0]
+      params[:timeslice][:timetrackable_id] = split[1]
+    end
 
     respond_to do |format|
       if @timeslice.update_attributes(params[:timeslice])
