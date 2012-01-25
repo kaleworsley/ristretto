@@ -14,6 +14,7 @@ gem "sunspot_rails", "~> 1.2.1"
 gem "xeroizer", "~> 0.3.5"
 
 group :development, :test do
+  gem "foreman"
   gem "ruby-debug"
   gem "factory_girl", "~> 1.3.2"
   gem "rspec", "~> 1.3.0", :require => "spec"
