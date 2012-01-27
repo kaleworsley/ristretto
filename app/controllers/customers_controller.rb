@@ -32,6 +32,7 @@ class CustomersController < ApplicationController
   def index
     respond_to do |format|
       format.html { @customers = Customer.page(params[:page]) }
+      format.js { @customers = Customer.page(params[:page]) }
       format.xml  { render :xml => Customer.all }
       format.json  { render :json => Customer.all }
     end

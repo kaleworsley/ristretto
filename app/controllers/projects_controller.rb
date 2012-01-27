@@ -72,6 +72,7 @@ class ProjectsController < ApplicationController
   def index
     respond_to do |format|
       format.html # index.html.erb
+      format.js
       format.xml  { render :xml => @projects }
     end
   end
