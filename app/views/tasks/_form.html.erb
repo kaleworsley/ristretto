@@ -18,6 +18,13 @@
   </div>
 
   <div class="clearfix">
+    <%= form.label :stage %>
+    <div class="input">
+      <%= form.select :stage, Task.stages_for_select, { :include_blank => true } %>
+    </div>
+  </div>
+
+  <div class="clearfix">
     <%= form.label :state %>
     <div class="input">
       <%= form.select :state, Task.states_for_select %>
