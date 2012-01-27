@@ -150,3 +150,8 @@ div.input.listinput {
   float:left;
   margin-left: 0px;
 }
+
+.inline-file {
+  width: 100%;
+  min-height: 600px;
+}

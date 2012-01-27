@@ -17,6 +17,7 @@
   <% tab 'Time', time_project_path(@project) do %>
     <%= tab 'Uninvoiced', uninvoiced_project_path(@project) %>
   <% end %>
+  <%= tab 'Files', project_attachments_path(@project) %>
 <%- end -%>
 
 <%= title "Are you sure you want to continue?" -%>

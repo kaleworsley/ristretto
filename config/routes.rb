@@ -12,6 +12,7 @@ ActionController::Routing::Routes.draw do |map|
   
   map.resources :customers, :shallow => true, :member => { :delete => :get }, :collection => { :missing => :get } do |customer|
     customer.resources :projects, :member => { :delete => :get, :uninvoiced => :get, :invoice => :post, :time => :get } do |project|
+      project.resources :attachments, :only => [:index], :as => :files
       project.resources :tasks, :member => { :delete => :get } do |task|
         task.resources :timeslices, :member => { :delete => :get }
       end
@@ -22,7 +23,7 @@ ActionController::Routing::Routes.draw do |map|
 
   map.resources :users, :member => { :delete => :get }
   map.resources :password_resets
-  map.resources :attachments, :member => { :delete => :get, :download => :get }
+  map.resources :attachments, :member => { :delete => :get, :download => :get }, :as => :files, :except => [:index, :edit, :update]
 
   map.resources :mailouts
 

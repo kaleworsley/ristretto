@@ -3,11 +3,12 @@
   <%= crumb @project.customer.name, @project.customer %>
   <%= crumb 'Projects', customer_projects_path(@project.customer) %>
   <%= crumb @project.name, @project %>
+  <%= crumb 'Files', project_attachments_path(@project) %>
 <%- end -%>
 
 <%- content_for :tabs do -%>
   <%= tab 'Show', project_path(@project) %>
-  <%= tab 'Edit', edit_project_path(@project), true %>
+  <%= tab 'Edit', edit_project_path(@project) %>
   <%= tab 'Delete', delete_project_path(@project) %>
   <% tab 'Tasks', project_tasks_path(@project) do %>
     <%= tab 'Tasks', project_tasks_path(@project) %>
@@ -17,10 +18,19 @@
   <% tab 'Time', time_project_path(@project) do %>
     <%= tab 'Uninvoiced', uninvoiced_project_path(@project) %>
   <% end %>
-  <%= tab 'Files', project_attachments_path(@project) %>
+  <%= tab 'Files', project_attachments_path(@project), true %>
 <%- end -%>
 
-<%= title "Editing project" -%>
-<% form_for @project do |form| %>
-<%= render :partial => form, :locals => {:form => form, :project => @project, :attachment => @attachment} %>
+<%= title "Files for #{@project.name}" %>
+
+<% if @attachments.present? %>
+  <ul>
+  <% @attachments.each do |attachment| %>
+    <% present attachment do |a| %>
+    <li><%= a.link %> - <%= a.mime_type %> - by <%= a.user %></li>
+    <% end %>
+  <% end %>
+  </ul>
+<% else %>
+  <em>No files.</em>
 <% end %>
