@@ -1,19 +1,15 @@
-/*
 $(function() {
-	$('.project-tasks tbody tr:last-child input').live('focus', function() {
-	  	new_task_row();
-	});
-});
-
-function new_task_row() {
-  var count = $('.project-tasks tbody').children().length;	
-  var row = $('.project-tasks tbody').children().last().html();
-  var new_row = row.replace(/_\d+_/g, "_"+count+"_").replace(/\[\d+\]/g, "["+count+"]");
-  $('.project-tasks tbody').append('<tr>' + new_row + '</tr>');
-}
-*/
-
-$(function() {
+  $('#project_kind').change(function() {
+    if ($(this).val() == 'support') {
+      $('.tasks').hide();
+      $('#project_fixed_price').parents('.clearfix').hide();
+    }
+    else {
+      $('.tasks').show();
+      $('#project_fixed_price').parents('.clearfix').show();
+    }
+  });
+  $('#project_kind').change();
   $('.tasks .project-tasks tbody').sortable({
     items: 'tr:not(.add)',
     forceHelperSize: true,
