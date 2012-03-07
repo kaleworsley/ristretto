@@ -37,7 +37,6 @@ class User < ActiveRecord::Base
   end
   
   has_and_belongs_to_many :projects, :uniq => true
-  has_and_belongs_to_many :mailouts
 
   DASHBOARD_PANELS = ['project_list', 'timesheet', 'customer_list', 'new_customer']
 

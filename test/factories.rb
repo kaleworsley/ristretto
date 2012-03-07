@@ -25,8 +25,3 @@ Factory.define :task do |f|
   f.state "started"
   f.estimate 4.5
 end
-
-Factory.define :mailout do |m|
-  m.subject 'Test mailout subject'
-  m.body 'Test mailout body'
-end

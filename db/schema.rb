@@ -9,7 +9,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111222092226) do
+ActiveRecord::Schema.define(:version => 20120307001332) do
 
   create_table "attachments", :force => true do |t|
     t.integer  "attachable_id"
@@ -27,21 +27,6 @@ ActiveRecord::Schema.define(:version => 20111222092226) do
     t.text   "name"
     t.string "xero_contact_id"
   end
-
-  create_table "mailouts", :force => true do |t|
-    t.string   "subject"
-    t.text     "body"
-    t.boolean  "sent",       :default => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "mailouts_users", :id => false, :force => true do |t|
-    t.integer "mailout_id"
-    t.integer "user_id"
-  end
-
-  add_index "mailouts_users", ["mailout_id", "user_id"], :name => "index_mailouts_users_on_mailout_id_and_user_id"
 
   create_table "projects", :force => true do |t|
     t.text    "name"

@@ -25,8 +25,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :password_resets
   map.resources :attachments, :member => { :delete => :get, :download => :get }, :as => :files, :except => [:index, :edit, :update]
 
-  map.resources :mailouts
-
   map.projects 'projects', :controller => 'projects', :action => 'index'
 
   map.reset 'reset', :controller => 'password_resets', :action => 'new'

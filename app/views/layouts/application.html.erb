@@ -45,7 +45,6 @@
               <% nav_li(gravatar(current_user, 30), current_user, nil, {:li => {:class => 'gravitar dropdown'}}) do %>
                 <%= nav_li('Users', users_path) %>
                 <%= nav_li('New user', new_user_path) %>
-                <%= nav_li('Mailouts', mailouts_path) %>
                 <%= nav_li 'Edit Profile', profile_path, 'users' %>
                 <li class="divider"></li>
                 <%= nav_li 'Logout', logout_path %>
