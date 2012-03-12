@@ -18,4 +18,7 @@ class AttachmentPresenter < BasePresenter
     end
   end
 
+  def file_size
+    h.number_to_human_size(attachment.file_file_size)
+  end
 end

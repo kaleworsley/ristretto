@@ -10,15 +10,15 @@
   <%= tab 'Show', project_path(@project) %>
   <%= tab 'Edit', edit_project_path(@project) %>
   <%= tab 'Delete', delete_project_path(@project) %>
-  <% tab 'Tasks', project_tasks_path(@project) do %>
+  <% tab "Tasks #{count_label(@project.tasks.size)}", project_tasks_path(@project) do %>
     <%= tab 'Tasks', project_tasks_path(@project) %>
     <li class="divider"></li>
     <%= tab 'New task', new_project_task_path(@project) %>
   <% end %>
-  <% tab 'Time', time_project_path(@project) do %>
+  <% tab "Time #{count_label(@project.timeslices.size)}", time_project_path(@project) do %>
     <%= tab 'Uninvoiced', uninvoiced_project_path(@project) %>
   <% end %>
-  <%= tab 'Files', project_attachments_path(@project), true %>
+  <%= tab "Files #{count_label(@project.attachments.size)}", project_attachments_path(@project), true %>
 <%- end -%>
 
 <%= title "Files for #{@project.name}" %>
@@ -27,10 +27,15 @@
   <ul>
   <% @attachments.each do |attachment| %>
     <% present attachment do |a| %>
-    <li><%= a.link %> - <%= a.mime_type %> - by <%= a.user %></li>
+    <li><%= a.link %> - <%= a.mime_type %> - <%= a.file_size %> - by <%= a.user %></li>
     <% end %>
   <% end %>
   </ul>
 <% else %>
   <em>No files.</em>
 <% end %>
+
+<% form_for @project.attachments.build, :html => { :multipart => true } do |form| %>
+  <%= render form %>
+<% end %>
+

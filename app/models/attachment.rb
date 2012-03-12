@@ -18,4 +18,8 @@ class Attachment < ActiveRecord::Base
   def self.page(page)
     paginate :per_page => 50, :page => page
   end
+
+  def project
+    attachable
+  end
 end
