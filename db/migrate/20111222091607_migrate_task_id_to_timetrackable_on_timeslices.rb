@@ -1,5 +1,6 @@
 class MigrateTaskIdToTimetrackableOnTimeslices < ActiveRecord::Migration
   def self.up
+    Timeslice.reset_column_information
     Timeslice.find(:all).each do |t|
       t.timetrackable_id = t.task_id
       t.timetrackable_type = 'Task'
