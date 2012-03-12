@@ -9,13 +9,20 @@ class CustomersController < ApplicationController
       if @customer.present?
         redirect_to @customer
       else
-        @xero_contact = Xero.Contact.find(@xero_contact_id)
+        begin
+          @xero_contact = Xero.Contact.find(@xero_contact_id)
+        rescue Exception => msg
+          logger.debug "Xero error: #{msg}"
+          @xero_contact = nil
+          flash[:notice] = 'Could not find customer.'
+          redirect_to customers_path
+        end
         if @xero_contact.present?
-          redirect_to new_customer_path(:name => @xero_contact.name)
+          redirect_to new_customer_path(:name => @xero_contact.name, :xero_contact_id => @xero_contact_id)
         end
       end
     else
-      flash[:notice] = 'Broke'
+      flash[:notice] = 'Could not find customer.'
       redirect_to customers_path
     end
   end
@@ -26,7 +33,13 @@ class CustomersController < ApplicationController
 
   def missing
     @customer_names = Customer.all.map(&:name)
-    @xero_customers = Xero.Contact.all(:where => {:is_customer => true}).reject {|c| @customer_names.include? c.name }
+    begin
+      @xero_customers = Xero.Contact.all(:where => {:is_customer => true}).reject {|c| @customer_names.include? c.name }
+    rescue Exception => msg
+      logger.debug "Xero error: #{msg}"
+      @xero_customers = nil
+      flash[:error] = 'Cannot connect to Xero.'
+    end
   end
 
   def index
@@ -47,10 +60,23 @@ class CustomersController < ApplicationController
   end
 
   def new
+    begin
+      @xero_customers = Xero.Contact.all
+    rescue Exception => msg
+      logger.debug "Xero error: #{msg}"
+      @xero_customers = nil
+      flash[:error] = 'Cannot connect to Xero.'
+    end
+
     @customer = Customer.new
     if params[:name].present?
       @customer.name = params[:name]
     end
+
+    if params[:xero_contact_id].present?
+      @customer.xero_contact_id = params[:xero_contact_id].downcase
+    end
+
     respond_to do |format|
       format.html # new.html.erb
       format.xml  { render :xml => @customer }
@@ -59,7 +85,13 @@ class CustomersController < ApplicationController
 
   # GET /customers/1/edit
   def edit
-
+    begin
+      @xero_customers = Xero.Contact.all
+    rescue Exception => msg
+      logger.debug "Xero error: #{msg}"
+      @xero_customers = nil
+      flash[:error] = 'Cannot connect to Xero.'
+    end
   end
 
   # POST /customers

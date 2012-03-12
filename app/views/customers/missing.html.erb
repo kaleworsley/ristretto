@@ -8,7 +8,7 @@
   <%= crumb 'Customers', customers_path %>
   <%= crumb 'Missing Customers', missing_customers_path %>
 <%- end -%>
-
+<% if @xero_customers %>
 <ul>
 <% @xero_customers.each do |xero_customer| %>
   <li>
@@ -20,3 +20,6 @@
   </li>
 <% end %>
 </ul>
+<% else %>
+No customers
+<% end %>

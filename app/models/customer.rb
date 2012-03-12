@@ -1,6 +1,4 @@
 class Customer < ActiveRecord::Base
-  after_create :xero_create
-  after_update :xero_update
 
   searchable do
     text :name
@@ -68,29 +66,5 @@ class Customer < ActiveRecord::Base
 
   def self.page(page)
     paginate :per_page => 50, :page => page, :order => 'name'
-  end
-  
-  private
-
-  def xero_update
-    if xero_customer?
-      if xero_customer.name != name
-        xero_customer.name = name
-        xero_customer.save
-      end
-    else
-      xero_create
-    end
-  end
-  
-  def xero_create
-    if xero_contact_id.blank?
-      @contact ||= Xero.Contact.first(:where => {:name => name, :contact_status => 'ACTIVE'})
-      if @contact.blank?
-        @contact = Xero.Contact.build(:name => name)
-        @contact.save
-      end
-      update_attributes(:xero_contact_id => @contact.contact_id)
-    end
   end
 end

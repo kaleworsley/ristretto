@@ -7,6 +7,7 @@
     <li class="divider"></li>
     <%= tab 'New Project', new_customer_project_path(@customer) %>
   <%- end -%>
+  <%= tab image_tag('xero.png'), @customer.xero_url if @customer.xero_customer? %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
