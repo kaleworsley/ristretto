@@ -9,6 +9,15 @@ ActionController::Routing::Routes.draw do |map|
   map.add_save_timeslice '/timeslices/add', :controller => 'timeslices', :action => 'add_save', :conditions => {:method => :post}
 
   map.resources :timeslices, :except => [:index]
+
+  map.projects 'projects', :controller => 'projects', :action => 'index'
+  map.projects_current 'projects/current', :controller => 'projects', :action => 'index', :index_scope => :current
+  map.projects_proposed 'projects/proposed', :controller => 'projects', :action => 'index', :index_scope => :proposed
+  map.projects_complete 'projects/complete', :controller => 'projects', :action => 'index', :index_scope => :complete
+  map.projects_postponed 'projects/postponed', :controller => 'projects', :action => 'index', :index_scope => :postponed
+  map.projects_support 'projects/support', :controller => 'projects', :action => 'index', :index_scope => :support
+  map.projects_development 'projects/development', :controller => 'projects', :action => 'index', :index_scope => :development
+
   
   map.resources :customers, :shallow => true, :member => { :delete => :get }, :collection => { :missing => :get } do |customer|
     customer.resources :projects, :member => { :delete => :get, :uninvoiced => :get, :invoice => :post, :time => :get } do |project|
@@ -24,8 +33,6 @@ ActionController::Routing::Routes.draw do |map|
   map.resources :users, :member => { :delete => :get }
   map.resources :password_resets
   map.resources :attachments, :member => { :delete => :get, :download => :get }, :as => :files, :except => [:index, :edit, :update]
-
-  map.projects 'projects', :controller => 'projects', :action => 'index'
 
   map.reset 'reset', :controller => 'password_resets', :action => 'new'
   map.reset_password 'reset/:id', :controller => 'password_resets', :action => 'edit'

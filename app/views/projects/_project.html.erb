@@ -1,6 +1,7 @@
 <tr class="<%= "project-#{project.id} project" %>">
   <td class="name"><%= link_to project.name, project %></td>
   <% if @customer.blank? %><td class="name"><%= link_to project.customer.name, project.customer %></td><% end %>
+  <td class="kind <%= project.kind %>"><%= project.kind.humanize %></td>
   <td class="state <%= project.state %>"><%= project.state.humanize %></td>
   <td class="estimate"><%= pluralize(project.estimate, 'hour') %></td>
   <td>

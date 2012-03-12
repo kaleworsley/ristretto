@@ -108,8 +108,8 @@ class Project < ActiveRecord::Base
   end
 
   # Paginate
-  def self.page(page)
-    paginate :per_page => 50, :page => page, :order => 'name'
+  def self.page(page, conditions = {})
+    paginate :per_page => 50, :page => page, :order => 'name', :conditions => conditions
   end
 
   # Include customer name

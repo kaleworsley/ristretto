@@ -13,8 +13,13 @@ class ProjectsController < ApplicationController
   end
 
   def uninvoiced
-    @invoices = Xero.Invoice.all(:where => {:type => 'ACCREC', :status => 'DRAFT'}).reject {|i| i.contact.contact_id != @project.customer.xero_contact_id}
-    #@timeslices = Timeslice.uninvoiced.all(:conditions => ['projects.id = ?', @project.id])
+    begin
+      @invoices = Xero.Invoice.all(:where => {:type => 'ACCREC', :status => 'DRAFT'}).reject {|i| i.contact.contact_id != @project.customer.xero_contact_id}
+    rescue Exception => msg
+      @invoices = []
+      flash[:error] = 'Cannot connect to Xero.'
+      logger.debug "Xero error: #{msg}"
+    end
   end
   
   def invoice
@@ -30,11 +35,11 @@ class ProjectsController < ApplicationController
       @due_date = Date.parse(params[:due_date])
     end
 
-		if params[:invoice][:invoice_id].blank?
-		  @new_invoice = true
+    if params[:invoice][:invoice_id].blank?
+      @new_invoice = true
       @invoice = Xero.Invoice.build(:type => 'ACCREC', :contact => @project.customer.xero_customer)
-    else 
- 		  @new_invoice = false
+    else
+      @new_invoice = false
       @invoice = Xero.Invoice.find(params[:invoice][:invoice_id])
     end
 
@@ -42,7 +47,7 @@ class ProjectsController < ApplicationController
       @invoice.add_line_item(:description => val[:description], :quantity => val[:hours].to_f, :unit_amount => @project.rate.to_f) if val[:include]
     end
 
-		@invoice.date = @date,
+    @invoice.date = @date
     @invoice.due_date = @due_date
     @invoice.save
     @invoice_id = @invoice.invoice_id
@@ -154,7 +159,23 @@ class ProjectsController < ApplicationController
 
     def find_projects
       if @customer.nil?
-        @projects = Project.page(params[:page])
+        @index_scope = params[:index_scope]
+        case params[:index_scope]
+        when :current
+          @projects = Project.page(params[:page], {:state => 'current'})
+        when :proposed
+          @projects = Project.page(params[:page], {:state => 'proposed'})
+        when :complete
+          @projects = Project.page(params[:page], {:state => 'complete'})
+        when :postponed
+          @projects = Project.page(params[:page], {:state => 'postponed'})
+        when :development
+          @projects = Project.page(params[:page], {:kind => 'development'})
+        when :support
+          @projects = Project.page(params[:page], {:kind => 'support'})
+        else
+          @projects = Project.page(params[:page])
+        end
       else
         @projects = @customer.projects.page(params[:page])
       end
