@@ -1,9 +1,17 @@
 <%- content_for :tabs do -%>
-  <%= tab 'Edit', edit_customer_path(@customer)               if can? :edit, @customer %>
-  <%= tab 'New project', new_customer_project_path(@customer) if can? :create, Project %>
+  <%= tab 'Show', customer_path(@customer) %>
+  <%= tab 'Edit', edit_customer_path(@customer) %>
+  <%= tab 'Delete', delete_customer_path(@customer), true %>
+  <% tab 'Projects', customer_projects_path(@customer) do %>
+    <%= tab 'Projects', customer_projects_path(@customer) %>
+    <li class="divider"></li>
+    <%= tab 'New Project', new_customer_project_path(@customer) %>
+  <%- end -%>
+  <%= tab image_tag('xero.png'), @customer.xero_url if @customer.xero_customer? %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
+  <%= crumb 'Customers', customers_path %>
   <%= crumb @customer.name, @customer %>
 <%- end -%>
 
@@ -11,6 +19,6 @@
 
 This will delete <%= link_to @customer.name, @customer %>, and all of the associated projects, tasks, etc.
 <% form_for @customer, :html => {:method => 'delete'} do |f| %>
-  <%= submit_tag 'Delete' %> or <%= link_to 'Cancel', customers_path %>
+  <%= f.submit 'Delete', :class => 'btn primary' %> or <%= link_to 'Cancel', @customer, :class => 'btn danger' %>
 <% end %>
 

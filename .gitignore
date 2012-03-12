@@ -9,5 +9,7 @@ public/system/*
 config/settings.yml
 config/database.yml
 config/sunspot.yml
+config/xero
 \#*\#
 solr
+.DS_Store

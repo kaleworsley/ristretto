@@ -1,0 +1,6 @@
+$('#customers tbody').append('<%= escape_javascript render(@customers) %>');
+<% if @customers.next_page %>
+  $('.pagination').replaceWith('<%= escape_javascript will_paginate(@customers) %>');
+<% else %>
+  $('.pagination').remove();
+<% end %>

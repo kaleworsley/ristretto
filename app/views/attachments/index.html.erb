@@ -1,2 +1,41 @@
-<h1>Attachment#index</h1>
-<p>Find me in app/views/attachment/index.html.erb</p>
+<%- content_for :breadcrumbs do -%>
+  <%= crumb 'Customers', customers_path %>
+  <%= crumb @project.customer.name, @project.customer %>
+  <%= crumb 'Projects', customer_projects_path(@project.customer) %>
+  <%= crumb @project.name, @project %>
+  <%= crumb 'Files', project_attachments_path(@project) %>
+<%- end -%>
+
+<%- content_for :tabs do -%>
+  <%= tab 'Show', project_path(@project) %>
+  <%= tab 'Edit', edit_project_path(@project) %>
+  <%= tab 'Delete', delete_project_path(@project) %>
+  <% tab "Tasks #{count_label(@project.tasks.size)}", project_tasks_path(@project) do %>
+    <%= tab 'Tasks', project_tasks_path(@project) %>
+    <li class="divider"></li>
+    <%= tab 'New task', new_project_task_path(@project) %>
+  <% end %>
+  <% tab "Time #{count_label(@project.timeslices.size)}", time_project_path(@project) do %>
+    <%= tab 'Uninvoiced', uninvoiced_project_path(@project) %>
+  <% end %>
+  <%= tab "Files #{count_label(@project.attachments.size)}", project_attachments_path(@project), true %>
+<%- end -%>
+
+<%= title "Files for #{@project.name}" %>
+
+<% if @attachments.present? %>
+  <ul>
+  <% @attachments.each do |attachment| %>
+    <% present attachment do |a| %>
+    <li><%= a.link %> - <%= a.mime_type %> - <%= a.file_size %> - by <%= a.user %></li>
+    <% end %>
+  <% end %>
+  </ul>
+<% else %>
+  <em>No files.</em>
+<% end %>
+
+<% form_for @project.attachments.build, :html => { :multipart => true } do |form| %>
+  <%= render form %>
+<% end %>
+

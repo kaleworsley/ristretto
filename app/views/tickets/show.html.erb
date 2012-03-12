@@ -1,0 +1,18 @@
+<p>
+  <b>Description:</b>
+  <%=h @ticket.description %>
+</p>
+
+<p>
+  <b>Ticketable type:</b>
+  <%=h @ticket.ticketable_type %>
+</p>
+
+<p>
+  <b>Ticketable:</b>
+  <%=h @ticket.ticketable_id %>
+</p>
+
+
+<%= link_to 'Edit', edit_ticket_path(@ticket) %> |
+<%= link_to 'Back', tickets_path %>

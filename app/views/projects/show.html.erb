@@ -1,21 +1,28 @@
 <%- content_for :breadcrumbs do -%>
+  <%= crumb 'Customers', customers_path %>
   <%= crumb @project.customer.name, @project.customer %>
+  <%= crumb 'Projects', customer_projects_path(@project.customer) %>
   <%= crumb @project.name, @project %>
 <%- end -%>
 
 <%- content_for :tabs do -%>
-  <%= tab 'Edit', edit_project_path(@project)                         if can? :update, @project %>
-  <%= tab 'Import tasks', import_project_tasks_path(@project)         if can? :create, @project.tasks.build %>
-  <%= tab 'New task', new_project_task_path(@project)                 if can? :create, @project.tasks.build %>
-  <%= tab 'New stakeholder', new_project_stakeholder_path(@project)   if can? :create, Stakeholder %>
-  <%= tab 'New project', new_customer_project_path(@project.customer) if can? :create, @project %>
+  <%= tab 'Show', project_path(@project), true %>
+  <%= tab 'Edit', edit_project_path(@project) %>
+  <%= tab 'Delete', delete_project_path(@project) %>
+  <% tab "Tasks #{count_label(@project.tasks.size)}", project_tasks_path(@project) do %>
+    <%= tab 'Tasks', project_tasks_path(@project) %>
+    <li class="divider"></li>
+    <%= tab 'New task', new_project_task_path(@project) %>
+  <% end %>
+  <% tab "Time #{count_label(@project.timeslices.size)}", time_project_path(@project) do %>
+    <%= tab 'Uninvoiced', uninvoiced_project_path(@project) %>
+  <% end %>
+  <%= tab "Files #{count_label(@project.attachments.size)}", project_attachments_path(@project) %>
 <%- end -%>
 
-<%- javascript "project.watch" -%>
-
 <%= title @project.name %>
-<%= notification_button_toggle(@project) %>
-<div class="clear-both"></div>
+
+
 <div class="project-info<%= ' overrunning' if @project.overrunning? %>">
   <% if @project.percentage_of_budget_used %>
   <strong>Budget:</strong>
@@ -23,63 +30,25 @@
   <% end %>
   <strong>Complete:</strong>
   <span><%= number_to_percentage(@project.percentage_complete, :precision => 0) %></span>
-  <% unless @project.deadline.nil? %>
-  <strong>Deadline:</strong>
-  <span><%= @project.deadline.strftime('%d/%m/%Y') %></span>
-  <% end %>
   <strong><%= "Estimate:" unless @project.fixed_price %><%= "Quote:" if @project.fixed_price %></strong>
-  <span><%= pluralize(@project.estimate, @project.estimate_unit.humanize.singularize).downcase %> <% if @project.estimate && @project.estimate_unit == 'hours' && current_user.is_staff? && @project.rate.present? %>(<%= number_to_currency(@project.estimate * @project.rate) %>)<% end %></span>
-  <% if (@project.fixed_price && current_user.is_staff?) || !@project.fixed_price %>
+  <span><%= pluralize(@project.estimate, 'hour').downcase %> <% if @project.estimate && @project.rate.present? %>(<%= number_to_currency(@project.estimate * @project.rate) %>)<% end %></span>
   /
   <strong>Chargeable:</strong>
-  <span><%= pluralize(@project.total_chargeable_hours, 'hour') %> <% if @project.total_chargeable_duration && @project.estimate_unit == 'hours' && current_user.is_staff? && @project.rate.present? %>(<%= number_to_currency(@project.total_chargeable_hours * @project.rate) %>)<% end %></span>
-  <% end %>
+  <span><%= pluralize(@project.total_chargeable_hours, 'hour') %> <% if @project.total_chargeable_duration && @project.rate.present? %>(<%= number_to_currency(@project.total_chargeable_hours * @project.rate) %>)<% end %></span>
 </div>
 
-<div class="quick-add">
-  <h4 class="hideform addlink">Add a task</h4>
-  <% javascript 'ajax' %>
-  <% javascript 'project.show' %>
-  <% form_for [@project, @task] do |f| %>
-    <div class="form-item form-item-block">
-      <%= f.label :name %>
-      <%= f.text_field :name %>
-    </div>
-    <div class="form-item form-item-block">
-      <%= f.submit 'Add' %>
-    </div>
-  <% end %>
-</div>
+<table class="tasks bordered-table zebra-striped">
+  <thead><tr><th>Name</th><th>State</th><th>Estimate</th><th>Time</th></tr></thead>
+  <tbody>
+    <% @project.tasks.current.group_by(&:stage).each do |stage, tasks| %>
+      <tr>
+        <th><%= (stage.present? ? stage.humanize : 'Other') %></th>
+        <th></th>
+        <th><%= pluralize(tasks.map {|t |t.estimate.to_f}.sum.to_f.round(2), 'hour') %></th>
+        <th><%= pluralize(tasks.map(&:total_chargeable_duration_hours).sum.to_f.round(2), 'hour') %></th>
+      </tr>				
+      <%= render tasks %>
+    <% end %>        
+  </tbody>
+</table>
 
-<div id="tasks">
-  <%- if @project.tasks.size != 0 -%>
-    <%= javascript_tag "var IS_STAFF = true;" if current_user.is_staff? %>
-    <%= javascript_tag "var IS_STAFF = false;" unless current_user.is_staff? %>
-    <%- javascript "project.task_order" -%>
-    <%= render :partial => 'task_order', :locals => {:project => @project} %>
-  <%- else -%>
-    <strong>No Tasks!</strong>
-  <%- end -%>
-</div>
-
-<%= render :partial => 'stakeholders/list', :locals => {:project => @project}  %>
-<% if @project.attachments.present? || @project.more_attachments.present? %>
-<div class="attachments panel small-panel">
-  <h3 class="title">Attachments</h3>
-  <div class="content">
-    <% if @project.attachments.present? %>
-    <ul class="attachments">
-      <%= render @project.attachments %>
-    </ul>
-    <% end %>
-    <% if @project.more_attachments.present? %>
-    <% if @project.attachments.present? %>
-    <h4 class="more">More...</h4>
-    <% end %>
-    <ul class="attachments task-attachments">
-      <%= render @project.more_attachments %>
-    </ul>
-    <% end %>
-  </div>
-</div>
-<% end %>

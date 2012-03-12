@@ -1,60 +1,25 @@
 <%- content_for :tabs do -%>
-  <%= tab 'Edit', edit_user_path(@user) if can? :update, @user %>
+  <%= tab 'Show', user_path(@user), true %>
+  <%= tab 'Edit', edit_user_path(@user) %>
+  <%= tab 'Delete', delete_user_path(@user) %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
-  <%= crumb 'Users', users_path if can? :index, User %>
+  <%= crumb 'Users', users_path %>
   <%= crumb @user.full_name, @user %>
 <% end %>
 
 <%= title @user.full_name %>
 <div class="panel three">
-<h3 class="title"><%= @user.full_name %></h3>
-<div class="content">
-<%= gravatar(@user) %>
-<p>
-  <strong>Username:</strong>
-  <%=h @user.name %>
-</p>
+  <h3 class="title"><%= @user.full_name %></h3>
+  <div class="content">
 
-<p>
-  <strong>First name:</strong>
-  <%=h @user.first_name %>
-</p>
+  <% present @user do |u| %>
 
-<p>
-  <strong>Last name:</strong>
-  <%=h @user.last_name %>
-</p>
+    <%= u.gravatar %>
+    <%= u.item :email, :email %>
+    <%= u.item 'API Token', :single_access_token %>
 
-<p>
-  <strong>Email:</strong>
-  <%=h @user.email %>
-</p>
-<% if @user == current_user || current_user.is_staff? %>
-<p>
-  <strong>API Token:</strong>
-  <%=h @user.single_access_token %>
-</p>
-<% end %>
-</div>
-</div>
-
-<% if @user == current_user && current_user.is_staff? %>
- <%= render :partial => 'disabled_notifications', :object => @user %>
-<% end %>
-
-<% if @user.assigned_tasks != 0 && current_user.is_staff? %>
-
-<div class="panel three">
-<h3 class="title">Active tasks</h3>
-<div class="content">
-  <ul class="tasks">
-  <% @user.assigned_tasks.doing.each do |task| %>
-    <li><%= link_to task.name, task %></li>
   <% end %>
-  </ul>
+  </div>
 </div>
-</div>
-
-<% end %>

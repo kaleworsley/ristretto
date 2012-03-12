@@ -1,19 +1,29 @@
 <%- content_for :breadcrumbs do -%>
+  <%= crumb 'Customers', customers_path %>
   <%= crumb @project.customer.name, @project.customer %>
+  <%= crumb 'Projects', customer_projects_path(@project.customer) %>
   <%= crumb @project.name, @project %>
 <%- end -%>
 
 <%- content_for :tabs do -%>
-  <%= tab 'Edit', edit_project_path(@project)                         if can? :update, @project %>
-  <%= tab 'New task', new_project_task_path(@project)                 if can? :create, Task %>
-  <%= tab 'New stakeholder', new_project_stakeholder_path(@project)   if can? :create, Stakeholder %>
-  <%= tab 'New project', new_customer_project_path(@project.customer) if can? :create, Project %>
+  <%= tab 'Show', project_path(@project) %>
+  <%= tab 'Edit', edit_project_path(@project) %>
+  <%= tab 'Delete', delete_project_path(@project), true %>
+  <% tab "Tasks #{count_label(@project.tasks.size)}", project_tasks_path(@project) do %>
+    <%= tab 'Tasks', project_tasks_path(@project) %>
+    <li class="divider"></li>
+    <%= tab 'New task', new_project_task_path(@project) %>
+  <% end %>
+  <% tab 'Time', time_project_path(@project) do %>
+    <%= tab 'Uninvoiced', uninvoiced_project_path(@project) %>
+  <% end %>
+  <%= tab "Files #{count_label(@project.attachments.size)}", project_attachments_path(@project) %>
 <%- end -%>
 
 <%= title "Are you sure you want to continue?" -%>
 
 This will delete <%= link_to @project.name, @project %>, and all of the associated tasks, etc.
 <% form_for @project, :html => {:method => 'delete'} do |f| %>
-  <%= submit_tag 'Delete' %> or <%= link_to 'Cancel', customer_projects_path(@project.customer) %>
+  <%= f.submit 'Delete', :class => 'btn primary' %> or <%= link_to 'Cancel', @project, :class => 'btn danger' %>
 <% end %>
 

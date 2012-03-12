@@ -1,0 +1,37 @@
+  <%= form.error_messages %>
+
+  <div class="clearfix">
+    <%= form.label :for %>
+    <div class="input">
+      <%= form.select :ticketable_object, grouped_options_for_select(Ticket.ticketable_for_select) %>
+    </div>
+  </div>
+
+  <div class="clearfix">
+    <%= form.label :description %>
+     <div class="input">
+       <%= form.text_area :description, :class => 'input-xxlarge' %>
+     </div>
+  </div>
+
+  <% form.fields_for :timeslices, @ticket.timeslices.build(:started => current_user.now, :finished => current_user.now+(current_user.minute_step.to_i).minutes) do |f| %>
+    <div class="clearfix">
+    <%= form.label :started %>
+     <div class="input">
+    <%= f.datetime_select :started %>
+     </div>
+  </div>
+   
+   <div class="clearfix">
+    <%= form.label :finished %>
+     <div class="input">
+    <%= f.datetime_select :finished %>
+     </div>
+  </div>
+
+  <% end %>
+
+  <div class="actions">
+    <%= form.submit 'Create', :class => 'btn primary' %>
+  </div>
+

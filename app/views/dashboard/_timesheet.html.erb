@@ -1,0 +1,9 @@
+<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
+<% javascript ['/libraries/fullcalendar/fullcalendar.min.js', '/libraries/bootstrap/bootstrap-tabs.js', 'timesheet'] %>
+<% stylesheet '/libraries/fullcalendar/fullcalendar.css' %>
+<h3 class="title">Timesheet</h3>
+<div id="timesheet-calendar" class="content well panel">
+</div>
+<div class="panel-footer">
+  <%= link_to 'Timesheet', timesheet_path %>
+</div>

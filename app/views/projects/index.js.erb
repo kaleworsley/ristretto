@@ -1,0 +1,6 @@
+$('#projects tbody').append('<%= escape_javascript render(@projects) %>');
+<% if @projects.next_page %>
+  $('.pagination').replaceWith('<%= escape_javascript will_paginate(@projects) %>');
+<% else %>
+  $('.pagination').remove();
+<% end %>

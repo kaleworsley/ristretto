@@ -1,29 +1,36 @@
-
+<% javascript 'add-timeslice' %>
   <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
 
   <% unless task.present? %>
-  <div class="form-item form-item-block">
-    <%= form.label :task_id %>
-    <%= form.text_field :task_id %>
-    <%= mcdropdown_ul(current_user) %>
+  <div class="clearfix">
+    <%= form.label 'Task' %>
+    <div class="input">
+      <%= form.select :timetrackable_object, grouped_options_for_select(current_user.timetrackable_for_select, @timeslice.timetrackable_object || nil), {}, :class => 'input-xxlarge' %>
+    </div>
   </div>
   <% end %>
-  <div class="form-item form-item-block">
+  <div class="clearfix">
     <%= form.label :description %>
-    <%= form.text_area :description, {:rows => 5} %>
+    <div class="input">
+      <%= form.text_area :description, {:rows => 5, :class => 'input-xxlarge'} %>
+    </div>
   </div>
-  <div class="form-item form-item-block">
-    <%= form.label :started %>
-    <%= form.datetime_select :started, :minute_step => current_user.minute_step %>
-  </div>
-  <div class="form-item form-item-block">
-    <%= form.label :finished %>
-    <%= form.datetime_select :finished, :minute_step => current_user.minute_step %>
-  </div>
-  <div class="form-item form-item-block">
+
+  <%= form.hidden_field :started %>
+  <%= form.hidden_field :finished %>
+
+  <% if @timeslice.new_record? %>
+    <%= form.hidden_field :chargeable %>
+  <% else %>
+  <div class="clearfix">
     <%= form.label :chargeable %>
-    <%= form.check_box :chargeable %>
+    <div class="input">
+      <%= form.check_box :chargeable %>
+    </div>
   </div>
-  <div class="form-item form-item-block">
-    <%= form.submit "Save" %>
+  <% end %>
+
+
+  <div class="actions">
+    <%= form.submit "Save", :class => 'btn primary' %>
   </div>

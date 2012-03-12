@@ -2,5 +2,10 @@
   <%= crumb 'Login', login_path %>
 <%- end -%>
 
+<%- content_for :tabs do -%>
+  <%= tab 'Login', login_path, true %>
+  <%= tab 'Reset password', reset_path %>
+<%- end -%>
+
 <%= title "Login" -%>
 <%= render :partial => @user_session %>

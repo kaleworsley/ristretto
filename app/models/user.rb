@@ -2,35 +2,17 @@ include ActionView::Helpers::DateHelper
   # TODO: Rename poorly-named methods.
 class User < ActiveRecord::Base
   searchable do
-    text :name, :first_name, :last_name, :email
+    text :full_name, :email
   end
-  # Create revisions
-  versioned :except => [:perishable_token, :last_request_at]
 
-  attr_protected :is_staff
-
-  validates_presence_of :name
-  validates_presence_of :first_name
-  validates_presence_of :last_name
+  validates_presence_of :full_name
   validates_presence_of :email
-  validates_uniqueness_of :name
+  validates_uniqueness_of :full_name
   validates_uniqueness_of :email
 
-  serialize :ignore_mail, Hash
+  acts_as_authentic
 
-  acts_as_authentic do |config|
-    # If passwords are found in plain MD5 crypt (e.g. from a Drupal import)
-    # they will be updated to the default encryption scheme on successful
-    # login
-    config.transition_from_crypto_providers = [Authlogic::CryptoProviders::MD5]
-  end
-
-  has_many :customers
-  has_many :projects
-  has_many :tasks
-  has_many :assigned_tasks, :class_name => 'Task', :foreign_key => 'assigned_to_id'
-
-  has_many :timeslices do
+  has_many :timeslices, :dependent => :destroy do
     # Get all chargeable timeslices or all chargeable timeslices on a date
     # or all chargeable timeslices between a range, for a user
     def chargeable(start = nil, finish = nil)
@@ -53,49 +35,35 @@ class User < ActiveRecord::Base
       by_date(start, finish).find_all {|t| !t.chargeable}
     end
   end
+  
+  has_and_belongs_to_many :projects, :uniq => true
 
-  has_many :comments
-  has_many :stakeholders, :dependent => :destroy
-  has_many :current_projects, :through => :stakeholders, :source => :project
+  DASHBOARD_PANELS = ['project_list', 'timesheet', 'customer_list', 'new_customer']
 
-  has_and_belongs_to_many :mailouts
+  serialize :panels
 
-  named_scope :staff, :conditions => {:is_staff => true}
-
-  # Adds an object to a users ignore mail list
-  def ignore_mail_from(instance)
-    return true if ignore_mail_from?(instance)
-    self.ignore_mail = {} if self.ignore_mail.nil?
-    unless self.ignore_mail.include? instance.class.to_s
-      self.ignore_mail[instance.class.to_s] = []
-    end
-    self.ignore_mail[instance.class.to_s].push(instance.to_param)
-    self.save
+  def staff
+    User.all
   end
 
-  # Removes an object from a users ignore mail list
-  def receive_mail_from(instance)
-    return true if receive_mail_from?(instance)
-    self.ignore_mail[instance.class.to_s].delete(instance.to_param) != nil
-    self.save
+
+  def customers
+    projects.map(&:customer).uniq
   end
 
-  # Checks for an object in a users ignore mail list
-  def ignore_mail_from?(instance)
-    self.ignore_mail = {} if self.ignore_mail.nil?
-    if self.ignore_mail.include? instance.class.to_s
-      if self.ignore_mail[instance.class.to_s].include? instance.to_param
-        true
-      else
-        false
-      end
+  def current_projects
+    projects.current
+  end  
+  def dashboard_panels
+    if panels.present?
+      [] + panels.sort_by {|v,k| k}.map{|v| v[0] }.to_a
     else
-      false
+      []
     end
   end
 
-  def receive_mail_from?(instance)
-    !ignore_mail_from?(instance)
+  def now
+    Time.at((DateTime.now.to_i.to_f/(60*minute_step)).round*(60*minute_step)).to_datetime
   end
 
   # Send password reset instructions
@@ -118,36 +86,55 @@ class User < ActiveRecord::Base
     full_name
   end
 
+  def name
+    full_name
+  end
+
   def for_select_box
-    "#{last_name}, #{first_name} (#{email})"
+    "#{full_name} (#{email})"
   end
-
-  # Fullname e.g. Firstname Lastname
-  def full_name
-    [first_name, last_name].join(' ')
-  end
-
 
   # Initials e.g. FL
   def initials
-    first_name.first + last_name.first
+    'TODO'
   end
+
+  def is_staff
+    true
+  end
+
 
   # Is a user a staff member?
   def is_staff?
-    is_staff
+    true
   end
 
-  # Return a collection of users who are stakeholder in projects that the current
-  # user is also a stakeholder in
-  def users(reset = false)
-    current_projects.each.collect { |project| project.users(reset) }.flatten.uniq
+
+  def tasks_for_select
+    current_projects_tasks.group_by(&:customer).map {|customer, tasks| [customer.name, tasks.map {|t|["#{t.project.name} : #{t.name}", t.timetrackable_object]}] }
+  end
+  
+  def timetrackable_for_select
+  @timetrackable = []
+    @customers = Customer.all.each do |c|
+     @items = [] + (c.tickets.map {|t| t.to_option })
+     c.support_projects.each do |p|
+       @items += [p.to_option] + (p.tickets.map {|t| t.to_option })
+     end
+     
+     c.development_projects.each do |p|
+       @items += [] + (p.tasks.map {|t| t.to_option })
+     end
+     
+       
+     @timetrackable.push([c.name, @items.reject(&:blank?)])
+    end
+    @timetrackable.sort_by {|o| o[0] }
   end
 
-  # Returns all projects that are either owned by this user or that this
-  # user is a stakeholder for
+  # Returns all projects that the user is a member of
   def all_projects
-    (projects + current_projects).uniq
+    projects
   end
 
   # Returns an array of project ids to which this user is associated
@@ -163,16 +150,8 @@ class User < ActiveRecord::Base
     current_projects_tasks.map(&:id)
   end
 
-  def current_projects_comments_ids
-    current_projects_comments.map(&:id)
-  end
-
-  def current_projects_stakeholders_ids
-    current_projects_stakeholders.map(&:id)
-  end
-
   # Returns an array of all timeslices assigned to any project on which this
-  # user is a stakeholder
+  # user is a member
   def current_projects_timeslices(params = nil)
     options = {
       :joins => { :task => :project },
@@ -184,7 +163,7 @@ class User < ActiveRecord::Base
   end
 
   # Return the most recent timeslices assigned to any project on which this
-  # user is a stakeholder, in reverse date order.  An options limit can be
+  # user is a member, in reverse date order.  An options limit can be
   # supplied, the default is 10
   def current_projects_recent_timeslices(limit = 10)
     current_projects_timeslices(:order => 'started DESC', :limit => limit)
@@ -192,10 +171,6 @@ class User < ActiveRecord::Base
 
   def current_projects_recent_tasks(limit = 10)
     current_projects_tasks(:order => 'created_at DESC', :limit => limit)
-  end
-
-  def current_projects_recent_comments(limit = 10)
-    current_projects_comments(:order => 'created_at DESC', :limit => limit)
   end
 
   def current_projects_recent_projects(limit = 10)
@@ -206,17 +181,12 @@ class User < ActiveRecord::Base
     current_projects_attachments(:order => 'created_at DESC', :limit => limit)
   end
 
-  def current_projects_recent_stakeholders(limit = 10)
-    current_projects_stakeholders(:order => 'created_at DESC', :limit => limit)
-  end
-
-
   def current_customers_recent_customers(limit = 10)
     current_customers_customers(:order => 'created_at DESC', :limit => limit)
   end
 
   # Returns an array of all tasks of any project on which this
-  # user is a stakeholder
+  # user is a member
   def current_projects_tasks(params = nil)
     options = {
       :conditions => {:project_id => current_projects_ids},
@@ -225,26 +195,6 @@ class User < ActiveRecord::Base
     options.merge!(params) unless params.nil?
 
     Task.all options
-  end
-
-  # Returns an array of all comment of any project on which this
-  # user is a stakeholder
-  def current_projects_comments(params = nil)
-    options = {
-      :conditions => {:task_id => current_projects_tasks_ids},
-    }
-    options.merge!(params) unless params.nil?
-
-    Comment.all options
-  end
-
-  def current_projects_stakeholders(params = nil)
-    options = {
-      :conditions => {:project_id => current_projects_ids},
-    }
-    options.merge!(params) unless params.nil?
-
-    Stakeholder.all options
   end
 
 
@@ -259,7 +209,7 @@ class User < ActiveRecord::Base
 
   def current_projects_attachments(params = nil)
     options = {
-      :conditions => ["(attachable_type = 'Task' AND attachable_id IN (?)) OR (attachable_type = 'Project' AND attachable_id IN (?)) OR (attachable_type = 'Comment' AND attachable_id IN (?))", current_projects_tasks_ids, current_projects_ids, current_projects_comments_ids],
+      :conditions => ["(attachable_type = 'Task' AND attachable_id IN (?)) OR (attachable_type = 'Project' AND attachable_id IN (?)))", current_projects_tasks_ids, current_projects_ids],
     }
     options.merge!(params) unless params.nil?
 
@@ -278,10 +228,6 @@ class User < ActiveRecord::Base
     current_projects_recent_tasks(limit).collect(&:activity_item)
   end
 
-  def comment_activity_items(limit = 10)
-    current_projects_recent_comments(limit).collect(&:activity_item)
-  end
-
   def project_activity_items(limit = 10)
     current_projects_recent_projects(limit).collect(&:activity_item)
   end
@@ -290,21 +236,15 @@ class User < ActiveRecord::Base
     current_projects_recent_attachments(limit).collect(&:activity_item)
   end
 
-  def stakeholder_activity_items(limit = 10)
-    current_projects_recent_stakeholders(limit).collect(&:activity_item)
-  end
-
   def customer_activity_items(limit = 10)
     current_customers_recent_customers(limit).collect(&:activity_item)
   end
 
   def activity_items(limit = 10)
-    comment_activity_items(limit) +
-      task_activity_items(limit) +
-      timeslice_activity_items(limit) +
-      project_activity_items(limit) +
-      attachment_activity_items(limit) +
-      stakeholder_activity_items(limit) +
-      customer_activity_items(limit)
+    task_activity_items(limit) +
+    timeslice_activity_items(limit) +
+    project_activity_items(limit) +
+    attachment_activity_items(limit) +
+    customer_activity_items(limit)
   end
 end

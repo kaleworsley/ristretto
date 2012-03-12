@@ -3,23 +3,23 @@
 project1:
   name: Project1
   customer: customer1
-  user: user1
   state: current
   estimate: 20
-  estimate_unit: "hours"
+  users:
+    - user1
 
 project2:
   name: Project2
   customer: customer2
-  user: user1
   state: current
   estimate: 20
-  estimate_unit: "hours"
+  users:
+    - user2
+    - user3
 
 project3:
   name: Project3
   customer: customer3
-  user: user1
   state: current
   estimate: 20
-  estimate_unit: "hours"
+

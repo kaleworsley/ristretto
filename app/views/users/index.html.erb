@@ -1,43 +1,36 @@
 <%- content_for :tabs do -%>
-  <%= tab 'New user', new_user_path(@user) if can? :create, @user %>
+  <%= tab 'Users', users_path, true %>
+  <%= tab 'New user', new_user_path %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
-  <%= crumb 'Users', users_path if can? :index, User %>
+  <%= crumb 'Users', users_path %>
 <% end %>
 
 <% title "Users" -%>
-<div id="users" class="users panel">
+<div id="users" class="users">
   <h3 class="title">Users</h3>
   <div class="content">
-    <table class="users">
+    <table class="users bordered-table zebra-striped">
       <thead>
         <tr>
           <th>Gravatar</th>
           <th>Name</th>
-          <th>First name</th>
-          <th>Last name</th>
-          <% if current_user.is_staff? %>
           <th>Email</th>
-          <th class="show"><%= image_tag 'show.png' %></th>
-          <th class="edit"><%= image_tag 'edit.png' %></th>
-          <th class="delete"><%= image_tag 'delete.png' %></th>
-          <% end %>
+          <th>Show</th>
+          <th>Edit</th>
+          <th>Delete</th>
         </tr>
       </thead>
       <tbody>
         <% for user in @users %>
         <tr>
           <td><%= gravatar(user,40) %></td>
-          <td><%=h user.name %></td>
-          <td><%=h user.first_name %></td>
-          <td><%=h user.last_name %></td>
-          <% if current_user.is_staff? %>
+          <td><%=h user.full_name %></td>
           <td><%=h user.email %></td>
-          <td class="show"><%= show_link user %></td>
-          <td class="edit"><%= edit_link user %></td>
-          <td class="delete"><%= delete_link user %></td>
-          <% end %>
+          <td><%= show_link user, 'Show' %></td>
+          <td><%= edit_link user, 'Edit' %></td>
+          <td><%= delete_link user, 'Delete' %></td>
         </tr>
         <% end %>
       </tbody>

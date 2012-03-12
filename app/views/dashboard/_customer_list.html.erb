@@ -1,0 +1,14 @@
+<h3 class="title">Customers</h3>
+<div class="content well panel">
+  <table id="customers" class="customers bordered-table zebra-striped">
+    <thead>
+      <tr><th>Customer</th><th>Details</th></tr>
+    </thead>
+    <tbody>
+      <%= render :partial => 'customers/customer', :collection => current_user.customers.sort_by(&:name) %>
+    </tbody>
+  </table>
+</div>
+<div class="panel-footer">
+  <%= link_to 'More customers', customers_path %>
+</div>

@@ -1,22 +1,30 @@
 <%- content_for :breadcrumbs do -%>
-  <% unless @project.nil? %>
-    <%= crumb @customer.name, @customer %>
-    <%= crumb @project.name, @project %>
-    <%= crumb 'Tasks', project_tasks_path(@project) %>
-    <% else %>
-      <%= crumb 'Tasks', tasks_path %>
-  <% end %>
+  <%= crumb 'Customers', customers_path %>
+  <%= crumb @project.customer.name, @project.customer %>
+  <%= crumb 'Projects', customer_projects_path(@project.customer) %>
+  <%= crumb @project.name, @project %>
+  <%= crumb 'Tasks', project_tasks_path(@project) %>
 <%- end -%>
 
-<% title "Tasks" -%>
-<div id="tasks" class="tasks panel no-padding">
-  <h3 class="title">Tasks</h3>
-  <div class="content">
-    <ul class="tasks">
-      <%= render @tasks %>
-    </ul>
-  </div>
-  <div class="panel-footer">
-    <%= will_paginate @tasks %>
-  </div>
-</div>
+<%- content_for :tabs do -%>
+  <%= tab 'Tasks', project_tasks_path(@project), true %>
+  <%= tab 'New task', new_project_task_path(@project) %>  
+<%- end -%>
+
+
+<%= title "Tasks" -%>
+<table class="tasks bordered-table zebra-striped">
+  <thead><tr><th>Name</th><th>State</th><th>Estimate</th><th>Time</th></tr></thead>
+  <tbody>
+    <% @tasks.group_by(&:stage).each do |stage, tasks| %>
+	  <tr>
+	    <th><%= (stage.present? ? stage.humanize : 'Other') %></th>
+	    <th></th>
+	    <th><%= pluralize(tasks.map(&:estimate).sum, 'hour') %></th>
+	    <th><%= pluralize(tasks.map(&:total_chargeable_duration_hours).sum, 'hour') %></th>
+	  </tr>				
+      <%= render tasks %>
+	<% end %>  
+  </tbody>
+</table>
+<%= will_paginate @tasks %>

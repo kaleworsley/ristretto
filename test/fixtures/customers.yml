@@ -2,12 +2,9 @@
 
 customer1:
   name: Customer1
-  user: user1
 
 customer2:
   name: Customer2
-  user: user1
 
 customer3:
   name: Customer3
-  user: user1

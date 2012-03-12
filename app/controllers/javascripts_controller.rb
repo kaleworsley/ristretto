@@ -1,13 +1,9 @@
 class JavascriptsController < ApplicationController
   def timeslice_totals_by_day
-    if current_user.is_staff?
-      unless params[:start].blank? && params[:end].blank?
-        @timeslices = Timeslice.by_date(Time.at(params[:start].to_i), Time.at(params[:end].to_i)).find_all {|t| t.chargeable};
-      else
-        @timeslices = Timeslice.find(:all).find_all {|t| t.chargeable}
-      end
+    unless params[:start].blank? && params[:end].blank?
+      @timeslices = Timeslice.by_date(Time.at(params[:start].to_i), Time.at(params[:end].to_i)).find_all {|t| t.chargeable};
     else
-      @timeslices = []
+      @timeslices = Timeslice.find(:all).find_all {|t| t.chargeable}
     end
 
     respond_to do |format|

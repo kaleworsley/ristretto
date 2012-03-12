@@ -1,27 +1,25 @@
 class Task < ActiveRecord::Base
   searchable do
-    text :name, :description
+    text :name
   end
-  # Create revisions
-  versioned
 
   validates_presence_of :name
-  validates_presence_of :user_id
   validates_numericality_of :estimate, :greater_than => 0, :allow_nil => true
 
   belongs_to :project
-  belongs_to :user
-  belongs_to :assigned_to, :class_name => "User"
-  has_many :timeslices, :dependent => :destroy
-  has_many :comments, :dependent => :destroy
+  has_many :timeslices, :as => :timetrackable, :dependent => :destroy
 
   #NOTE: ":class_name => '::Attachment''" is required. There is a bug in paperclip
   #see: http://thewebfellas.com/blog/2008/11/2/goodbye-attachment_fu-hello-paperclip#comment-2415
   has_many :attachments, :as => :attachable, :dependent => :destroy, :class_name => '::Attachment'
 
+  delegate :customer, :to => :project
+
   # Task states
   STATES = ['not_started','started','delivered','accepted','rejected',
             'duplicate','change_of_scope']
+            
+  STAGES = ['analysis', 'concepts', 'development', 'delivery', 'review']
 
   # Task state groups
   STATEGROUPS = {
@@ -43,23 +41,23 @@ class Task < ActiveRecord::Base
 
   named_scope :selectable, :conditions => {:state => STATEGROUPS[:current]}, :order => 'name asc'
 
+  def timetrackable_object
+    "Task|#{id}"
+  end
+
   # Return a hash of available task states suitable for the select helper
   def Task.states_for_select
     STATES.collect { |state| [state.humanize, state] }
   end
 
+  # Return a hash of available task stages suitable for the select helper
+  def Task.stages_for_select
+    STAGES.collect { |stage| [stage.humanize, stage] }
+  end
+
   # Task states
   def Task.states
     STATES
-  end
-
-  # Estimage unit for the project
-  def estimate_unit
-    unless project.blank? || project.estimate_unit.blank?
-      project.estimate_unit
-    else
-      'hours'
-    end
   end
 
   # Task state groups
@@ -108,32 +106,37 @@ class Task < ActiveRecord::Base
     end
     duration
   end
+  
+  def total_chargeable_duration_hours
+    total_chargeable_duration/60/60
+  end
 
   # Total nonchargeable duration of timeslices for a task
   def total_nonchargeable_duration
     duration - total_chargeable_duration
   end
 
-  # Collection of stakeholders users who have emails enabled
-  def recipients
-    self.project.stakeholders.find_all {|s| s.user.receive_mail_from?(self) && s.user.receive_mail_from?(self.project) }.collect {|s| s.user}
-  end
 
-  # Check task's project for a stakeholder
-  def has_stakeholder?(user)
-    project.has_stakeholder?(user)
-  end
-
-  # Assign the task to user if the task state has just changed to 'started'
-  # and it is not currently assigned to a user.  Returns true if the task user
-  # was assigned, false if not.
-  def assign_to_if_starting(user)
-    if self.state == 'started' and self.state_changed? and self.assigned_to.nil?
-      self.assigned_to = user
-      true
-    else
-      false
+  def uninvoiced
+    timeslices.select do |timeslice|
+      !timeslice.chargeable || timeslice.invoice.blank?
     end
+  end
+
+  def total_chargeable_uninvoiced_duration
+    duration = 0
+    uninvoiced.each do |timeslice|
+      duration += timeslice.duration
+    end
+    duration
+  end
+  
+  def total_chargeable_uninvoiced_duration_hours
+    total_chargeable_uninvoiced_duration/60/60
+  end
+
+  def to_option
+    ["#{project.customer.name} - #{project.name} : #{name}", timetrackable_object]
   end
 
   # Include customer and project names

@@ -1,5 +1,7 @@
 <%- content_for :tabs do -%>
   <%= tab 'Customers', customers_path %>
+  <%= tab 'New Customer', new_customer_path, true %>
+  <%= tab 'Missing Customers', missing_customers_path %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>

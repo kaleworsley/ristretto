@@ -2,7 +2,6 @@
   <span class="mime-type"><%= mime_icon(attachment) %></span>
   <span class="name"><%= link_to attachment.file_file_name, attachment.file.url %></span>
   <span class="size"><%= number_to_human_size(attachment.file_file_size) %></span>
-  <%= post_info(attachment, 'by', false, 'span') %>
-  <span class="edit"><%= edit_link attachment if can? :edit, attachment %></span>
-  <span class="delete"><%= delete_link attachment if can? :destroy, attachment %></span>
+  <span class="edit"><%= edit_link attachment %></span>
+  <span class="delete"><%= delete_link attachment %></span>
 <% end %>

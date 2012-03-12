@@ -1,9 +1,18 @@
+<%- content_for :tabs do -%>
+  <%= tab 'Show', user_path(@user) %>
+  <%= tab 'Edit', edit_user_path(@user), true %>
+  <%= tab 'Delete', delete_user_path(@user) %>
+<%- end -%>
+
 <%- content_for :breadcrumbs do -%>
-  <%= crumb 'Users', users_path if can? :index, User%>
+  <%= crumb 'Users', users_path %>
   <%= crumb @user.full_name, @user %>
 <% end %>
 
 <%= title "Edit profile" -%>
+
+<% javascript 'user' %>
+
 <% form_for @user do |form| %>
   <%= render form %>
 <% end %>

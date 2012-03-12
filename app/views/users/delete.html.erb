@@ -1,9 +1,11 @@
 <%- content_for :tabs do -%>
-  <%= tab 'Edit', edit_user_path(@user) if can? :update, @user %>
+  <%= tab 'Show', user_path(@user) %>
+  <%= tab 'Edit', edit_user_path(@user) %>
+  <%= tab 'Delete', delete_user_path(@user), true %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
-  <%= crumb 'Users', users_path if can? :index, User %>
+  <%= crumb 'Users', users_path %>
   <%= crumb @user.full_name, @user %>
 <% end %>
 

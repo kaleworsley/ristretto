@@ -1,11 +1,4 @@
-<% content_tag 'li', { :class =>  ["customer-#{customer.id}", 'customer'].join(' ') } do %>
-  <span class="name"><%= link_to customer.name, customer %></span>
-
-  <span class="projects"><%= pluralize(customer.projects.length, 'project') %></span>
-
-  <ul class="edit-links">
-    <li class="edit"><%= edit_link customer %></li>
-    <li class="delete"><%= delete_link customer %></li>
-  </ul>
-
-<% end %>
+<tr class="<%= "customer-#{customer.id} customer" %>">
+  <td class="name"><%= link_to customer.name, customer %></td>
+  <td class="projects"><%= pluralize(customer.projects.length, 'project') %></td>
+</tr>

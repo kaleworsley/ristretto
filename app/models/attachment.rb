@@ -8,7 +8,7 @@ class Attachment < ActiveRecord::Base
 
   def attachment_for name
     @_paperclip_attachments ||= {}
-    @_paperclip_attachments[name] ||= Attachment.new(name, self, self.class.attachment_definitions[name])
+    @_paperclip_attachments[name] ||= Paperclip::Attachment.new(name, self, self.class.attachment_definitions[name])
   end
 
   def to_s
@@ -19,18 +19,7 @@ class Attachment < ActiveRecord::Base
     paginate :per_page => 50, :page => page
   end
 
-  def has_stakeholder?(user)
-    attachable.has_stakeholder?(user)
-  end
-
-  def activity_item
-    {
-      :user => self.user,
-      :parent => self.attachable,
-      :subject => self,
-      :action => ' uploaded ',
-      :date => self.created_at,
-      :object => self
-    }
+  def project
+    attachable
   end
 end

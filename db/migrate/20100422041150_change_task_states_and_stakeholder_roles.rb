@@ -1,3 +1,8 @@
+class Stakeholder < ActiveRecord::Base
+  
+end
+
+
 class ChangeTaskStatesAndStakeholderRoles < ActiveRecord::Migration
   def self.up
     tasks = Task.find(:all, :order => :id)

@@ -2,16 +2,18 @@ class Timeslice < ActiveRecord::Base
   searchable do
     text :description
   end
-  # Create revisions
-  versioned
+  
+#  attr_accessor :timetrackable_object
 
   validates_presence_of :started, :finished
   validates_presence_of :user_id
+  validates_presence_of :timetrackable_id
+  validates_presence_of :timetrackable_type
   validate :finished_must_be_after_started, :if => :started_and_finished_set?
   validate :must_not_overlap, :if => :started_and_finished_set?
 
-  belongs_to :task
   belongs_to :user
+  belongs_to :timetrackable, :polymorphic => true
 
   named_scope :by_date, lambda { |start_date,*end_date|
     {
@@ -23,36 +25,32 @@ class Timeslice < ActiveRecord::Base
 
   named_scope :by_task_ids, lambda { |task_ids|
     {
-      :conditions => { :task_id => task_ids }
+      :conditions => { :timetrackable_id => task_ids, :timetrackable_type => 'Task'}
     }
   }
 
-  named_scope :uninvoiced, :conditions => ['(timeslices.ar IS NULL) OR (timeslices.ar = 0)'], :include => [:task => { :project => :customer }]
+  named_scope :uninvoiced, :conditions => ['timeslices.invoice IS NULL AND projects.fixed_price = ?', true], :include => [:task => :project]
   named_scope :recent_invoices, lambda { |user|
-    if user.is_staff
-      {
-        :include => { :task => :project },
-        :group => :ar,
-        :limit => 10,
-        :order => 'timeslices.ar DESC'
-      }
-    else
-      {
-        :conditions => {
-          :task_id => user.current_projects_tasks_ids
-        },
-        :include => {
-          :task => :project
-        },
-        :group => :ar,
-        :limit => 10,
-        :order => 'timeslices.ar DESC'
-      }
-    end
+    {
+      :include => { :task => :project },
+      :group => :invoice,
+      :limit => 10,
+      :order => 'timeslices.invoice DESC'
+    }
   }
 
   def to_s
     description
+  end
+
+  def timetrackable_object
+    "#{timetrackable_type}|#{timetrackable_id}"
+  end
+  
+  def timetrackable_object=(str)
+    split = str.split('|')
+    self.timetrackable_type= split[0]
+    self.timetrackable_id= split[1]
   end
 
   # Paginate
@@ -160,11 +158,6 @@ class Timeslice < ActiveRecord::Base
     self.finished = Time.parse("#{date} #{self.finished.strftime('%H:%M:%S')}")
   end
 
-  # Check for a stakeholder
-  def has_stakeholder?(user)
-    task.has_stakeholder?(user)
-  end
-
   # Returns the previous timeslice (for the same user)
   def previous
     Timeslice.find(:first,
@@ -225,7 +218,8 @@ class Timeslice < ActiveRecord::Base
         options.merge!(:id => self.id)
       end
 
-      if self.user.timeslices.first(:conditions => [conditions, options])
+      puts user.inspect
+      if user.timeslices.first(:conditions => [conditions, options])
         errors.add(:started, "overlaps with another timeslice")
       end
     end

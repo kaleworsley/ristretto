@@ -10,10 +10,6 @@ module UsersHelper
   end
 
   def user_task_summary(user)
-    if user.is_staff
-      pluralize(user.assigned_tasks.doing.count, 'active task')
-    else
-      pluralize(user.tasks.delivered.count, 'task') + ' awaiting approval'
-    end
+    pluralize(user.assigned_tasks.doing.count, 'active task')
   end
 end

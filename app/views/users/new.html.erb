@@ -1,5 +1,11 @@
+<%- content_for :tabs do -%>
+  <%= tab 'Users', users_path %>
+  <%= tab 'New user', new_user_path, true %>
+<%- end -%>
+
 <%- content_for :breadcrumbs do -%>
-  <%= crumb 'Register', register_path %>
+  <%= crumb 'Users', users_path %>
+  <%= crumb 'New User', new_user_path %>
 <%- end -%>
 
 <%= title "Register" -%>

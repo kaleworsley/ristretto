@@ -1,0 +1,6 @@
+<tr>
+  <td><a href="#" class="handle"></a><%= f.text_field :name, :class => 'xxlarge' %></td>
+  <td><%= f.text_field :estimate, :class => 'mini' %></td>
+  <td><%= f.select :stage, Task.stages_for_select, { :include_blank => true } %></td>
+  <td><%= f.hidden_field :state %><%= f.check_box :_destroy %><%= f.hidden_field :id %><%= f.hidden_field :weight, :class => 'weight' %></td>
+</tr>

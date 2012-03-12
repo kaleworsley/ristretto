@@ -1,74 +1,76 @@
-<% javascript 'project.new' %>
-<% javascript 'attachment.new' %>
-  <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
-  <% unless project.new_record? || !project.try(:has_stakeholder?, current_user) %>
-  <div class="form-item form-item-block">
+  <% javascript 'project' %>
+  <%= form.error_messages :message => nil, :header_message => nil %>
+  <% unless project.new_record? %>
+  <div class="clearfix">
     <%= form.label :customer_id %>
-    <%= form.collection_select :customer_id, current_user.current_customers.sort_by(&:name), :id, :name %>
+    <div class="input">
+      <%= form.collection_select :customer_id, Customer.all.sort_by(&:name), :id, :name %>
+    </div>
   </div>
   <% end %>
-  <div class="form-item form-item-block">
+  <div class="clearfix">
     <%= form.label :name %>
-    <%= form.text_field :name %>
+    <div class="input">
+      <%= form.text_field :name %>
+    </div>
   </div>
 
-  <div class="form-item form-item-block">
+  <div class="clearfix">
     <%= form.label :state %>
-    <%= form.select :state, Project.states_for_select %>
+    <div class="input">
+      <%= form.select :state, Project.states_for_select %>
+    </div>
   </div>
 
-  <div class="form-item form-item-block">
+  <div class="clearfix">
     <%= form.label :kind %>
-    <%= form.select :kind, Project.kinds_for_select %>
+    <div class="input">
+      <%= form.select :kind, Project.kinds_for_select %>
+    </div>
   </div>
 
-  <% if project.new_record? %>
-    <div class="form-item form-item-block">
-      <%= label_tag 'is_member', "I'm involved in this project" %>
-      <%= check_box_tag :is_member %>
-      <span id="stakeholder_role_div">
-        as a
-        <%= select_tag :stakeholder_role, options_for_select(Stakeholder.roles_for_select) %>
-      </span>
-    </div>
-  <% end %>
-
-  <div class="form-item form-item-block">
+  <div class="clearfix">
     <%= form.label :fixed_price %>
-    <%= form.check_box :fixed_price %>
-  </div>
+    <div class="input">
+      <%= form.check_box :fixed_price %>
+    </div>
+   </div>
 
-  <div class="form-item form-item-block">
-    <%= form.label :deadline %>
-    <%= form.text_field :deadline, :size => 8 %>
-  </div>
-
-  <div class="form-item form-item-block">
+  <div class="clearfix">
     <%= form.label :rate %>
-    <%= form.text_field :rate, :size => 4 %> $/hour
-  </div>
-
-  <div class="form-item form-item-block">
-    <%= form.label :estimate %>
-    <%= form.text_field :estimate, :size => 4 %> <%= form.select :estimate_unit, Project.estimate_units_for_select %> (leave blank for no estimate)
-  </div>
-
-  <% unless project.attachments.blank? %>
-    <ul class="attachments">
-      <%= render project.attachments %>
-    </ul>
-  <% end %>
-
-  <div id="attachments">
-    <div class="form-item form-item-block">
-      <% fields_for "new_attachments[]", attachment do |f| %>
-        <%= f.label :file %>
-        <%= f.file_field :file %>
-      <% end %>
+    <div class="input input-append">
+      <%= form.text_field :rate, :size => 4 %><span class="add-on">$/hour</span>
     </div>
   </div>
 
+  <div class="clearfix">
+    <%= form.label :estimate %>
+    <div class="input">
+      <%= form.text_field :estimate, :size => 4 %>
+      <span class="help-text">Leave blank for no estimate</span>
+    </div>
+  </div>
 
-  <div class="form-item form-item-block">
-    <%= form.submit "Save" %>
+  <div class="clearfix">
+    <%= form.label :users %>
+    <div class="input">
+      <%= form.collection_select :user_ids, User.all, :id, :name, {}, {:multiple => true} %>
+      <span class="help-text">Leave blank for no estimate</span>
+    </div>
+  </div>
+  
+  <div class="tasks">
+    <table class="project-tasks">
+    <thead><tr><th>Name</th><th>Estimate</th><th>Stage</th><th>Delete</th></tr></thead>
+    <tbody>
+    <% form.fields_for :tasks do |t| %>
+      <%= render 'task_fields', :f => t %>
+    <% end %>
+    <tr class="add"><td colspan="4"><%= link_to_add_fields "Add Task", form, :tasks %></td></tr>
+    </tbody>
+    </table>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Save", :class => 'btn primary' %>
   </div>

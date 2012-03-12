@@ -18,10 +18,8 @@ Setup
     cd ristretto
     bundle install
     rake ristretto:setup
-    rake db:create
-    rake db:schema:load
-    rake user:new NAME=yourname FIRST_NAME=your LAST_NAME=name EMAIL=example@example.com PASSWORD=yourpassword
-    rake user:is_staff NAME=yourname
+    rake db:create db:schema:load
+    rake user:new NAME="Your Name" EMAIL=example@example.com PASSWORD=yourpassword
     ./script/server
 
 Other steps
@@ -33,7 +31,7 @@ License
 =======
 
 Ristretto - Project Management and Time-tracking
-Copyright (C) 2010 Kale Worsley <kale@egressive.com>, Josh Campbell <josh@egressive.com>, Malc Locke <malc@egressive.com>
+Copyright (C) 2010-2012 Kale Worsley <kale@egressive.com>, Josh Campbell <josh@egressive.com>, Malc Locke <malc@egressive.com>
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU Affero General Public License as

@@ -1,14 +1,14 @@
-<% content_tag 'li', { :class =>  ["project-#{project.id}", 'project'].join(' ') } do %>
-  <span class="state <%= project.state %>"><%= project.state.humanize %></span>
-  <span class="name"><%= link_to project.name, project %></span>
-  <span class="estimate"><%= pluralize(project.estimate, project.estimate_unit.humanize.singularize) %></span>
+<tr class="<%= "project-#{project.id} project" %>">
+  <td class="name"><%= link_to project.name, project %></td>
+  <% if @customer.blank? %><td class="name"><%= link_to project.customer.name, project.customer %></td><% end %>
+  <td class="kind <%= project.kind %>"><%= project.kind.humanize %></td>
+  <td class="state <%= project.state %>"><%= project.state.humanize %></td>
+  <td class="estimate"><%= pluralize(project.estimate, 'hour') %></td>
+  <td>
   <ul class="progress-details">
-    <li class="todo"><%= project.tasks.todo.length %> todo,</li>
-    <li class="doing"><%= project.tasks.doing.length %> doing,</li>
+    <li class="todo"><%= project.tasks.todo.length %> todo</li>
+    <li class="doing"><%= project.tasks.doing.length %> doing</li>
     <li class="done"><%= project.tasks.done.length %> done</li>
   </ul>
-  <ul class="edit-links">
-    <li class="edit"><%= edit_link project %></li>
-    <li class="delete"><%= delete_link project %></li>
-  </ul>
-<% end %>
+  </td>
+</tr>
