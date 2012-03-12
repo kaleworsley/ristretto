@@ -1,28 +1,78 @@
 <%- content_for :tabs do -%>
-  <%= tab 'Edit', edit_customer_path(@customer)                  if can? :edit, @customer %>
-  <%= tab 'New project', new_customer_project_path(@customer.id) if can? :create, Project %>
+  <%= tab 'Show', customer_path(@customer), true %>
+  <%= tab 'Edit', edit_customer_path(@customer) %>
+  <%= tab 'Delete', delete_customer_path(@customer) %>
+  <% tab "Projects #{count_label(@customer.projects.size)}", customer_projects_path(@customer) do %>
+    <%= tab 'Projects', customer_projects_path(@customer) %>
+    <li class="divider"></li>
+    <%= tab 'New Project', new_customer_project_path(@customer) %>
+  <%- end -%>
+  <%= tab image_tag('xero.png'), @customer.xero_url if @customer.xero_customer? %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
+  <%= crumb 'Customers', customers_path %>
   <%= crumb @customer.name, @customer %>
 <%- end -%>
 
-<div class="customers">
-  <%= title @customer.name %>
-  <%- if @customer.projects.size != 0 -%>
-  <div class="projects panel small-panel no-padding">
-    <h3 class="title">Projects</h3>
-    <div class="content">
-      <ul class="projects">
-        <% if current_user.is_staff? %>
-        <%= render :partial => 'projects/project', :collection => @customer.projects.sort_by(&:name) %>
-        <% else %>
-        <%= render :partial => 'projects/project', :collection => @customer.projects.find(:all, :conditions => {:id => current_user.current_projects_ids}).sort_by(&:name) %>
+<%= title @customer.name %>
+
+<% present @customer do |c| %>
+
+
+  <% if @customer.xero_customer? %>
+
+    <% if @customer.invoices.present? %>
+
+      <% @customer.invoices.group_by(&:status).each do |status,invoices| %>
+        <h3><%= status.to_s.downcase.humanize %></h3>
+        <ul>
+        <% invoices.each do |invoice| %>
+          <li><%= invoice.invoice_number %></li>
         <% end %>
+        </ul>
+      <% end %>
+
+    <% end %>
+
+    <% if @customer.xero_customer.first_name.present? %>
+	    <strong>Contact:</strong>
+	    <% if @customer.xero_customer.email_address.present? %>
+        <%= mail_to @customer.xero_customer.email_address, "#{@customer.xero_customer.first_name} #{@customer.xero_customer.last_name}" %>
+      <% else %>
+        <%= "#{@customer.xero_customer.first_name} #{@customer.xero_customer.last_name}" %>
+      <% end %>
+    <% end %>
+
+    <% if @customer.xero_customer.phones.map(&:number).reject {|n| n.blank?}.size > 0 %>
+      <strong>Phones:</strong>
+      <ul>
+      <% @customer.xero_customer.phones.each do |phone| %>
+      <% if phone.number.present? %>
+        <li><strong><%= phone.type %>:</strong> <%= "#{phone.country_code} #{phone.area_code} #{phone.number}"%></li>
+      <% end %>
+      <% end %>
       </ul>
-      <%- else -%>
-      <h3>No Projects!</h3>
-      <%- end -%>
+    <% end %>
+  <% end %>
+
+  <%- if @customer.projects.current.size != 0 -%>
+    <div class="projects">
+      <h3 class="title">Current Projects</h3>
+      <div class="content">
+        <table class="projects bordered-table zebra-striped">
+          <thead>
+            <tr><th>Name</th><th>Kind</th><th>State</th><th>Estimate/Quote</th><th>Details</th></tr>
+          </thead>
+          <tbody>
+            <%= render :partial => 'projects/project', :collection => @customer.projects.current.sort_by(&:name) %>
+          </tbody>
+        </table>
+      </div>
     </div>
-  </div>
-</div>
+  <%- else -%>
+    <h3>No Projects!</h3>
+  <%- end -%>
+
+
+<% end %>

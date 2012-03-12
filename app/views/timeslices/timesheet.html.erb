@@ -1,56 +1,18 @@
 <%- content_for :breadcrumbs do -%>
   <%= crumb 'Timesheet', timesheet_path %>
-  <%= crumb @date, timesheet_path(:date => @date) %>
-<% end %>
-<%= javascript_tag("TIMESLICE_GRANULARITY = #{current_user.minute_step}") %>
-<%= javascript_tag "var AUTH_TOKEN = #{form_authenticity_token.inspect};" if protect_against_forgery? %>
-<% javascript "ajax" %>
-<% javascript "fullcalendar.min" %>
-<% javascript "jquery.timeentry.min" %>
-<% javascript "timeslice.timesheet" %>
-<% javascript "timeslice.new" %>
-
-<div id="timesheet-nav">
-<% content_tag 'div', {:class => 'fc-button-prev ui-state-default ui-corner-left ui-no-right day-nav'} do %>
-  <%= link_to('<span class="ui-icon ui-icon-circle-triangle-w"></span><span class="date">' + @date.yesterday.to_s + '</span>', "/timesheet/#{@date.yesterday}") -%>
 <% end %>
 
-<% content_tag 'div', {:class => 'fc-button-prev ui-state-default ui-corner-left ui-no-right week-nav'} do %>
-  <%= link_to('<span class="ui-icon ui-icon-circle-triangle-w"></span><span class="date">' + (@date.monday-7).to_s + '</span>', "/timesheet/#{(@date.monday-7)}") -%>
-<% end %>
-
-<% content_tag 'div', {:class => 'fc-button-prev ui-state-default ui-corner-left ui-no-right month-nav'} do %>
-  <%= link_to('<span class="ui-icon ui-icon-circle-triangle-w"></span><span class="date">' + (@date.monday-1.month).to_s + '</span>', "/timesheet/#{(@date.monday-7)}") -%>
-<% end %>
-
-<% content_tag 'div', {:class => 'fc-button-next ui-state-default ui-corner-right day-nav'} do %>
-  <%= link_to('<span class="ui-icon ui-icon-circle-triangle-e"></span><span class="date">' + @date.tomorrow.to_s + '</span>', "/timesheet/#{@date.tomorrow}") -%>
-<% end %>
-
-<% content_tag 'div', {:class => 'fc-button-next ui-state-default ui-corner-right week-nav'} do %>
-  <%= link_to('<span class="ui-icon ui-icon-circle-triangle-e"></span><span class="date">' + (@date.monday+7).to_s + '</span>', "/timesheet/#{(@date.monday+7)}") -%>
-<% end %>
-
-<% content_tag 'div', {:class => 'fc-button-next ui-state-default ui-corner-right month-nav'} do %>
-  <%= link_to('<span class="ui-icon ui-icon-circle-triangle-e"></span><span class="date">' + (@date.monday+1.month).to_s + '</span>', "/timesheet/#{(@date.monday+7)}") -%>
-<% end %>
-</div>
-
-<div id="timesheet"></div>
 <div id="timesheet-table">
-<table id="timesheet-week">
+  <table id="timesheet-week" class="bordered-table zebra-striped">
     <thead>
       <tr>
-        <th>Project #</th>
         <th>Project</th>
-        <th>Task #</th>
         <th>Task</th>
-        <th>Time</th>
         <th>Description</th>
+        <th>Time</th>
         <th>Duration</th>
-        <th>Chargeable</th>
-        <th class="edit"><%= image_tag 'edit.png' %></th>
-        <th class="delete"><%= image_tag 'delete.png' %></th>
+        <!--<th>Chargeable</th>
+        <th></th>-->
       </tr>
     </thead>
     <tbody>
@@ -58,36 +20,39 @@
         table_class = (date == Date.today) ? date.strftime('%A').downcase + ' today' : date.strftime('%A').downcase
         %>
       <tr class="day-heading <%= table_class %>">
-        <td colspan="10">
-          <%= date.strftime('%A') %>
-        </td>
+        <th colspan="5">
+          <%= date.strftime('%A (%Y-%m-%d)') %>
+        </th>
       </tr>
       <% current_user.timeslices.by_date(date).each do |timeslice| %>
       <tr class="<%= table_class %>">
-        <td><%= timeslice.task.project.id %></td>
-        <td><%= link_to timeslice.task.project.name, timeslice.task.project %></td>
-        <td><%= timeslice.task.id %></td>
+        <td><%= link_to timeslice.project.name, timeslice.project %></td>
         <td><%= link_to timeslice.task.name, timeslice.task %></td>
+        <td><%= link_to timeslice.description, timeslice %></td>
         <td><%= timeslice.started_time %> - <%= timeslice.finished_time %></td>
-        <td><%= timeslice.description %></td>
         <td class="right"><%= timeslice.duration_in_hours %></td>
+        <!--
         <td class="right"><%= timeslice.chargeable %></td>
         <td class="edit"><%= edit_link timeslice %></td>
-        <td class="delete"><%= delete_link timeslice %></td>
+        -->
       </tr>
       <% end %>
       <tr class="subtotal <%= table_class %>">
-        <td colspan="6"></td>
+        <td colspan="4"></td>
         <td><%= (Timeslice.total_duration(current_user.timeslices.by_date(date))/60/60).to_f.round(2) %> hours</td>
+        <!--
         <td><%= (Timeslice.total_chargeable_duration(current_user.timeslices.by_date(date))/60/60).to_f.round(2) %> hours</td>
-        <td colspan="2"></td>
+        <td colspan="1"></td>
+        -->
   </tr>
       <% end %>
       <tr class="total">
-    <td colspan="6"></td>
+    <td colspan="4"></td>
     <td><%= (Timeslice.total_duration(current_user.timeslices.by_date(@date.beginning_of_week, @date.end_of_week))/60/60).to_f.round(2) %> hours</td>
+    <!--
     <td><%= (Timeslice.total_chargeable_duration(current_user.timeslices.by_date(@date.beginning_of_week, @date.end_of_week))/60/60).to_f.round(2) %> hours</td>
-    <td colspan="2"></td>
+    <td colspan="1"></td>
+    -->
   </tr>
     </tbody>
   </table>

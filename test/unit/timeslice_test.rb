@@ -7,8 +7,6 @@ class TimesliceTest < ActiveSupport::TestCase
     task = Task.new
     task.name = 'blah'
     task.project = Project.find(:first)
-    task.user = user
-    task.assigned_to = user
     task.save
 
     ts1 = Timeslice.new
@@ -38,8 +36,6 @@ class TimesliceTest < ActiveSupport::TestCase
     task = Task.new
     task.name = 'blah'
     task.project = Project.find(:first)
-    task.user = user
-    task.assigned_to = user
     task.save
 
     ts1 = Timeslice.new
@@ -68,8 +64,6 @@ class TimesliceTest < ActiveSupport::TestCase
     task = Task.new
     task.name = 'blah'
     task.project = Project.find(:first)
-    task.user = user
-    task.assigned_to = user
     task.save
 
     ts1 = Timeslice.new
@@ -98,8 +92,6 @@ class TimesliceTest < ActiveSupport::TestCase
     task = Task.new
     task.name = 'blah'
     task.project = Project.find(:first)
-    task.user = user
-    task.assigned_to = user
     task.save
 
     ts1 = Timeslice.new

@@ -1,9 +1,12 @@
 <% unless @q.blank? %>
 <%= title "Search results for \"#{ @q }\"" %>
+<% @search.results.group_by(&:class).each do |model, results| %>
+<h3><%= h model.to_s.pluralize %></h3>
 <ul class="results">
-<% @search.results.each do |result| %>
-  <li><strong><%= link_to truncate(result.to_s, 100), result %></strong> - <%= h result.class.to_s %></li>
-<% end %>
+  <% results.each do |result| %>
+  <li><strong><%= link_to truncate(result.to_s, :length => 100), result %></strong></li>
+  <% end %>
 </ul>
+<% end %>
 <%= will_paginate(@search.results) %>
 <% end %>

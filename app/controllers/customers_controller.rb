@@ -1,28 +1,81 @@
 class CustomersController < ApplicationController
-
-  load_and_authorize_resource
-
   before_filter :find_customer, :only => [:edit, :delete, :show, :update, :destroy]
+
+
+  def xero
+    @xero_contact_id = params[:xero_contact_id]
+    if @xero_contact_id.present?
+      @customer = Customer.find_by_xero_contact_id(@xero_contact_id)
+      if @customer.present?
+        redirect_to @customer
+      else
+        begin
+          @xero_contact = Xero.Contact.find(@xero_contact_id)
+        rescue Exception => msg
+          logger.debug "Xero error: #{msg}"
+          @xero_contact = nil
+          flash[:notice] = 'Could not find customer.'
+          redirect_to customers_path
+        end
+        if @xero_contact.present?
+          redirect_to new_customer_path(:name => @xero_contact.name, :xero_contact_id => @xero_contact_id)
+        end
+      end
+    else
+      flash[:notice] = 'Could not find customer.'
+      redirect_to customers_path
+    end
+  end
 
   def delete
 
   end
 
-  def index
-    @customers = Customer.page(params[:page])
+  def missing
+    @customer_names = Customer.all.map(&:name)
+    begin
+      @xero_customers = Xero.Contact.all(:where => {:is_customer => true}).reject {|c| @customer_names.include? c.name }
+    rescue Exception => msg
+      logger.debug "Xero error: #{msg}"
+      @xero_customers = nil
+      flash[:error] = 'Cannot connect to Xero.'
+    end
+  end
 
+  def index
     respond_to do |format|
-      format.html
-      format.xml  { render :xml => @customers }
+      format.html { @customers = Customer.page(params[:page]) }
+      format.js { @customers = Customer.page(params[:page]) }
+      format.xml  { render :xml => Customer.all }
+      format.json  { render :json => Customer.all }
     end
   end
 
   def show
-
+    respond_to do |format|
+      format.html
+      format.xml  { render :xml => @customer }
+      format.json  { render :json => @customer }
+    end
   end
 
   def new
+    begin
+      @xero_customers = Xero.Contact.all
+    rescue Exception => msg
+      logger.debug "Xero error: #{msg}"
+      @xero_customers = nil
+      flash[:error] = 'Cannot connect to Xero.'
+    end
+
     @customer = Customer.new
+    if params[:name].present?
+      @customer.name = params[:name]
+    end
+
+    if params[:xero_contact_id].present?
+      @customer.xero_contact_id = params[:xero_contact_id].downcase
+    end
 
     respond_to do |format|
       format.html # new.html.erb
@@ -32,14 +85,19 @@ class CustomersController < ApplicationController
 
   # GET /customers/1/edit
   def edit
-
+    begin
+      @xero_customers = Xero.Contact.all
+    rescue Exception => msg
+      logger.debug "Xero error: #{msg}"
+      @xero_customers = nil
+      flash[:error] = 'Cannot connect to Xero.'
+    end
   end
 
   # POST /customers
   # POST /customers.xml
   def create
     @customer = Customer.new(params[:customer])
-    @customer.user = current_user
     respond_to do |format|
       if @customer.save
         flash[:notice] = 'Customer was successfully created.'

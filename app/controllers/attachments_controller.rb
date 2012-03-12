@@ -1,21 +1,13 @@
 class AttachmentsController < ApplicationController
-  # FIXME: Download and show are quite similar, we should decide on one.
-  load_and_authorize_resource
-
   before_filter :find_attachment, :only => [:edit, :delete, :show, :update, :destroy, :download]
 
   def download
-    send_file(@attachment.file.path, {:type => @attachment.file_content_type, :filename => @attachment.file_file_name})
-  end
-
-  def show
+    #send_file(@attachment.file.path, {:type => @attachment.file_content_type, :filename => @attachment.file_file_name})
     send_file(@attachment.file.path, {:type => @attachment.file_content_type, :disposition => 'inline', :filename => @attachment.file_file_name})
   end
 
-  def edit
-    respond_to do |format|
-      format.html { redirect_to('/' + @attachment.attachable_type.pluralize.downcase + '/' + @attachment.attachable_id.to_s + '/edit') }
-    end
+  def show
+    #send_file(@attachment.file.path, {:type => @attachment.file_content_type, :disposition => 'inline', :filename => @attachment.file_file_name})
   end
 
   def new
@@ -44,18 +36,6 @@ class AttachmentsController < ApplicationController
 
   end
 
-  def update
-        respond_to do |format|
-      if @attachment.update_attributes(params[:attachment])
-        flash[:notice] = 'Attachment was successfully updated.'
-        format.html { redirect_to(@attachment) }
-        format.xml  { head :ok }
-      else
-        format.html { render :action => "edit" }
-        format.xml  { render :xml => @attachment.errors, :status => :unprocessable_entity }
-      end
-    end
-  end
 
   def destroy
     @attachment.destroy
@@ -70,7 +50,12 @@ class AttachmentsController < ApplicationController
   end
 
   def index
-    @attachments = Attachment.page(params[:page])
+    if params[:project_id].present?
+      @project = Project.find(params[:project_id])
+      @attachments = @project.attachments
+    else
+      @attachments = Attachment.page(params[:page])
+    end
 
     respond_to do |format|
       format.html

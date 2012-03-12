@@ -1,0 +1,5 @@
+<% form_for(task) do |f| %>
+  <%= f.hidden_field :state, :value => next_state %>
+  <%= hidden_field_tag :destination, destination %>
+  <%= f.submit next_state.sub(/ed$/, '').humanize, :class => 'btn primary' %>
+<% end %>

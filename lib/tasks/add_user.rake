@@ -1,11 +1,9 @@
 namespace :user do
-  desc "Add a new user. You must supply NAME=, FIRST_NAME=, LAST_NAME=, EMAIL= and PASSWORD=" 
+  desc "Add a new user. You must supply NAME=, EMAIL= and PASSWORD="
   task :new => :environment do
-    if ENV['NAME'] && ENV['FIRST_NAME'] && ENV['LAST_NAME'] && ENV['EMAIL'] && ENV['PASSWORD']
+    if ENV['NAME'] && ENV['EMAIL'] && ENV['PASSWORD']
       user = User.create({
-        :name => ENV['NAME'],
-        :first_name => ENV['FIRST_NAME'],
-        :last_name => ENV['LAST_NAME'],
+        :full_name => ENV['NAME'],
         :email => ENV['EMAIL'],
         :password => ENV['PASSWORD'],
         :password_confirmation => ENV['PASSWORD'],
@@ -16,7 +14,7 @@ namespace :user do
         puts user.errors.full_messages
       end
     else
-      puts "You must supply NAME=, FIRST_NAME=, LAST_NAME=, EMAIL= and PASSWORD="
+      puts "You must supply NAME=, EMAIL= and PASSWORD="
     end
   end
 end

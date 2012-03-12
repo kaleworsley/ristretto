@@ -1,9 +1,0 @@
-<% @task.comments.each do |comment| %>
-<% div_for comment do %>
-  <%= post_info comment %>
-  <%= task_diff comment %>
-  <%= content_tag "div", comment.body, :class => "content" %>
-  <%= edit_link comment %>
-  <%= delete_link comment %>
-<% end %>
-<% end %>

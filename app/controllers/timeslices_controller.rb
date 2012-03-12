@@ -1,123 +1,10 @@
 class TimeslicesController < ApplicationController
-
-  load_and_authorize_resource
-
-  # TODO Make start time configurable per user
-  DAYSTART = '08:00:00'
+  DAYSTART = '09:00:00'
 
   before_filter :find_task, :only => [:new, :edit, :create, :index]
   before_filter :find_timeslice, :only => [:show, :edit, :update, :destroy, :delete]
   before_filter :set_dates, :only => [:index, :create, :timesheet]
   after_filter :copy_errors, :only => [:create, :update]
-
-  skip_before_filter :require_login, :only => [:ical]
-
-  # Ical feed for timeslices
-  # TODO: this needs refactoring
-  def ical
-    user = User.find_by_single_access_token(params[:user_credentials])
-
-    if params[:user]
-      timeslices = User.find_by_name(params[:user]).timeslices.find(:all, :include => {:task => {:project => :customer}})
-    else
-      timeslices = Timeslice.find(:all, :include => {:task => {:project => :customer}})
-    end
-
-    if user && user.is_staff?
-      cal = Icalendar::Calendar.new
-      timeslices.each do |timeslice|
-        event = Icalendar::Event.new
-        event.start = timeslice.started.strftime("%Y%m%dT%H%M%S")
-        event.end = timeslice.finished.strftime("%Y%m%dT%H%M%S")
-        event.summary = timeslice.description
-        event.organizer = "#{timeslice.user.full_name} <#{timeslice.user.email}>"
-        event.description = "Timeslice for #{timeslice.task.project.customer}: #{timeslice.task.project}: #{timeslice.task}"
-        cal.add_event(event)
-      end
-    end
-
-    respond_to do |format|
-      if user && user.valid?
-        headers['Content-Type'] = "text/calendar; charset=UTF-8"
-        cal.publish
-        format.ics { render :text => cal.to_ical }
-      else
-        format.ics { render :nothing => true, :status => :forbidden }
-      end
-    end
-  end
-
-
-  def update_ar
-    # FIXME: This should be a scope
-    @timeslices = Timeslice.uninvoiced.reject {|t| t.task.project.fixed_price == true}
-    @tasks = @timeslices.collect {|timeslice| timeslice.task}.uniq
-    @projects = @tasks.collect {|task| task.project}.uniq
-    @customers = @projects.collect {|project| project.customer}.uniq
-
-    respond_to do |format|
-      format.html
-    end
-  end
-
-  def update_ar_save
-    if params[:ar] =~ /[^\d+]/
-      flash[:error] = 'Invalid AR number'
-    else
-      params[:include_task].each do |task_id|
-        timeslices = Timeslice.find(params[:timeslice_ids][task_id])
-        if timeslices.class == Timeslice
-          timeslices = [timeslices]
-        end
-        timeslices.each do |timeslice|
-          timeslice.ar = params[:ar].to_i
-          if timeslice.save
-            flash[:notice] = 'Updated AR'
-          else
-            flash[:error] = '<ul>'
-            timeslice.errors.each do |field, message|
-              flash[:error] += "Timeslice #" + timeslice.id.to_s + " - " + field + " - " + message + " - may be #" + timeslice.previous.id.to_s
-            end
-            flash[:error] += '</ul>'
-          end
-        end
-      end
-    end
-
-    respond_to do |format|
-      format.html { redirect_to update_ar_path}
-    end
-  end
-
-  def sales_order_tracker
-    if params[:ar].blank?
-      redirect_to invoice_tracker_path
-    else
-      redirect_to invoice_tracker_path(params[:ar])
-    end
-  end
-
-  def invoice_tracker
-    @recent = Timeslice.recent_invoices(current_user)
-    @recent = @recent.select {|s| s.ar && s.ar != '' && s.ar != 0}
-    if current_user.is_staff?
-      if params[:invoice_val].blank? == false
-        redirect_to invoice_tracker_path(:invoice => params[:invoice_val])
-      end
-      @invoice = params[:invoice]
-      @timeslices = Timeslice.find(:all, :conditions => {:ar => @invoice}) || nil
-    else
-      if params[:invoice_val].blank? == false
-        redirect_to invoice_tracker_path(:invoice => params[:invoice_val])
-      end
-      @invoice = params[:invoice]
-      @timeslices = Timeslice.find(:all, :conditions => {:ar => @invoice, :task_id => current_user.current_projects_tasks_ids}) || nil
-    end
-  end
-
-  def smart_add
-
-  end
 
   def delete
     respond_to do |format|
@@ -125,35 +12,62 @@ class TimeslicesController < ApplicationController
     end
   end
 
-  def smart_create
-    timeslice = Timeslice.new(params[:timeslice])
-    timeslice.user = current_user
+  def calendar
+  
+  end
+  
+  def add
+   if params[:started].present? && params[:finished].present?
+     @started = Time.at(params[:started].to_i)
+     @finished = Time.at(params[:finished].to_i) 
+   else
+     @started = current_user.now
+     @finished = current_user.now+(current_user.minute_step.to_i).minutes
+   end
 
+  end
+  
+  def add_save
+    if params[:task_timeslice][:timetrackable_object].present?
+      #split = params[:task_timeslice][:timetrackable_object].split('|')
+      #params[:timeslice][:timetrackable_type] = split[0]
+      #params[:timeslice][:timetrackable_id] = split[1]
+      params[:timeslice][:timetrackable_object] = params[:task_timeslice][:timetrackable_object]
+    elsif params[:ticket_timeslice][:timetrackable_object].present? && params[:ticket_timeslice][:timetrackable_object] =~ /^Ticket/
+      #split = params[:ticket_timeslice][:timetrackable_object].split('|')
+      #params[:timeslice][:timetrackable_type] = split[0]
+      #params[:timeslice][:timetrackable_id] = split[1]
+      params[:timeslice][:timetrackable_object] = params[:ticket_timeslice][:timetrackable_object]
+    elsif params[:ticket_timeslice][:timetrackable_object].present? && params[:ticket_timeslice][:timetrackable_object] =~ /^(Customer|Project)/
+      @ticket = Ticket.create(:ticketable_object => params[:ticket_timeslice][:timetrackable_object], :description => params[:timeslice][:description])
+      #split = params[:ticket_timeslice][:timetrackable_object].split('|')
+      #@ticket = Ticket.create(:ticketable_type => split[0], :ticketable_id => split[1], :description => params[:timeslice][:description])
+      #params[:timeslice][:timetrackable_type] = 'Ticket'
+      #params[:timeslice][:timetrackable_id] = @ticket.id
+      params[:timeslice][:timetrackable_object] = @ticket.timetrackable_object
+    end
+
+    @timeslice = Timeslice.new(params[:timeslice])
+    if @timeslice.started.to_i == @timeslice.finished.to_i
+      @timeslice.finished = Time.now.utc.to_s(:db)
+    end
+
+    @timeslice.user = current_user
+    
     respond_to do |format|
-      if timeslice.save
-
-        cookies.delete("timesliceDescription:#{timeslice.task.id.to_s}")
-        cookies.delete("timesliceStarted:#{timeslice.task.id.to_s}")
-        cookies.delete("timesliceFinished:#{timeslice.task.id.to_s}")
-        cookies.delete("timesliceTimer:#{timeslice.task.id.to_s}")
-
-        flash[:notice] = "Saved timeslice"
-        format.html do
-          if params[:return_to_task] == 'true'
-            redirect_to timeslice.task
-          else
-            redirect_to timesheet_path(timeslice.started.strftime('%Y-%m-%d'))
-          end
-
-        end
-        format.js { render :template => 'timeslices/smart_create'}
+      if @timeslice.save
+        flash[:notice] = 'Timeslice was successfully created.'
+        format.html { redirect_to(add_timeslice_path) }
+        format.xml  { render :xml => @timeslice, :status => :created, :location => @timeslice }
+        format.js
       else
-        flash[:warning] = "Could not save timeslice: " + timeslice.errors.full_messages.to_s
-        format.html {redirect_to timeslice.task}
+        flash[:error] =  @timeslice.inspect
+        format.html { render :action => "add" }
+        format.xml  { render :xml => @timeslice.errors, :status => :unprocessable_entity }
         format.js
       end
-
     end
+
   end
 
   def timesheet
@@ -181,14 +95,13 @@ class TimeslicesController < ApplicationController
       timeslice_collection = @timeslices.collect do |timeslice|
         {
         'id' => timeslice.id,
-        'title' => timeslice.task.name,
+        'title' => timeslice.timetrackable.name,
         'description' => timeslice.description,
         'start' => timeslice.started.xmlschema,
         'end' => timeslice.finished.xmlschema,
         'allDay' => false,
         'className' => timeslice.chargeable ? 'chargeable' : 'non-chargeable'
         }
-
       end
 
       render :json => timeslice_collection
@@ -226,8 +139,8 @@ class TimeslicesController < ApplicationController
     if params[:task_id]
       @timeslice = @task.timeslices.build
     else
-      if params[:start].present? && params[:end].present?
-        @timeslice = Timeslice.new(:started => Time.at(params[:start].to_i), :finished => Time.at(params[:end].to_i))
+      if params[:started].present? && params[:finished].present?
+        @timeslice = Timeslice.new(:started => Time.at(params[:started].to_i), :finished => Time.at(params[:finished].to_i))
       else
         @timeslice = Timeslice.new
       end
@@ -249,13 +162,15 @@ class TimeslicesController < ApplicationController
   # POST /timeslices
   # POST /timeslices.xml
   def create
+    split = params[:timeslice][:timetrackable_object].split('|')
+    params[:timeslice][:timetrackable_type] = split[0]
+    params[:timeslice][:timetrackable_id] = split[1]
+    
     @timeslice = Timeslice.new(params[:timeslice])
     if @timeslice.started.to_i == @timeslice.finished.to_i
       @timeslice.finished = Time.now.utc.to_s(:db)
     end
-    if @task.present?
-      @timeslice.task = @task
-    end
+
     @timeslice.user = current_user
     respond_to do |format|
       if @timeslice.save
@@ -280,6 +195,12 @@ class TimeslicesController < ApplicationController
   # PUT /timeslices/1
   # PUT /timeslices/1.xml
   def update
+    if params[:timeslice][:timetrackable_object].present?
+      split = params[:timeslice][:timetrackable_object].split('|')
+      params[:timeslice][:timetrackable_type] = split[0]
+      params[:timeslice][:timetrackable_id] = split[1]
+    end
+
     respond_to do |format|
       if @timeslice.update_attributes(params[:timeslice])
         flash[:notice] = 'Timeslice was successfully updated.'

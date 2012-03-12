@@ -1,0 +1,75 @@
+<%- content_for :breadcrumbs do -%>
+  <%= crumb 'Customers', customers_path %>
+  <%= crumb @project.customer.name, @project.customer %>
+  <%= crumb 'Projects', customer_projects_path(@project.customer) %>
+  <%= crumb @project.name, @project %>
+<%- end -%>
+
+<%- content_for :tabs do -%>
+  <%= tab 'Show', project_path(@project) %>
+  <%= tab 'Edit', edit_project_path(@project) %>
+  <%= tab 'Delete', delete_project_path(@project) %>
+  <% tab "Tasks #{count_label(@project.tasks.size)}", project_tasks_path(@project) do %>
+    <%= tab 'Tasks', project_tasks_path(@project) %>
+    <li class="divider"></li>
+    <%= tab 'New task', new_project_task_path(@project) %>
+  <% end %>
+  <% tab 'Time', time_project_path(@project), true do %>
+    <%= tab 'Uninvoiced', uninvoiced_project_path(@project) %>
+  <% end %>
+  <%= tab "Files #{count_label(@project.attachments.size)}", project_attachments_path(@project) %>
+<%- end -%>
+
+<%= title @project.name %>
+
+<%= javascript 'uninvoiced' %>
+
+<%#= debug @invoices %>
+
+<% form_tag(invoice_project_path(@project)) do %>
+<div class="clearfix">
+<%= label_tag :invoice %>
+<div class="input">
+<%= select :invoice, :invoice_id, options_from_collection_for_select(@invoices, :invoice_id, :invoice_number), {:include_blank => true} %>
+</div>
+</div>
+
+<div class="clearfix">
+<%= label_tag :issue_date %>
+<div class="input">
+<%= text_field_tag :issue_date, DateTime.now.strftime('%Y-%m-%d') %>
+</div>
+</div>
+
+<div class="clearfix">
+<%= label_tag :due_date %>
+<div class="input">
+<%= text_field_tag :due_date, (DateTime.now+30.days).strftime('%Y-%m-%d') %>
+</div>
+</div>
+
+<table id="invoice">
+<thead><tr><th>Description</th><th>Hours</th><th>Include</th></tr></thead>
+<tbody>
+<% @project.tasks.group_by(&:stage).each do |stage, tasks| %>
+  <% if tasks.select {|t| t.total_chargeable_uninvoiced_duration_hours > 0}.size > 0 %>
+    <tr class="heading">
+	    <th colspan="3"><%= (stage.present? ? stage.humanize : 'Other') %></th>
+    </tr>
+
+    <% tasks.each do |task| %>
+      <% if task.total_chargeable_uninvoiced_duration_hours > 0 %>
+      <tr>
+        <td><%= text_field_tag "items[#{task.id}][description]", task.name, :class => 'xxlarge' %></td>
+        <td class="hours"><%= text_field_tag "items[#{task.id}][hours]", task.total_chargeable_uninvoiced_duration_hours.to_f.round(2), :class => 'mini' %></td>
+        <td class="include"><%= check_box_tag "items[#{task.id}][include]", true, :checked => true %><%= hidden_field_tag "items[#{task.id}][timeslice_ids]", task.uninvoiced.map(&:id).join(',') %></td>
+      </tr>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+</tbody>
+<tfoot><tr><td></td><td class="total-hours"></td><td></td></tr></tfoot>
+</table>
+<%= submit_tag "Create Invoice", :class => 'btn primary' %>
+<% end %>

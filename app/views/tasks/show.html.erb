@@ -1,61 +1,20 @@
 <%- content_for :tabs do -%>
-  <%= tab 'Edit', edit_task_path(@task)                    if can? :edit, @task %>
-  <%= tab 'New timeslice', new_task_timeslice_path(@task)  if can? :create, Timeslice %>
-  <%= tab 'New comment', new_task_comment_path(@task)      if can? :create, Comment %>
-  <%= tab 'New task', new_project_task_path(@project) if can? :create, Task %>
+  <%= tab 'Edit', edit_task_path(@task) %>
+  <%= tab 'New timeslice', new_task_timeslice_path(@task) %>
+  <%= tab 'New task', new_project_task_path(@project) %>
 <% end %>
 
 <%- content_for :breadcrumbs do -%>
-  <%= crumb @customer.name, @customer %>
+  <%= crumb 'Customers', customers_path %>
+  <%= crumb @project.customer.name, @project.customer %>
+  <%= crumb 'Projects', customer_projects_path(@project.customer) %>
   <%= crumb @project.name, @project %>
+  <%= crumb 'Tasks', project_tasks_path(@project) %>
   <%= crumb @task.name, @task %>
 <%- end -%>
-<% javascript 'ajax' %>
-<% javascript 'delete' %>
-
-<% if current_user.is_staff? %>
-<%= javascript_tag("TIMESLICE_GRANULARITY = #{current_user.minute_step}") %>
-<% javascript "jquery.timeentry.min" %>
-<% javascript "timeslice.new" %>
-
-<div style="clear: both;">
-  <%= render :partial => "timeslices/new_task_timeslice", :locals => {:task => @task} %>
-</div>
-<% end %>
 
 <%= title @task.name %>
-<%= notification_button_toggle(@task) %>
-<div class="clear-both"></div>
-<%= post_info(@task, 'Requested by') %>
 
-<div class="content description">
-  <%= markdown @task.description %>
-</div>
-
-<% if @task.attachments.size > 0 %>
-  <ul class="attachments">
-    <%= render @task.attachments %>
-  </ul>
-<% end %>
-
-<div id="comments">
-  <h3 class="title dark">Comments</h3>
-  <div class="comments">
-    <% if @task.comments.size == 0 %>
-      <%="No Comments!" %>
-    <% else %>
-      <%= render @task.comments %>
-    <% end %>
-  </div>
-<div class="comment-form">
-<% javascript 'comment.new' %>
-  <h4><a name="comment-form">Post comment</a></h4>
-<% form_for [@task, @comment], :html => { :multipart => true } do |form| %>
-   <%= render :partial => "comments/form", :locals => {:form => form, :comment => @comment, :attachment => @attachment} %>
-<% end %>
-</div>
-</div>
-<% if (!@task.project.fixed_price && !current_user.is_staff?) || current_user.is_staff? %>
 <div id="timeslices">
   <h3 class="title dark">Timeslices</h3>
   <div class="timeslices">
@@ -66,7 +25,6 @@
     <% end %>
   </div>
 </div>
-<% end %>
 
 <div id="task-details" class="panel small-panel">
 <h3 class="title">Task details</h3>
@@ -78,9 +36,9 @@
 
 <p>
   <strong><% if @task.project.fixed_price %>Quote:<% else %>Estimate:<% end %></strong>
-  <%= pluralize(@task.estimate.to_f.round(2), @task.estimate_unit.humanize.singularize) %>
+  <%= pluralize(@task.estimate.to_f.round(2), 'hour') %>
 </p>
-<% if (!@task.project.fixed_price && !current_user.is_staff?) || current_user.is_staff? %>
+
 <p>
   <strong>Chargeable:</strong>
   <%= pluralize((Timeslice.total_chargeable_duration(@task.timeslices)/60/60).to_f.round(2), 'Hour') %>
@@ -90,14 +48,6 @@
   <strong>Non-chargeable:</strong>
   <%= pluralize((Timeslice.total_nonchargeable_duration(@task.timeslices)/60/60).to_f.round(2), 'Hour') %>
 </p>
-<% end %>
-<p>
-  <strong>Assigned to:</strong>
-  <% unless @task.assigned_to.blank? %>
-  <%= link_to @task.assigned_to, @task.assigned_to %>
-  <% else %>
-  Un-assigned
-  <% end %>
-</p>
+
 </div>
 </div>

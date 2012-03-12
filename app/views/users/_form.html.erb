@@ -1,45 +1,64 @@
   <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
-  <div class="form-item form-item-block">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
+  <div class="clearfix">
+    <%= form.label :full_name %>
+    <div class="input">
+      <%= form.text_field :full_name %>
+    </div>
   </div>
-  <div class="form-item form-item-block">
-    <%= form.label :first_name %>
-    <%= form.text_field :first_name %>
-  </div>
-  <div class="form-item form-item-block">
-    <%= form.label :last_name %>
-    <%= form.text_field :last_name %>
-  </div>
-  <div class="form-item form-item-block">
+  <div class="clearfix">
     <%= form.label :email %>
-    <%= form.text_field :email %>
+    <div class="input">
+      <%= form.text_field :email %>
+    </div>
   </div>
-  <div class="form-item form-item-block">
+  <div class="clearfix">
     <%= form.label :password %>
-    <%= form.password_field :password %>
+    <div class="input">
+      <%= form.password_field :password %>
+    </div>
   </div>
-  <div class="form-item form-item-block">
+  <div class="clearfix">
     <%= form.label :password_confirmation %>
-    <%= form.password_field :password_confirmation %>
-  </div>
-  <% if !current_user.nil? && current_user.is_staff %>
-  <div class="form-item form-item-block">
-    <%= form.label :is_staff %>
-    <%= form.check_box :is_staff %>
+    <div class="input">
+      <%= form.password_field :password_confirmation %>
+    </div>
   </div>
 
-  <div class="form-item form-item-block">
+  <div class="clearfix">
     <%= form.label :minute_step %>
-    <%= form.select :minute_step, User.minute_steps_for_select %> <div class="field-description">Default minute increments for timeslices.</div>
+    <div class="input"> 
+      <%= form.select :minute_step, User.minute_steps_for_select %> <div class="field-description">Default minute increments for timeslices.</div>
+    </div>
   </div>
-  <% end %>
+
   <% unless @user.new_record? %>
-  <div class="form-item form-item-block">
-    <%= label_tag :reset_api_key, "Reset API key?" %>
-    <%= check_box_tag :reset_api_key %>
+  <div class="clearfix">
+    <%= label_tag :reset_api_key, "Reset API key?" %>    
+    <div class="input">
+      <%= check_box_tag :reset_api_key %>
+    </div>
   </div>
   <% end %>
-  <div class="form-item form-item-block">
-    <%= form.submit 'Save' %>
+  
+  <% if @user == current_user %>
+  <div class="clearfix">
+    <%= label_tag :panels %>
+    <div class="input listinput">
+      <div class="inputs-list dashboard-panels">
+      <% if @user.panels.present? %>
+        <% User::DASHBOARD_PANELS.sort_by {|v,k| @user.panels[v] || 'zzz'}.each do |panel| %>
+        <div class="input-list-item"><label><a href="#" class="handle"></a><%= check_box_tag "user[panels][#{panel}]", @user.panels.include?(panel) ? @user.panels[panel] : -1, @user.panels.include?(panel) %><span><%= panel.humanize %></span></label></div>
+        <% end %>
+      <% else %>
+        <% User::DASHBOARD_PANELS.sort_by {|v,k| v}.each do |panel| %>
+          <div class="input-list-item"<label><a href="#" class="handle"></a><%= check_box_tag "user[panels][#{panel}]", -1, false %><%= panel.humanize %></label></div>
+        <% end %>
+      <% end %>
+      </div>
+    </div>
+  </div>
+  <% end %>
+  
+  <div class="actions">
+    <%= form.submit 'Save', :class => 'btn primary' %>
   </div>

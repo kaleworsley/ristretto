@@ -1,31 +1,23 @@
 # Read about fixtures at http://ar.rubyonrails.org/classes/Fixtures.html
 
 user1:
-  name: User1
-  first_name: Test
-  last_name: User1
+  full_name: Test User1
   email: test1@example.com
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("testpass1" + salt) %>
   persistence_token: <%= Authlogic::Random.hex_token %>
-  is_staff: true
 
 user2:
-  name: User2
-  first_name: Test
-  last_name: User2
+  full_name: Test User2
   email: test2@example.com
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("testpass2" + salt) %>
   persistence_token: <%= Authlogic::Random.hex_token %>
-  is_staff: false
 
 user3:
-  name: User3
-  first_name: Test
-  last_name: User3
+  full_name: Test User3
   email: test3@example.com
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt("testpass3" + salt) %>
   persistence_token: <%= Authlogic::Random.hex_token %>
-  is_staff: false
+

@@ -1,9 +1,4 @@
-<% content_tag 'div', { :class =>  ["project-#{project_dashboard.id}", 'project'].join(' ') } do %>
+<% content_tag 'div', { :class =>  "project-#{project_dashboard.id} project" } do %>
   <div class="name"><%= link_to project_dashboard.name, project_dashboard %></div>
-  <span class="customer"><%= link_to project_dashboard.customer, project_dashboard.customer %></span>
-  <div class="overview">
-  <%= project_dashboard.tasks.todo.length %> todo,
-  <%= project_dashboard.tasks.doing.length %> doing,
-  <%= project_dashboard.tasks.done.length %> done.
-  </div>
+  <div class="customer"><%= link_to project_dashboard.customer, project_dashboard.customer %></div>
 <% end %>

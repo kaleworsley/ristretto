@@ -1,0 +1,7 @@
+<h3 class="title">Current Projects</h3>
+<div class="content well panel">
+  <%= render :partial => 'projects/project_dashboard', :collection => current_user.current_projects.sort_by(&:name) %>
+</div>
+<div class="panel-footer">
+  <%= link_to 'More projects', projects_path %>
+</div>

@@ -1,16 +1,26 @@
 <%- content_for :breadcrumbs do -%>
+  <%= crumb 'Customers', customers_path %>
   <%= crumb @project.customer.name, @project.customer %>
+  <%= crumb 'Projects', customer_projects_path(@project.customer) %>
   <%= crumb @project.name, @project %>
 <%- end -%>
 
 <%- content_for :tabs do -%>
-  <%= tab 'View', @project                                            if can? :show, @project  %>
-  <%= tab 'New task', new_project_task_path(@project)                 if can? :create, Task %>
-  <%= tab 'New stakeholder', new_project_stakeholder_path(@project)   if can? :create, Stakeholder %>
-  <%= tab 'New project', new_customer_project_path(@project.customer) if can? :create, Project %>
-<% end %>
+  <%= tab 'Show', project_path(@project) %>
+  <%= tab 'Edit', edit_project_path(@project), true %>
+  <%= tab 'Delete', delete_project_path(@project) %>
+  <% tab "Tasks #{count_label(@project.tasks.size)}", project_tasks_path(@project) do %>
+    <%= tab 'Tasks', project_tasks_path(@project) %>
+    <li class="divider"></li>
+    <%= tab 'New task', new_project_task_path(@project) %>
+  <% end %>
+  <% tab 'Time', time_project_path(@project) do %>
+    <%= tab 'Uninvoiced', uninvoiced_project_path(@project) %>
+  <% end %>
+  <%= tab "Files #{count_label(@project.attachments.size)}", project_attachments_path(@project) %>
+<%- end -%>
 
 <%= title "Editing project" -%>
-<% form_for @project, :html => { :multipart => true } do |form| %>
+<% form_for @project do |form| %>
 <%= render :partial => form, :locals => {:form => form, :project => @project, :attachment => @attachment} %>
 <% end %>

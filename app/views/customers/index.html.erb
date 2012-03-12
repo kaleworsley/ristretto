@@ -1,20 +1,23 @@
 <%- content_for :tabs do -%>
-  <%= tab 'New customer', new_customer_path %>
+  <%= tab 'Customers', customers_path, true %>
+  <%= tab 'New Customer', new_customer_path %>
+  <%= tab 'Missing Customers', missing_customers_path %>
 <%- end -%>
 
 <%- content_for :breadcrumbs do -%>
   <%= crumb 'Customers', customers_path %>
 <%- end -%>
 
-<% title "Customers" -%>
-<div id="customers" class="customers panel no-padding">
-  <h3 class="title">Customers</h3>
-  <div class="content">
-    <ul class="customers">
-      <%= render @customers %>
-    </ul>
-  </div>
-  <div class="panel-footer">
-    <%= will_paginate @customers %>
-  </div>
-</div>
+<%= title "Customers" -%>
+
+<% javascript 'customers' %>
+
+<table id="customers" class="customers bordered-table zebra-striped">
+  <thead>
+    <tr><th>Customer</th><th>Details</th></tr>
+  </thead>
+  <tbody>
+  <%= render @customers %>
+  </tbody>
+</table>
+<%= will_paginate @customers %>

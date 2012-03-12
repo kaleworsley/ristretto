@@ -1,127 +1,79 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
-       "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
-<head>
-  <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
-  <title><%= yield(:title) || SETTINGS['tagline'] -%> - <%= SETTINGS['name'] %></title>
-  <link rel="SHORTCUT ICON" href="/favicon.ico" />
-  <%= stylesheet_link_tag ['application', 'theme/jquery-ui.css', '/javascripts/wmd/wmd.css', '/javascripts/jquery.mcdropdown/css/jquery.mcdropdown.min.css'] %>
-  <%= javascript_include_tag [
-      'jquery.min',
-      'jquery.ui.min',
-      'jquery.form.min',
-      'jquery.typing.min',
-      'jquery.hotkeys',
-      'jquery.infinitescroll.min',
-      'jquery.purr.min',
-      'jquery.bt.min',
-      'jquery.sparkline.min',
-      'jquery.throbber.min',
-      'jquery.textarearesizer.min',
-      'jquery.mcdropdown/lib/jquery.mcdropdown.min',
-      'wmd/jquery.wmd.min',
-      'highlight.pack',
-      'search',
-      'application.min'
-      ] %>
-  <%= yield :head %>
-</head>
-<body class="<%= controller.controller_name %> <%= controller.controller_name + "-" + controller.action_name %><%= " " + @body_classes.join(' ') unless @body_classes.nil? %>">
-<div id="header">
-  <h1 class="title"><a href="/"><%= image_tag 'ristretto.png' %> <%= SETTINGS['name'] %></a></h1>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta http-equiv="content-type" content="text/html;charset=UTF-8" />
+    <title><%= yield(:title) || SETTINGS['tagline'] -%> - <%= SETTINGS['name'] %></title>
+    <link rel="SHORTCUT ICON" href="/favicon.ico" />
+    <%= stylesheet_link_tag [
+          '/libraries/bootstrap/bootstrap.css',
+          '/libraries/bootstrap-xtra/bootstrap-xtra.css',
+          '/libraries/jquery.ui/theme/jquery-ui.css',
+          '/libraries/chosen/chosen.css',
+          'application']
+    %>
+    <%= javascript_include_tag [
+          '/libraries/jquery/jquery.min.js',
+          '/libraries/jquery.ui/jquery.ui.min.js',
+          '/libraries/jquery.form/jquery.form.min.js',
+          '/libraries/store/store.js',
+          '/libraries/bootstrap/bootstrap-dropdown.js',
+          '/libraries/bootstrap/bootstrap-alerts.js',
+          '/libraries/chosen/chosen.jquery.min.js',
+          'application'] %>
+    <%= yield :head %>
+  </head>
+  <body class="<%= body_classes %>">
+    <div id="header" class="topbar">
+      <div class="topbar-inner">
+        <div class="container-fluid">
+	        <h3 class="title"><a class="brand" href="/"><%= image_tag 'logo.png', :width => '32', :height => '32' %><%= SETTINGS['name'] %></a></h3>
+          <%- if current_user -%>
 
-  <ul class="primary-nav">
-    <%- if current_user -%>
-      <% nav_li('Sales', '#', nil, {:class => 'sales'}) do %>
-        <%= nav_li('Invoice Tracker', invoice_tracker_path) %>
-        <%= nav_li('Update AR', update_ar_path) if current_user.is_staff %>
-      <% end %>
-
-      <% nav_li('Projects', projects_path, nil, {:class => 'projects'}) do %>
-        <%= nav_li('Projects', projects_path) %>
-        <%= nav_li('Order Projects', project_order_path) if current_user.is_staff %>
-        <%= nav_li('Tasks', tasks_path) if current_user.is_staff%>
-      <% end %>
-      <% if current_user.is_staff %>
-
-      <% nav_li('Reports', reports_path, nil, {:class => 'reports'}) do %>
-        <%= nav_li 'Staff time statistics', reports_path('timestats') %>
-        <%= nav_li 'Staff timesheets', reports_path('timesheets') %>
-        <%= nav_li 'Monthly project report', reports_path('monthly_report') %>
-        <%= nav_li 'Projects per user', reports_path('user_projects') %>
-        <%= nav_li 'Stakeholders per project', reports_path('project_stakeholders') %>
-      <% end %>
-
-        <% nav_li('Timesheet', timesheet_path(Date.today), 'timeslices', {:class => 'time'}) do %>
-          <% unless @unsaved_timeslices.blank? %>
-            <li class="unsaved-timeslice-title"><span class="title">Unsaved</span></li>
-            <% @unsaved_timeslices.each do |index,task| %>
-              <%
-                text = image_tag 'clock.png'
-                text += ' #' + task.id.to_s
-                unless @timeslice_started[task.id].blank?
-                  text += ' ' + @timeslice_started[task.id]
-                  if @timeslice_finished[task.id].blank?
-                    text += ' - now'
-                  else
-                    text += ' - ' + @timeslice_finished[task.id]
-                  end
-                end
-                title = task.name
-                unless @timeslice_description[task.id].blank?
-                  title += ' - ' + @timeslice_description[task.id]
-                end
-              %>
-              <li class="unsaved-timeslice"><%= link_to text, task, :title => title %><span class="task"><%= task.id %></span></li>
+            <% form_tag search_path, :method => :get, :class => 'form-search navbar-search pull-left' do %>
+              <%= text_field_tag :q, '', :class => 'search-query', :placeholder => 'Search' %>
             <% end %>
-          <% end %>
-        <% end %>
+	          <ul class="nav secondary-nav">
+              <%= nav_li('Customers', customers_path, 'customers') %>
+
+              <%= nav_li('Projects', projects_path, 'projects', {}) %>
+
+              <% nav_li('Timesheet', timesheet_path, 'timeslices', {}) do  %>
+                <%= nav_li('Timesheet', timesheet_path, 'timeslices', {}) %>
+                <%= nav_li('Calendar', timesheet_calendar_path, 'timeslices', {}) %>
+              <% end %>
+     
+              <% nav_li(gravatar(current_user, 30), current_user, nil, {:li => {:class => 'gravitar dropdown'}}) do %>
+                <%= nav_li('Users', users_path) %>
+                <%= nav_li('New user', new_user_path) %>
+                <%= nav_li 'Edit Profile', profile_path, 'users' %>
+                <li class="divider"></li>
+                <%= nav_li 'Logout', logout_path %>
+              <% end %>
+		
+            </ul>
+	        <%- end -%>
+        </div>
+      </div>
+    </div>
+    <div id="page" class="fluid-container">
+      <div class="content">
+      <ul class="breadcrumb">
+        <li class="home"><a href="/">Home</a></li>
+        <%= yield(:breadcrumbs) -%>
+      </ul>
+
+      <%= display_flashes -%>
+
+      <% unless yield(:tabs).blank? %>
+      <ul id="tabs" class="tabs" data-dropdown="dropdown">
+        <%= yield(:tabs) -%>
+      </ul>
       <% end %>
-    <%- end -%>
 
-    <% nav_li('People', customers_path, nil, {:class => 'people'}) do %>
-      <%- if current_user -%>
-        <%= nav_li('Customers', customers_path) if current_user.is_staff %>
-        <%= nav_li('Users', users_path) if current_user.is_staff %>
-        <%= nav_li('New user', new_user_path) if current_user.is_staff %>
-        <%= nav_li('Mailouts', mailouts_path) if current_user.is_staff %>
-        <%= nav_li 'Edit Profile', profile_path, 'users' %>
-        <%= nav_li 'Logout', logout_path %>
-      <%- else -%>
-        <%= nav_li 'Register', register_path, 'users' %>
-        <%= nav_li 'Reset password', reset_path %>
-        <%= nav_li 'Login', login_path, 'user_sessions' %>
-      <%- end -%>
-    <% end %>
-    <%- if current_user -%>
-    <%= nav_li('Search', 'javascript: showSearchPopup();', nil, {:class => 'search'}) if current_user.is_staff %>
-    <%- end -%>
+      <div id="content">
+        <%= yield -%>
+      </div>
 
-  </ul>
-</div>
-<div id="page">
-<%= display_flashes -%>
-<div id="nav">
-  <ul id="breadcrumbs">
-    <li class="home ui-widget-header"><a href="/"><span class="ui-icon ui-icon-home"></span> Home</a></li>
-    <%= yield(:breadcrumbs) -%>
-  </ul>
-  <ul id="context-links">
-    <%= yield(:tabs) -%>
-  </ul>
-</div>
-<div id="content">
-<%= yield -%>
-</div>
-<% unless yield(:sidebar).blank? %>
-<div id="sidebar">
-<%= yield(:sidebar) -%>
-</div>
-<% end %>
-</div>
-<div id="footer">
-  <span class="powered-by"><%= link_to "Powered By Ristretto", 'http://github.com/egressive/ristretto' %></span>
-  <span class="copyright">Copyright &copy; 2010 <a href="http://egressive.com/">Egressive</a>.</span>
-</div>
-</body>
+    </div>
+  </body>
 </html>

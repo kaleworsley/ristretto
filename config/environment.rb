@@ -5,7 +5,7 @@
 # ENV['RAILS_ENV'] ||= 'production'
 
 # Specifies gem version of Rails to use when vendor/rails is not present
-RAILS_GEM_VERSION = '2.3.11' unless defined? RAILS_GEM_VERSION
+RAILS_GEM_VERSION = '2.3.14' unless defined? RAILS_GEM_VERSION
 
 # Bootstrap the Rails environment, frameworks, and default configuration
 require File.join(File.dirname(__FILE__), 'boot')
@@ -40,7 +40,7 @@ Rails::Initializer.run do |config|
   # config.plugins = [ :exception_notification, :ssl_requirement, :all ]
 
   # Add additional load paths for your own custom dirs
-  # config.load_paths += %W( #{RAILS_ROOT}/extras )
+  config.load_paths += %W( #{RAILS_ROOT}/app/presenters )
 
   # Force all environments to use the same logger level
   # (by default production uses :info, the others :debug)
@@ -64,7 +64,7 @@ Rails::Initializer.run do |config|
     :key => '_ristretto_session',
     :secret      => SETTINGS['secret']
   }
-
+ 
   # Use the database for sessions instead of the cookie-based default,
   # which shouldn't be used to store highly confidential information
   # (create the session table with "rake db:sessions:create")
@@ -85,7 +85,7 @@ Time::DATE_FORMATS[:date_only] = '%Y-%m-%d'
 Date::DATE_FORMATS[:human] = '%a %d %b %Y'
 
 ActionView::Base.field_error_proc = Proc.new { |html_tag, instance|
-  "<span class=\"fieldWithErrors\">#{html_tag}</span>" }
+  "<span class=\"clearfix error\">#{html_tag}</span>" }
 
 if SETTINGS['exception_notifications']
   ExceptionNotification::Notifier.exception_recipients = SETTINGS['exception_recipients']

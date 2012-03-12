@@ -7,7 +7,7 @@
 <%- end -%>
 
 <%- content_for :tabs do -%>
-  <%= tab 'Timeslices', task_timeslices_path(@task) if can? :index, Timeslice %>
+  <%= tab 'Timeslices', task_timeslices_path(@task) %>
 <%- end -%>
 
 <% else %>
@@ -17,9 +17,6 @@
 <%- end -%>
 
 <%= title "New timeslice" -%>
-<%= javascript_tag("TIMESLICE_GRANULARITY = #{current_user.minute_step}") %>
-<% javascript "jquery.timeentry.min" %>
-<% javascript "timeslice.new" %>
 
 <% form_for [@task, @timeslice] do |form| %>
   <% if @task.present? %>

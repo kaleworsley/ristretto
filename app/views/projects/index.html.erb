@@ -1,21 +1,39 @@
 <%- content_for :breadcrumbs do -%>
   <% unless @customer.nil? %>
+    <%= crumb "Customers", customers_path %>
     <%= crumb @customer.name, @customer %>
     <%= crumb 'Projects', customer_projects_path(@customer) %>
     <% else %>
       <%= crumb 'Projects', projects_path %>
+      <%= crumb @index_scope.to_s.humanize, send("projects_#{@index_scope}_path") if @index_scope %>
   <% end %>
 <%- end -%>
 
-<% title "Projects" -%>
-<div id="projects" class="projects panel no-padding">
-  <h3 class="title">Projects</h3>
-  <div class="content">
-    <ul class="projects">
-      <%= render @projects %>
-    </ul>
-  </div>
-  <div class="panel-footer">
-    <%= will_paginate @projects %>
-  </div>
-</div>
+<%- content_for :tabs do -%>
+  <% if @customer.nil? %>
+    <%= tab "All #{count_label(Project.all.size)}", projects_path, (@index_scope == nil) %>
+    <%= tab "Proposed #{count_label(Project.proposed.size)}", projects_proposed_path, (@index_scope == :proposed) %>
+    <%= tab "Complete #{count_label(Project.complete.size)}", projects_complete_path, (@index_scope == :complete) %>
+    <%= tab "Current #{count_label(Project.current.size)}", projects_current_path, (@index_scope == :current) %>
+    <%= tab "Postponed #{count_label(Project.postponed.size)}", projects_postponed_path, (@index_scope == :postponed) %>
+    <%= tab "Support #{count_label(Project.support.size)}", projects_support_path, (@index_scope == :support) %>
+    <%= tab "Development #{count_label(Project.development.size)}", projects_development_path, (@index_scope == :development) %>
+  <% else %>
+    <%= tab 'Projects', customer_projects_path(@customer), true %>
+    <%= tab 'New project', new_customer_project_path(@customer) %>
+  <% end %>
+<%- end -%>
+
+<%= title (@index_scope) ? "#{@index_scope.to_s.humanize} Projects" : "Projects" -%>
+
+<% javascript 'projects' %>
+
+<table id="projects" class="projects bordered-table zebra-striped">
+  <thead>
+    <tr><th>Name</th><% if @customer.blank? %><th>Customer</th><% end %><th>Kind</th><th>State</th><th>Estimate/Quote</th><th>Details</th></tr>
+  </thead>
+  <tbody>
+    <%= render @projects %>
+  </tbody>
+</table>
+<%= will_paginate @projects %>

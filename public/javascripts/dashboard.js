@@ -1,32 +1,63 @@
-$(document).ready(function() {
-  $('#project-list').each(function() {
-    //Add search input field to the heading tag
-    $(this).find('h3:first').append($('<input />', {
-      'type': 'text',
-      'class': 'search'
-    }));
+$(function() {
+/*
+  $(".resizeable").resizable({
+    grid: 50,
+    start: function() {
+      $(this).css('opacity', '0.5');
+      $(this).trigger('resize:start');
+    },
+    stop: function() {
+      $(this).css('opacity', '1');
+      $(this).trigger('resize:stop');
+   	  var name = $(this).attr('id') + ':size';
+	    var size = {
+	      height: $(this).height(),
+	      width: $(this).width()
+	    }
+	    store.set(name, size);
+    }    
   });
-  $('input.search', this).css('opacity', '0.6');
-  $('input.search', this).focus();
 
-  // Redues a list based on the value of a textfield
-  $('input.search', this).keyup(function() {
-    var search = $(this).val().toLowerCase();
-    var panel = $('#project-list');
-    if (search != '') {
-      panel.addClass('searching');
-      panel.find('.project').each(function() {
-        if (searchAll(search, $(this).text().toLowerCase()) > -1) {
-          $(this).addClass('match');
-        }
-        else {
-          $(this).removeClass('match');
-        }
-      });
-    }
-    else {
-      panel.removeClass('searching');
-      panel.find('.project').removeClass('match');
+
+  $(".draggable").draggable({
+    handle: 'h3.title',
+    start: function() {
+      $(this).trigger('drag:start');
+    },
+    stop: function() {
+      $(this).trigger('drag:stop');
+  	  var name = $(this).attr('id') + ':position';
+	    var position = {
+	      top: $(this).css('top'),
+	      left: $(this).css('left')
+	    }
+	    store.set(name, position);
     }
   });
+
+
+  $('.resizeable').bind('resize:stop', function() {
+    $('.panel', this).height($(this).height()-114);
+  });
+
+	$(".draggable").each(function() {
+	  var name = $(this).attr('id') + ':position';
+	  var position = store.get(name);
+	  if (position) {
+	    $(this).css('top', position.top);
+ 	    $(this).css('left', position.left);
+	  }
+	});
+	
+  $(".resizeable").each(function() {
+	  var name = $(this).attr('id') + ':size';
+	  var size = store.get(name);
+	  if (size) {
+	    $(this).height(size.height);
+ 	    $(this).width(size.width);
+	  }
+	  $('.panel', this).height($(this).height()-114);
+	});
+		
+		*/
 });

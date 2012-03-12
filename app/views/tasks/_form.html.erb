@@ -1,51 +1,43 @@
-<% javascript 'attachment.new' %>
+
   <% flash[:error] = form.error_messages :message => nil, :header_message => nil %>
 
-  <% unless task.new_record? || !task.try(:has_stakeholder?, current_user) %>
-  <div class="form-item form-item-block">
+  <% unless task.new_record? %>
+  <div class="clearfix">
     <%= form.label :project_id %>
+    <div class="input">
     <%= form.collection_select :project_id, current_user.current_projects.sort_by(&:full_name), :id, :full_name %>
+    </div>
   </div>
   <% end %>
-  <div class="form-item form-item-block">
-    <%= form.label :name %>
-    <%= form.text_field :name %>
-  </div>
-  <% if current_user.is_staff? %>
-  <div class="form-item form-item-block">
-    <%= form.label :state %>
-    <%= form.select :state, Task.states_for_select %>
-  </div>
-  <% else %>
-    <%= form.hidden_field :state %>
-  <% end %>
-  <div class="form-item form-item-block">
-    <%= form.label :estimate %>
-    <%= form.text_field :estimate, :size => 4 %> <%= project.estimate_unit.humanize unless project.estimate_unit.blank? %>
-  </div>
-  <div class="form-item form-item-block">
-    <%= form.label :assigned_to %>
-    <%= form.collection_select :assigned_to_id, project.users, :id, :to_s, :include_blank => '-- Un-assigned --'  %>
-  </div>
-  <div class="form-item form-item-block">
-    <%= form.label :description %>
-    <%= form.text_area :description, {:class => 'markdown'} %>
-  </div>
 
-  <% unless task.attachments.blank? %>
-    <ul class="attachments">
-      <%= render task.attachments %>
-    </ul>
-  <% end %>
-  <div id="attachments">
-    <div class="form-item form-item-block">
-      <% fields_for "new_attachments[]", attachment do |f| %>
-        <%= f.label :file %>
-        <%= f.file_field :file %>
-      <% end %>
+  <div class="clearfix">
+    <%= form.label :name %>
+    <div class="input">
+      <%= form.text_field :name %>
     </div>
   </div>
 
-  <div class="form-item form-item-block form-submit">
-    <%= form.submit "Save" %>
+  <div class="clearfix">
+    <%= form.label :stage %>
+    <div class="input">
+      <%= form.select :stage, Task.stages_for_select, { :include_blank => true } %>
+    </div>
+  </div>
+
+  <div class="clearfix">
+    <%= form.label :state %>
+    <div class="input">
+      <%= form.select :state, Task.states_for_select %>
+    </div>
+  </div>
+
+  <div class="clearfix">
+    <%= form.label :estimate %>
+    <div class="input">
+      <%= form.text_field :estimate, :size => 4 %>
+    </div>
+  </div>
+
+  <div class="actions">
+    <%= form.submit "Save", :class => 'btn primary' %>
   </div>

@@ -1,24 +1,28 @@
-<% @body_classes = ['dashboard-' + @partial] %>
-<%= title "Dashboard" %>
-<% if current_user.is_staff? %>
-<script type="text/javascript">
-$(document).ready(function() {
-  $('#dashboard-select').val(readCookie('dashboardView') || 'project_activity');
-  $('#dashboard-select').change(function() {
-    createCookie('dashboardView', $(this).val());
-    window.location.reload();
-  });
-});
-</script>
-<select id="dashboard-select">
-  <option value="project_activity">Projects + Recent activity</option>
-  <option value="projects_overview">Projects Overview</option>
-  <option value="support_overview">Support Overview</option>
-  <option value="assigned_tasks">My Tasks</option>
-  <option value="project_tasks">My projects and tasks</option>
-  <option value="not_staff_dashboard">Tasks for acceptance</option>
-</select>
+<% title "Dashboard" %>
+
+<% javascript 'dashboard' %>
+
+<% if current_user.dashboard_panels.present? %>
+<% current_user.dashboard_panels.each do |panel| %>
+  <div class="dashboard-panel resizeable draggable" id="<%= panel %>">
+    <%= render :partial => panel %>
+  </div>
 <% end %>
-<div id="dashboard">
-  <%= render :partial => @partial %>
+
+<% else %>
+
+<div class="alert-message block-message info">
+  <a class="close" data-dismiss="alert" href="#">×</a>
+  <p>You currently do not have any dashboard panels selected. The following panels are available:</p>
+  <ul>
+  <% User::DASHBOARD_PANELS.each do |panel| %>
+    <li><%= panel.humanize %></li>
+  <% end %>
+  </ul>
+  
+  <div class="alert-actions">
+    <%= link_to "Select Panels", edit_user_path(current_user), :class => "btn small" %>
+  </div>
 </div>
+
+<% end %>

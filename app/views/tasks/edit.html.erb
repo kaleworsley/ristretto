@@ -1,8 +1,7 @@
 <%- content_for :tabs do -%>
-  <%= tab 'View', @task                                    if can? :show, @task%>
-  <%= tab 'New timeslice', new_task_timeslice_path(@task)  if can? :create, Timeslice %>
-  <%= tab 'New comment', new_task_comment_path(@task)      if can? :create, Comment %>
-  <%= tab 'New task', new_project_task_path(@project)      if can? :create, Task %>
+  <%= tab 'View', @task %>
+  <%= tab 'New timeslice', new_task_timeslice_path(@task) %>
+  <%= tab 'New task', new_project_task_path(@project) %>
 <% end %>
 
 <%- content_for :breadcrumbs do -%>

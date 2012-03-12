@@ -1,118 +1,75 @@
 class ProjectsController < ApplicationController
-
-  load_and_authorize_resource
-
-  before_filter :find_project, :only => [:edit, :delete, :show, :update, :destroy, :update_task_order, :watch, :enable_mail, :disable_mail]
+  before_filter :find_project, :only => [:edit, :delete, :show, :update, :destroy, :uninvoiced, :invoice, :time]
   before_filter :find_customer, :only => [:index, :new, :create]
   before_filter :find_projects, :only => [:index]
-  after_filter :new_attachments, :only => [:create, :update]
 
   skip_before_filter :require_login, :only => [:ical]
 
-  # Ical feed for project deadlines
-  # TODO: this needs refactoring
-  def ical
-    user = User.find_by_single_access_token(params[:user_credentials])
+  def delete
 
-    if user
-      if user.is_staff?
-        projects = Project.current
-      else
-        projects = user.current_projects.current
-      end
+  end
+  
+  def time
+  end
+
+  def uninvoiced
+    begin
+      @invoices = Xero.Invoice.all(:where => {:type => 'ACCREC', :status => 'DRAFT'}).reject {|i| i.contact.contact_id != @project.customer.xero_contact_id}
+    rescue Exception => msg
+      @invoices = []
+      flash[:error] = 'Cannot connect to Xero.'
+      logger.debug "Xero error: #{msg}"
+    end
+  end
+  
+  def invoice
+    if params[:issue_date].blank?
+      @date = Date.today
+    else
+      @date = Date.parse(params[:issue_date])
     end
 
-    if projects
-      cal = Icalendar::Calendar.new
+    if params[:due_date].blank?
+      @due_date = @date + 30.days
+    else
+      @due_date = Date.parse(params[:due_date])
+    end
 
-      projects.each do |project|
-        if project.deadline.present?
-          event = Icalendar::Event.new
-          event.start = project.deadline
-          event.summary = "#{project} deadline"
-          cal.add_event(event)
+    if params[:invoice][:invoice_id].blank?
+      @new_invoice = true
+      @invoice = Xero.Invoice.build(:type => 'ACCREC', :contact => @project.customer.xero_customer)
+    else
+      @new_invoice = false
+      @invoice = Xero.Invoice.find(params[:invoice][:invoice_id])
+    end
+
+    params[:items].each do |id, val|
+      @invoice.add_line_item(:description => val[:description], :quantity => val[:hours].to_f, :unit_amount => @project.rate.to_f) if val[:include]
+    end
+
+    @invoice.date = @date
+    @invoice.due_date = @due_date
+    @invoice.save
+    @invoice_id = @invoice.invoice_id
+    @invoice_number = @invoice.invoice_number
+
+    params[:items].each do |id, val|
+      if val[:include]
+        timeslice_ids = val[:timeslice_ids].split(',')
+        timeslice_ids.each do |timeslice_id|
+          Timeslice.find(timeslice_id).update_attributes(:invoice => @invoice_number)
         end
       end
     end
-
+    
     respond_to do |format|
-      if user && user.valid?
-        headers['Content-Type'] = "text/calendar; charset=UTF-8"
-        cal.publish
-        format.ics { render :text => cal.to_ical }
+      if @new_invoice
+        flash[:notice] = '<a href="https://go.xero.com/AccountsReceivable/View.aspx?InvoiceId=' + @invoice_id + '">Your invoice</a> was successfully created.'
       else
-        format.ics { render :nothing => true, :status => :forbidden }
+        flash[:notice] = '<a href="https://go.xero.com/AccountsReceivable/View.aspx?InvoiceId=' + @invoice_id + '">Your invoice</a> was successfully updated.'
       end
-    end
-  end
-
-  # Enable email notifications for this project
-  def enable_mail
-    current_user.receive_mail_from(@project)
-    redirect_to @project
-  end
-
-  # Disable email notifications for this project
-  def disable_mail
-    current_user.ignore_mail_from(@project)
-    redirect_to @project
-  end
-
-  def project_order
-    respond_to do |format|
-      format.html
-    end
-  end
-
-  def update_project_order
-    projects = params[:project_ids]
-    order = params[:project_orders]
-    state = params[:project_states]
-
-    projects.each_with_index do |project_id, key|
-      project = Project.find(project_id)
-      project.weight = order[key]
-      project.state = state[key]
-      project.save
-    end
-    flash[:notice] = 'Projects were successfully updated.'
-    @projects = Project.find(projects)
-    respond_to do |format|
-      format.html { redirect_to project_order_path }
-      format.js
-    end
-  end
-
-  def update_task_order
-    @tasks = params[:task_ids]
-    @order = params[:task_orders]
-    @state = params[:task_states]
-    flash[:notice] = 'Tasks were successfully updated.'
-    @tasks.each_with_index do |task_id, key|
-      task = Task.find(task_id)
-      task.weight = @order[key]
-      task.state = @state[key]
-      task.save
-    end
-
-    @project.update_attributes(:updated_at => DateTime.now.to_s(:db));
-    @project.save
-
-    respond_to do |format|
-      format.html { redirect_to project_path(@project) }
-      format.js
-    end
-
-  end
-
-  def watch
-    respond_to do |format|
-      format.js
-    end
-  end
-
-  def delete
-
+      format.html { redirect_to(@project) }
+    end  
   end
 
   # GET /projects
@@ -120,6 +77,7 @@ class ProjectsController < ApplicationController
   def index
     respond_to do |format|
       format.html # index.html.erb
+      format.js
       format.xml  { render :xml => @projects }
     end
   end
@@ -127,36 +85,18 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.xml
   def show
-    @task = @project.tasks.build
-    @attachment = Attachment.new
-
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @project }
-      format.js do
-        project = {
-          :project => {
-            :name => @project.name,
-            :id => @project.id,
-            :todo => @project.todo.length,
-            :doing => @project.doing.length,
-            :done => @project.done.length
-            }
-          }
-        render :json => project
-      end
     end
   end
 
   # GET /projects/new
   # GET /projects/new.xml
   def new
-    @project = Project.new
-    @attachment = Attachment.new
+    @project = @customer.projects.new
 
-    if params[:customer]
-      @project.customer_id = params[:customer]
-    end
+		3.times { @project.tasks.build }
 
     respond_to do |format|
       format.html # new.html.erb
@@ -166,25 +106,20 @@ class ProjectsController < ApplicationController
 
   # GET /projects/1/edit
   def edit
-    @attachment = Attachment.new
-
+		@project.tasks.build
   end
 
   # POST /projects
   # POST /projects.xml
   def create
     @project = @customer.projects.build(params[:project])
-    @project.user = current_user
 
     respond_to do |format|
       if @project.save
-
-        @project.add_stakeholder(current_user, params['stakeholder_role']) if params['is_member']
         flash[:notice] = 'Project was successfully created.'
         format.html { redirect_to(@project) }
         format.xml  { render :xml => @project, :status => :created, :location => @project }
       else
-        @attachment = Attachment.new
         format.html { render :action => "new" }
         format.xml  { render :xml => @project.errors, :status => :unprocessable_entity }
       end
@@ -200,7 +135,6 @@ class ProjectsController < ApplicationController
         format.html { redirect_to(@project) }
         format.xml  { head :ok }
       else
-        @attachment = Attachment.new
         format.html { render :action => "edit" }
         format.xml  { render :xml => @project.errors, :status => :unprocessable_entity }
       end
@@ -219,29 +153,28 @@ class ProjectsController < ApplicationController
   end
 
   private
-    def new_attachments
-      new_attachments = params[:new_attachments]
-      unless new_attachments.nil?
-        new_attachments.each do |attachment|
-          attachment['attachable_id'] = @project.id
-          attachment['user_id'] = current_user.id
-          attachment['attachable_type'] = @project.class.to_s
-          attachment['attachable'] = @project
-          Attachment.create(attachment)
-        end
-      end
-    end
-
     def find_project
       @project = Project.find(params[:id])
     end
 
     def find_projects
       if @customer.nil?
-        if current_user.is_staff?
-          @projects = Project.page(params[:page])
+        @index_scope = params[:index_scope]
+        case params[:index_scope]
+        when :current
+          @projects = Project.page(params[:page], {:state => 'current'})
+        when :proposed
+          @projects = Project.page(params[:page], {:state => 'proposed'})
+        when :complete
+          @projects = Project.page(params[:page], {:state => 'complete'})
+        when :postponed
+          @projects = Project.page(params[:page], {:state => 'postponed'})
+        when :development
+          @projects = Project.page(params[:page], {:kind => 'development'})
+        when :support
+          @projects = Project.page(params[:page], {:kind => 'support'})
         else
-          @projects = current_user.current_projects.page(params[:page])
+          @projects = Project.page(params[:page])
         end
       else
         @projects = @customer.projects.page(params[:page])
