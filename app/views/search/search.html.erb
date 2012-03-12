@@ -4,7 +4,7 @@
 <h3><%= h model.to_s.pluralize %></h3>
 <ul class="results">
   <% results.each do |result| %>
-  <li><strong><%= link_to truncate(result.to_s, 100), result %></strong></li>
+  <li><strong><%= link_to truncate(result.to_s, :length => 100), result %></strong></li>
   <% end %>
 </ul>
 <% end %>

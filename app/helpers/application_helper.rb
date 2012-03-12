@@ -44,16 +44,16 @@ module ApplicationHelper
   end
 
   def crumb(text, target)
-    content_tag(:li, '<span class="divider">/</span>' + link_to(truncate(h(text), { :length => 30 }), target, {:title => text}))
+    content_tag(:li, '<span class="divider">/</span>' + link_to(truncate(h(text), { :length => 30 }), target, {:title => strip_tags(text)}))
   end
 
   def tab(text, target, active = false, opts = {}, &block)
     li_opts = {:class => ''}
     ul_opts = {:class => 'dropdown-menu'}
-    a_opts = {:class => '', :title => text}
+    a_opts = {:class => '', :title => strip_tags(text)}
 
-    if block_given?    
-      a_opts = {:class => 'dropdown-toggle', 'data-toggle' => 'dropdown', :title => text}
+    if block_given?
+      a_opts = {:class => 'dropdown-toggle', 'data-toggle' => 'dropdown', :title => strip_tags(text)}
     end
     a_opts.merge!(opts[:a]) if opts[:a].present?
     
@@ -67,9 +67,9 @@ module ApplicationHelper
 	    li_opts[:class] += ' active'
 	  end
 
-    li_opts.merge!(opts[:li]) if opts[:li].present?    
+    li_opts.merge!(opts[:li]) if opts[:li].present?
 
-    content = link_to(h(text), target, a_opts)
+    content = link_to(text, target, a_opts)
 
     if block_given?
       subcontent = capture(&block)
@@ -195,4 +195,11 @@ module ApplicationHelper
     presenter
   end
 
+  def count_label(count)
+    if count && count > 0
+      '<span class="label notice">' + count.to_s + '</span>'
+    else
+      ""
+    end
+  end
 end

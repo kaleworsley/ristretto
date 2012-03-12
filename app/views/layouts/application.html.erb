@@ -57,11 +57,12 @@
     </div>
     <div id="page" class="fluid-container">
       <div class="content">
-      <%= display_flashes -%>
       <ul class="breadcrumb">
         <li class="home"><a href="/">Home</a></li>
         <%= yield(:breadcrumbs) -%>
       </ul>
+
+      <%= display_flashes -%>
 
       <% unless yield(:tabs).blank? %>
       <ul id="tabs" class="tabs" data-dropdown="dropdown">
