@@ -1,9 +1,7 @@
 source :gemcutter
 gem "rails",         "~> 2.3.11"
 gem "rake",          :require => false
-gem "sqlite3-ruby",  :require => "sqlite3"
-
-gem "mysql"
+gem "mysql2",        "~> 0.2.0"
 
 gem "authlogic",               "~> 2.1.6"
 gem "will_paginate",           "~> 2.3.16"
